@@ -3,97 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sturgia Elite | Dashboard</title>
+    <title>Sturgia Dashboard | Elite Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .accent-gradient { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        :root { --sturgia-blue: #3b82f6; --dark-depth: #020617; }
+        body { font-family: 'Outfit', sans-serif; background: var(--dark-depth); color: #f8fafc; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar-link { transition: all 0.3s; border-left: 3px solid transparent; }
+        .sidebar-link.active { background: rgba(59, 130, 246, 0.1); border-left-color: var(--sturgia-blue); color: var(--sturgia-blue); }
+        .sturgia-gradient { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        input, select { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; }
     </style>
 </head>
-<body class="min-h-screen custom-scroll">
+<body class="flex min-h-screen">
 
-    <nav class="sticky top-0 z-50 glass border-b border-slate-800 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <img src="https://i.ibb.co/L8p6M5t/sturgia-logo-fix.png" class="w-10 h-10 object-contain" alt="Logo">
-                <span class="text-xl font-extrabold tracking-tighter">STURGIA</span>
+    <aside class="w-64 glass-card border-r border-slate-800 flex flex-col fixed h-full z-50">
+        <div class="p-6 flex items-center gap-3">
+            <img src="https://i.ibb.co/L8p6M5t/sturgia-logo-fix.png" class="w-10 h-10 shadow-lg shadow-blue-500/20 rounded-lg" alt="Sturgia Logo">
+            <span class="text-xl font-black tracking-tighter italic">STURGIA</span>
+        </div>
+
+        <nav class="flex-1 px-4 py-4 space-y-2">
+            <button onclick="nav('home')" id="nav-home" class="sidebar-link active w-full flex items-center gap-3 p-3 rounded-xl font-medium">
+                <i class="fa-solid fa-house w-5"></i> Anasayfa
+            </button>
+            <button onclick="nav('warriors')" id="nav-warriors" class="sidebar-link w-full flex items-center gap-3 p-3 rounded-xl font-medium">
+                <i class="fa-solid fa-shield-halved w-5"></i> Savaşçılar
+            </button>
+            <button onclick="nav('settings')" id="nav-settings" class="sidebar-link w-full flex items-center gap-3 p-3 rounded-xl font-medium">
+                <i class="fa-solid fa-gear w-5"></i> Ayarlar & Şifre
+            </button>
+            <div id="adm-nav" class="hidden">
+                <button onclick="nav('admin')" id="nav-admin" class="sidebar-link w-full flex items-center gap-3 p-3 rounded-xl font-medium text-amber-400">
+                    <i class="fa-solid fa-unlock-keyhole w-5"></i> Admin Paneli
+                </button>
             </div>
-            <div class="flex items-center gap-6">
-                <button onclick="showPage('home')" class="hover:text-blue-400 transition font-medium">Anasayfa</button>
-                <button onclick="showPage('warriors')" class="hover:text-blue-400 transition font-medium text-slate-400">Savaşçılar</button>
-                <div id="auth-ui">
-                    <button onclick="openModal('auth')" class="accent-gradient px-5 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-500/20">Giriş Yap</button>
-                </div>
-                <div id="user-ui" class="hidden flex items-center gap-4">
-                    <span id="nav-username" class="text-blue-400 font-bold border-r border-slate-700 pr-4"></span>
-                    <button onclick="logout()" class="text-red-400 text-sm hover:underline">Çıkış</button>
-                </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800">
+            <div id="auth-box">
+                <button onclick="openModal('auth')" class="w-full sturgia-gradient p-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20">GİRİŞ YAP</button>
+            </div>
+            <div id="user-box" class="hidden text-center">
+                <p id="u-name" class="text-blue-400 font-bold mb-2"></p>
+                <button onclick="logout()" class="text-red-400 text-xs hover:underline uppercase tracking-widest font-black">Güvenli Çıkış</button>
             </div>
         </div>
-    </nav>
+    </aside>
 
-    <main class="max-w-7xl mx-auto p-6 mt-8">
+    <main class="ml-64 flex-1 p-8">
         
-        <div id="page-home" class="page-content grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                <div class="glass p-10 rounded-3xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl"></div>
-                    <h1 class="text-4xl font-extrabold mb-4 italic">Kuzeyin Soğuk Nefesi</h1>
-                    <p class="text-slate-400 leading-relaxed">
-                        Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyin sert topraklarında omuz omuza savaşıyoruz. Hoş geldin savaşçı.
-                    </p>
+        <section id="sec-home" class="space-y-6">
+            <div class="relative rounded-[2rem] overflow-hidden p-12 sturgia-gradient shadow-2xl">
+                <div class="relative z-10 max-w-2xl">
+                    <h1 class="text-6xl font-black mb-4 leading-none italic">KUZEYİN SOĞUK NEFESİ</h1>
+                    <p class="text-blue-100 text-lg opacity-90">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Hoş geldin savaşçı.</p>
                 </div>
-                
-                <div id="admin-panel" class="hidden glass p-8 rounded-3xl border-blue-500/30">
-                    <h3 class="text-blue-400 font-bold mb-4 flex items-center gap-2">🛡️ Yönetim Merkezi</h3>
-                    <div id="admin-list" class="space-y-3"></div>
-                </div>
+                <img src="https://i.ibb.co/3p3r3mH/image-16de68.jpg" class="absolute top-0 right-0 h-full opacity-20 grayscale pointer-events-none" alt="Background Clan Symbol">
             </div>
-            
-            <div class="space-y-6">
-                <div class="glass p-8 rounded-3xl text-center">
-                    <h4 class="text-slate-400 text-sm font-bold uppercase mb-2">Ordu Gücü</h4>
-                    <div id="army-count" class="text-6xl font-black text-white">0</div>
-                    <p class="text-slate-500 mt-2 text-xs">Aktif Savaşçı</p>
-                </div>
-            </div>
-        </div>
 
-        <div id="page-warriors" class="page-content hidden">
-            <div class="glass p-8 rounded-3xl">
-                <h2 class="text-2xl font-bold mb-8 italic">Aktif Savaşçılar</h2>
-                <div id="warriors-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-8 rounded-3xl text-center">
+                    <h4 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Ordu Gücü</h4>
+                    <div id="count-main" class="text-5xl font-black">0</div>
+                    <p class="text-blue-500 text-xs mt-2">Aktif Kayıtlı Üye</p>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <section id="sec-warriors" class="hidden space-y-6">
+            <h2 class="text-3xl font-black italic">AKTİF SAVAŞÇILAR</h2>
+            <div id="w-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </section>
+
+        <section id="sec-settings" class="hidden max-w-md mx-auto space-y-6 pt-12">
+            <div class="glass-card p-8 rounded-3xl">
+                <h2 class="text-2xl font-black mb-6 italic"><i class="fa-solid fa-lock mr-2"></i> ŞİFRE GÜNCELLE</h2>
+                <div class="space-y-4">
+                    <input type="password" id="new-p" placeholder="Yeni Şifre" class="w-full p-4 rounded-xl outline-none focus:ring-2 ring-blue-500">
+                    <button onclick="changePW()" class="w-full sturgia-gradient py-4 rounded-xl font-black shadow-lg">GÜNCELLE</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-admin" class="hidden space-y-6">
+            <h2 class="text-3xl font-black italic text-amber-400">YÖNETİM MERKEZİ</h2>
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900/50">
+                        <tr>
+                            <th class="p-4 text-xs font-bold text-slate-500 uppercase">Savaşçı</th>
+                            <th class="p-4 text-xs font-bold text-slate-500 uppercase">Mevcut Rütbe</th>
+                            <th class="p-4 text-xs font-bold text-slate-500 uppercase text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adm-table"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
-    <div id="modal-auth" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
-        <div class="glass max-w-md w-full p-10 rounded-[40px] shadow-2xl">
-            <h2 class="text-3xl font-black mb-8">Klan Girişi</h2>
+    <div id="modal-auth" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-10 rounded-[2.5rem] shadow-2xl border-blue-500/20">
+            <h2 class="text-4xl font-black mb-8 italic tracking-tighter text-center">GİRİŞ YAP</h2>
             <div class="space-y-4">
-                <input type="text" id="auth-nick" placeholder="Savaşçı Adı" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
-                <input type="password" id="auth-pass" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
-                <div class="flex items-center gap-3 px-2">
-                    <input type="checkbox" id="auth-remember" class="w-4 h-4 rounded border-slate-700 bg-slate-900">
-                    <label for="auth-remember" class="text-sm text-slate-400">Beni Hatırla</label>
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-4 top-5 text-slate-500"></i>
+                    <input type="text" id="a-nick" placeholder="Savaşçı Adı" class="w-full pl-12 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 transition">
                 </div>
-                <button onclick="handleAuth()" class="w-full accent-gradient py-4 rounded-2xl font-black text-lg mt-4 shadow-lg shadow-blue-500/30">Devam Et</button>
+                <div class="relative">
+                    <i class="fa-solid fa-key absolute left-4 top-5 text-slate-500"></i>
+                    <input type="password" id="a-pass" placeholder="Şifre" class="w-full pl-12 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 transition">
+                </div>
+                <button onclick="handleAuth()" class="w-full sturgia-gradient py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-500/20 transition hover:scale-[1.02]">KUZEYE DÖN</button>
             </div>
-            <button onclick="closeModal('auth')" class="w-full text-slate-500 text-sm mt-6 hover:text-slate-300">Kapat</button>
+            <button onclick="closeModal('auth')" class="w-full text-slate-500 text-sm mt-6 font-bold hover:text-white transition">İPTAL</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, query, onSnapshot, addDoc, getDocs, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, where, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Senin Gönderdiğin Firebase Bilgileri
         const firebaseConfig = {
             apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
             authDomain: "sturgia-clan.firebaseapp.com",
@@ -105,99 +140,100 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        let me = JSON.parse(localStorage.getItem('sturgia_v15_session')) || null;
 
-        let currentUser = JSON.parse(localStorage.getItem('sturgia_final_user')) || null;
-
-        const roles = {
-            'admin': { n: '</> Yönetici', c: 'bg-blue-500 shadow-blue-500/40' },
-            'westra': { n: 'Westra / Abak 🌊', c: 'bg-cyan-500 shadow-cyan-500/40' },
-            'rehber_plus': { n: 'Rehber+', c: 'bg-indigo-600 shadow-indigo-600/40' },
-            'ally': { n: 'Ally', c: 'bg-pink-500 shadow-pink-500/40' },
-            '216': { n: '216', c: 'bg-sky-400 shadow-sky-400/40' },
-            'asistan': { n: 'Asistan', c: 'bg-purple-600 shadow-purple-600/40' },
-            'rehber': { n: 'Rehber', c: 'bg-emerald-600 shadow-emerald-600/40' },
-            'buyuk': { n: 'Büyük Sturgiyalı', c: 'bg-red-600 shadow-red-600/40' },
-            'onemli': { n: 'Önemli Sturgiyalı', c: 'bg-violet-600 shadow-violet-600/40' },
-            'sturgiyali': { n: 'Sturgiyalı', c: 'bg-slate-600 shadow-slate-600/40' }
+        const R = {
+            'admin': { n: 'Yönetici', c: 'bg-blue-500' },
+            'westra': { n: 'Westra / Abak 🌊', c: 'bg-cyan-500' },
+            'sturgiyali': { n: 'Sturgiyalı', c: 'bg-slate-600' }
+            // Diğer rütbeleri buraya görseldeki gibi ekleyebilirsin
         };
 
-        // Realtime Veri Akışı
+        // Realtime Veri Senkronizasyonu
         onSnapshot(collection(db, "users"), (snap) => {
-            const list = document.getElementById('warriors-list');
-            const admList = document.getElementById('admin-list');
-            const count = document.getElementById('army-count');
+            const list = document.getElementById('w-list');
+            const table = document.getElementById('adm-table');
+            const count = document.getElementById('count-main');
             
             list.innerHTML = "";
-            admList.innerHTML = "";
+            table.innerHTML = "";
             count.innerText = snap.size;
 
-            snap.forEach(docSnap => {
-                const u = docSnap.data();
-                const r = roles[u.role] || roles['sturgiyali'];
+            snap.forEach(dSnap => {
+                const u = dSnap.data();
+                const r = R[u.role] || R['sturgiyali'];
                 
+                // Savaşçı Kartları
                 list.innerHTML += `
-                    <div class="glass p-5 rounded-2xl flex justify-between items-center border-l-4 border-l-${u.role === 'admin' ? 'blue' : 'slate'}-500">
-                        <span class="font-bold text-slate-200">${u.nick}</span>
-                        <span class="${r.c} text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter shadow-sm text-white">${r.n}</span>
+                    <div class="glass-card p-6 rounded-2xl flex justify-between items-center group hover:bg-slate-800/40 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-blue-500 font-bold">${u.nick[0].toUpperCase()}</div>
+                            <span class="font-bold text-lg">${u.nick}</span>
+                        </div>
+                        <span class="${r.c} text-[10px] px-3 py-1 rounded-full font-black uppercase text-white shadow-lg">${r.n}</span>
                     </div>`;
                 
-                if(currentUser?.role === 'admin') {
-                    admList.innerHTML += `
-                        <div class="flex justify-between items-center bg-slate-900/40 p-4 rounded-xl border border-slate-800">
-                            <span class="text-sm font-bold text-slate-300">${u.nick}</span>
-                            <select onchange="updateUserRole('${docSnap.id}', this.value)" class="bg-black text-xs p-1.5 rounded border border-slate-700 outline-none focus:border-blue-500">
-                                ${Object.keys(roles).map(k => `<option value="${k}" ${u.role === k ? 'selected' : ''}>${roles[k].n}</option>`).join('')}
-                            </select>
-                        </div>`;
+                // Admin Tablosu
+                if(me?.role === 'admin') {
+                    table.innerHTML += `
+                        <tr class="border-b border-slate-800/50 hover:bg-slate-900/30 transition">
+                            <td class="p-4 font-bold text-blue-400">${u.nick}</td>
+                            <td class="p-4"><span class="text-xs opacity-60 italic">${r.n}</span></td>
+                            <td class="p-4 text-right">
+                                <select onchange="updRole('${dSnap.id}', this.value)" class="p-2 rounded text-xs">
+                                    ${Object.keys(R).map(k => `<option value="${k}" ${u.role === k ? 'selected' : ''}>${R[k].n}</option>`).join('')}
+                                </select>
+                            </td>
+                        </tr>`;
                 }
             });
         });
 
         window.handleAuth = async () => {
-            const nick = document.getElementById('auth-nick').value;
-            const pass = document.getElementById('auth-pass').value;
-            const rem = document.getElementById('auth-remember').checked;
-
-            if(!nick || !pass) return alert("Bilgileri gir kanka!");
-
-            const q = query(collection(db, "users"), where("nick", "==", nick), where("pass", "==", pass));
+            const n = document.getElementById('a-nick').value, p = document.getElementById('a-pass').value;
+            if(!n || !p) return;
+            const q = query(collection(db, "users"), where("nick", "==", n), where("pass", "==", p));
             const snap = await getDocs(q);
-
             let user;
             if(snap.empty) {
-                const newDoc = await addDoc(collection(db, "users"), { nick, pass, role: 'sturgiyali' });
-                user = { id: newDoc.id, nick, role: 'sturgiyali' };
+                const d = await addDoc(collection(db, "users"), { nick: n, pass: p, role: 'sturgiyali' });
+                user = { id: d.id, nick: n, role: 'sturgiyali' };
             } else {
-                const d = snap.docs[0];
-                user = { id: d.id, ...d.data() };
+                user = { id: snap.docs[0].id, ...snap.docs[0].data() };
             }
-
-            if(rem) localStorage.setItem('sturgia_final_user', JSON.stringify(user));
-            login(user);
+            localStorage.setItem('sturgia_v15_session', JSON.stringify(user));
+            applyLogin(user);
             closeModal('auth');
         };
 
-        window.updateUserRole = async (id, newRole) => {
-            await updateDoc(doc(db, "users", id), { role: newRole });
+        window.changePW = async () => {
+            const np = document.getElementById('new-p').value;
+            if(!np || !me) return alert("Hata: Önce giriş yapmalısın.");
+            await updateDoc(doc(db, "users", me.id), { pass: np });
+            alert("Şifre Başarıyla Güncellendi!");
         };
 
-        function login(user) {
-            currentUser = user;
-            document.getElementById('auth-ui').classList.add('hidden');
-            document.getElementById('user-ui').classList.remove('hidden');
-            document.getElementById('nav-username').innerText = user.nick;
-            if(user.role === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
+        window.updRole = async (id, r) => { await updateDoc(doc(db, "users", id), { role: r }); };
+
+        function applyLogin(u) {
+            me = u;
+            document.getElementById('auth-box').classList.add('hidden');
+            document.getElementById('user-box').classList.remove('hidden');
+            document.getElementById('u-name').innerText = u.nick;
+            if(u.role === 'admin') document.getElementById('adm-nav').classList.remove('hidden');
         }
 
-        if(currentUser) login(currentUser);
+        if(me) applyLogin(me);
 
-        window.logout = () => { localStorage.removeItem('sturgia_final_user'); location.reload(); };
-        window.showPage = (p) => { 
-            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('page-' + p).classList.remove('hidden');
+        window.logout = () => { localStorage.removeItem('sturgia_v15_session'); location.reload(); };
+        window.nav = (id) => {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('sec-'+id).classList.remove('hidden');
+            document.getElementById('nav-'+id).classList.add('active');
         };
-        window.openModal = (m) => document.getElementById('modal-' + m).classList.replace('hidden', 'flex');
-        window.closeModal = (m) => document.getElementById('modal-' + m).classList.replace('flex', 'hidden');
+        window.openModal = (m) => document.getElementById('modal-'+m).classList.replace('hidden', 'flex');
+        window.closeModal = (m) => document.getElementById('modal-'+m).classList.replace('flex', 'hidden');
     </script>
 </body>
 </html>
