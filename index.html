@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sturgia Clan | Resmi Web Sitesi</title>
+    <meta name="description" content="Sturgia Clan - Minecraft ve Valorant Topluluğu. Savaş başlasın!">
+    
+    <style>
+        :root { --primary: #4da6ff; --bg: #121212; --card: #1f1f1f; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 50px; }
+        header { background: var(--card); padding: 20px; text-align: center; border-bottom: 2px solid #333; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h1, h2 { color: var(--primary); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #333; border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { background: var(--primary); color: #121212; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; }
+        button:hover { background: #80bfff; }
+        .hidden { display: none; }
+        .status-badge { padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .deneme { background: #ffcc00; color: black; }
+        .asıl-uye { background: #00ff88; color: black; }
+        .admin-box { border: 2px solid red; margin-top: 20px; }
+        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #444; }
+        .discord-btn { background: #7289da; color: white; display: block; text-align: center; text-decoration: none; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>STURGIA CLAN</h1>
+    <div id="user-info">Yükleniyor...</div>
+</header>
+
+<div class="container">
+    <div id="auth-area" class="card">
+        <h2 id="auth-title">Klan Girişi / Başvuru</h2>
+        <input type="text" id="nick" placeholder="Nickname (Takma Ad)">
+        <input type="password" id="pass" placeholder="Şifre">
+        <button onclick="handleAuth()">Giriş Yap / Kayıt Ol</button>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">*Eğer isminiz kayıtlı değilse sistem sizi otomatik "Deneme Üye" olarak kaydeder.</p>
+    </div>
+
+    <div id="member-area" class="card hidden">
+        <h2>Klan Merkezi</h2>
+        <p id="welcome-text"></p>
+        <p>Rolün: <span id="role-badge" class="status-badge"></span></p>
+        
+        <div id="exclusive-content" class="hidden">
+            <hr>
+            <h3>Klan Duyuruları & Chat</h3>
+            <p>Tebrikler! Asıl üye olduğun için bu alanı görebiliyorsun.</p>
+            <a href="BURAYA_DISCORD_LINKI" class="discord-btn">Discord Sunucusuna Katıl</a>
+        </div>
+        <button onclick="logout()" style="background: #ff4d4d; margin-top: 20px;">Çıkış Yap</button>
+    </div>
+
+    <div id="admin-area" class="card admin-box hidden">
+        <h2>Klan Yönetimi (Admin)</h2>
+        <div id="pending-users">Onay bekleyen üye yok.</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
+      authDomain: "sturgia-clan.firebaseapp.com",
+      projectId: "sturgia-clan",
+      storageBucket: "sturgia-clan.firebasestorage.app",
+      messagingSenderId: "257587521790",
+      appId: "1:257587521790:web:59b1a1b38029d1564dddaf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // GİRİŞ VE KAYIT MANTIĞI
+    window.handleAuth = async () => {
+        const nick = document.getElementById('nick').value.toLowerCase();
+        const pass = document.getElementById('pass').value;
+        const fakeEmail = `${nick}@sturgia.com`;
+
+        if(nick.length < 3 || pass.length < 6) { alert("Nickname en az 3, şifre en az 6 karakter olmalı!"); return; }
+
+        try {
+            // Önce giriş yapmayı dene
+            await signInWithEmailAndPassword(auth, fakeEmail, pass);
+        } catch (error) {
+            // Giriş başarısızsa yeni kayıt oluştur
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
+                const user = userCredential.user;
+                
+                // Firestore'a Deneme Üye olarak kaydet
+                await setDoc(doc(db, "users", user.uid), {
+                    nickname: nick,
+                    role: "deneme_uye",
+                    uid: user.uid
+                });
+                alert("Başarıyla kayıt oldun! Admin onayı bekleniyor.");
+            } catch (regError) {
+                alert("Hata: " + regError.message);
+            }
+        }
+    };
+
+    // KULLANICI DURUMU TAKİBİ
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            document.getElementById('auth-area').classList.add('hidden');
+            document.getElementById('member-area').classList.remove('hidden');
+            
+            const userRef = doc(db, "users", user.uid);
+            const snap = await getDoc(userRef);
+            const data = snap.data();
+
+            document.getElementById('welcome-text').innerText = `Selam, ${data.nickname.toUpperCase()}!`;
+            const badge = document.getElementById('role-badge');
+            badge.innerText = data.role === "admin" ? "KURUCU" : (data.role === "uye" ? "ASIL ÜYE" : "DENEME ÜYESİ");
+            badge.className = `status-badge ${data.role === "uye" ? 'asıl-uye' : (data.role === "admin" ? 'asıl-uye' : 'deneme')}`;
+
+            if(data.role === "uye" || data.role === "admin") {
+                document.getElementById('exclusive-content').classList.remove('hidden');
+            }
+
+            if(data.role === "admin") {
+                loadAdminPanel();
+            }
+        } else {
+            document.getElementById('auth-area').classList.remove('hidden');
+            document.getElementById('member-area').classList.add('hidden');
+            document.getElementById('admin-area').classList.add('hidden');
+            document.getElementById('user-info').innerText = "Giriş yapmanız bekleniyor...";
+        }
+    });
+
+    // ADMIN PANELİ FONKSİYONU
+    async function loadAdminPanel() {
+        document.getElementById('admin-area').classList.remove('hidden');
+        const q = query(collection(db, "users"), where("role", "==", "deneme_uye"));
+        const querySnapshot = await getDocs(q);
+        const listDiv = document.getElementById('pending-users');
+        listDiv.innerHTML = "";
+
+        querySnapshot.forEach((uDoc) => {
+            const uData = uDoc.data();
+            listDiv.innerHTML += `
+                <div class="user-item">
+                    <span>${uData.nickname}</span>
+                    <button onclick="approveUser('${uDoc.id}')" style="width:auto; padding:5px 10px;">Onayla</button>
+                </div>
+            `;
+        });
+    }
+
+    window.approveUser = async (uid) => {
+        await updateDoc(doc(db, "users", uid), { role: "uye" });
+        alert("Üye onaylandı! Sayfayı yenileyin.");
+        loadAdminPanel();
+    };
+
+    window.logout = () => signOut(auth);
+</script>
+
+</body>
+</html>
