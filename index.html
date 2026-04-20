@@ -3,169 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sturgia Clan | Resmi Web Sitesi</title>
-    <meta name="description" content="Sturgia Clan - Minecraft ve Valorant Topluluğu. Savaş başlasın!">
-    
+    <title>Sturgia Clan | Northern Kings</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #4da6ff; --bg: #121212; --card: #1f1f1f; --text: #e0e0e0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 50px; }
-        header { background: var(--card); padding: 20px; text-align: center; border-bottom: 2px solid #333; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        h1, h2 { color: var(--primary); }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #333; border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; }
-        button { background: var(--primary); color: #121212; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; }
-        button:hover { background: #80bfff; }
-        .hidden { display: none; }
-        .status-badge { padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-        .deneme { background: #ffcc00; color: black; }
-        .asıl-uye { background: #00ff88; color: black; }
-        .admin-box { border: 2px solid red; margin-top: 20px; }
-        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #444; }
-        .discord-btn { background: #7289da; color: white; display: block; text-align: center; text-decoration: none; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        :root {
+            --sturgia-blue: #1a3a5a;
+            --sturgia-silver: #d1d8e0;
+            --bg-dark: #05070a;
+            --card-bg: rgba(15, 20, 30, 0.95);
+            --accent: #3498db;
+            --border: rgba(52, 152, 219, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body {
+            background: var(--bg-dark);
+            color: var(--sturgia-silver);
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.8), var(--bg-dark)), url('https://images.alphacoders.com/100/1005370.jpg');
+            background-attachment: fixed; background-size: cover;
+        }
+
+        /* NAV */
+        nav {
+            background: rgba(5, 7, 10, 0.9); padding: 12px 0; border-bottom: 2px solid var(--sturgia-blue);
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+        }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-links a { color: white; text-decoration: none; margin-right: 20px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* HERO */
+        .hero { height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero img { width: 160px; filter: drop-shadow(0 0 20px var(--accent)); margin-bottom: 10px; }
+        .hero h1 { font-family: 'Montserrat', sans-serif; font-size: 3.5rem; letter-spacing: 8px; color: white; }
+
+        /* GRID */
+        .wrapper { max-width: 1200px; margin: -30px auto 50px; display: grid; grid-template-columns: 1fr 320px; gap: 20px; padding: 0 20px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
+        .card-header { font-size: 1.3rem; font-weight: 700; margin-bottom: 15px; color: white; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+
+        /* BUTTONS */
+        .btn { padding: 8px 18px; border: none; border-radius: 3px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-blue { background: var(--accent); color: white; }
+        .btn-outline { background: transparent; color: white; border: 1px solid var(--accent) !important; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: #0f141e; padding: 30px; width: 360px; border-top: 4px solid var(--accent); position: relative; }
+        .modal-content input { width: 100%; padding: 12px; margin: 10px 0; background: #05070a; border: 1px solid var(--border); color: white; }
+
+        #admin-panel { border-color: #e74c3c; display: none; }
+        #admin-panel::before { background: #e74c3c; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>STURGIA CLAN</h1>
-    <div id="user-info">Yükleniyor...</div>
-</header>
-
-<div class="container">
-    <div id="auth-area" class="card">
-        <h2 id="auth-title">Klan Girişi / Başvuru</h2>
-        <input type="text" id="nick" placeholder="Nickname (Takma Ad)">
-        <input type="password" id="pass" placeholder="Şifre">
-        <button onclick="handleAuth()">Giriş Yap / Kayıt Ol</button>
-        <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">*Eğer isminiz kayıtlı değilse sistem sizi otomatik "Deneme Üye" olarak kaydeder.</p>
-    </div>
-
-    <div id="member-area" class="card hidden">
-        <h2>Klan Merkezi</h2>
-        <p id="welcome-text"></p>
-        <p>Rolün: <span id="role-badge" class="status-badge"></span></p>
-        
-        <div id="exclusive-content" class="hidden">
-            <hr>
-            <h3>Klan Duyuruları & Chat</h3>
-            <p>Tebrikler! Asıl üye olduğun için bu alanı görebiliyorsun.</p>
-            <a href="https://discord.gg/F6XNnkwD6E" class="discord-btn">Discord Sunucusuna Katıl</a>
+<nav>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="#"><i class="fa fa-home"></i> Anasayfa</a>
+            <a href="#"><i class="fa fa-shield-alt"></i> Kurallar</a>
         </div>
-        <button onclick="logout()" style="background: #ff4d4d; margin-top: 20px;">Çıkış Yap</button>
+        <div id="auth-ui">
+            <button class="btn btn-outline" onclick="openModal('login')">Giriş</button>
+            <button class="btn btn-blue" style="margin-left:5px" onclick="openModal('reg')">Kayıt</button>
+        </div>
+        <div id="user-ui" style="display:none">
+            <span id="u-display" style="cursor:pointer; font-weight:bold; color:var(--accent)" onclick="openPassModal()"><i class="fa fa-user-circle"></i> Kullanıcı</span>
+            <button class="btn btn-outline" onclick="logout()" style="margin-left:10px; padding:4px 10px">Çıkış</button>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">
+    <img src="https://static.wikia.nocookie.net/mountandblade/images/6/6e/Bannerlord_Sturgia_Banner.png" alt="Sturgia Logo">
+    <h1>STURGIA CLAN</h1>
+</div>
+
+<div class="wrapper">
+    <div class="content">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-newspaper"></i> Klan Duyuruları</div>
+            <p>Sturgia Krallığı'nın yeni merkezi açıldı. Kayıt olan herkesin <b>Admin Onayı</b> alması şarttır. Kuzeyin gücünü herkese gösterelim!</p>
+        </div>
+
+        <div id="admin-panel" class="card">
+            <div class="card-header" style="color:#e74c3c"><i class="fa fa-user-check"></i> Onay Bekleyenler</div>
+            <div id="pending-list"></div>
+        </div>
     </div>
 
-    <div id="admin-area" class="card admin-box hidden">
-        <h2>Klan Yönetimi (Admin)</h2>
-        <div id="pending-users">Onay bekleyen üye yok.</div>
+    <div class="sidebar">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-info-circle"></i> İstatistik</div>
+            <p>Lider: <b>Murad</b></p>
+            <p>Üye Sayısı: <b id="member-count">0</b></p>
+        </div>
+        <div class="card" style="background:rgba(88,101,242,0.1); border-color:#5865F2">
+            <div class="card-header" style="color:#5865F2"><i class="fab fa-discord"></i> Topluluk</div>
+            <button class="btn" style="width:100%; background:#5865F2; color:white">SUNUCUYA KATIL</button>
+        </div>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h2 id="m-title">GİRİŞ</h2>
+        <input type="text" id="m-nick" placeholder="Nickname">
+        <input type="password" id="m-pass" placeholder="Şifre">
+        <label style="font-size:0.8rem; display:block; margin-bottom:10px">
+            <input type="checkbox" id="m-rem"> Beni Hatırla
+        </label>
+        <button class="btn btn-blue" id="m-btn" style="width:100%">TAMAMLA</button>
+        <p onclick="closeAll()" style="text-align:center; margin-top:15px; cursor:pointer; color:gray">Kapat</p>
+    </div>
+</div>
 
+<div id="passModal" class="modal">
+    <div class="modal-content">
+        <h2>ŞİFRE DEĞİŞTİR</h2>
+        <p id="p-user" style="font-size:0.8rem; color:var(--accent)"></p>
+        <input type="password" id="new-pass" placeholder="Yeni Şifre">
+        <button class="btn btn-blue" onclick="changePassword()" style="width:100%">GÜNCELLE</button>
+        <p onclick="closeAll()" style="text-align:center; margin-top:15px; cursor:pointer; color:gray">Vazgeç</p>
+    </div>
+</div>
+
+<script>
+    // BURAYI KENDİ FIREBASE BİLGİLERİNLE DOLDUR
     const firebaseConfig = {
-      apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
-      authDomain: "sturgia-clan.firebaseapp.com",
-      projectId: "sturgia-clan",
-      storageBucket: "sturgia-clan.firebasestorage.app",
-      messagingSenderId: "257587521790",
-      appId: "1:257587521790:web:59b1a1b38029d1564dddaf"
+        apiKey: "AIzaSy...", 
+        authDomain: "sturgia-clan.firebaseapp.com",
+        projectId: "sturgia-clan",
+        storageBucket: "sturgia-clan.appspot.com",
+        messagingSenderId: "...",
+        appId: "..."
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let userDocId = null; 
+
+    window.onload = () => {
+        const saved = localStorage.getItem('sturgiaAuth');
+        if(saved) {
+            const data = JSON.parse(saved);
+            loginStep(data.nick, data.role, data.id);
+        }
+        updateMemberCount();
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    function openModal(mode) {
+        document.getElementById('m-title').innerText = mode === 'login' ? 'GİRİŞ YAP' : 'KAYIT OL';
+        document.getElementById('m-btn').onclick = () => mode === 'login' ? doLogin() : doReg();
+        document.getElementById('authModal').style.display = 'flex';
+    }
 
-    // GİRİŞ VE KAYIT MANTIĞI
-    window.handleAuth = async () => {
-        const nick = document.getElementById('nick').value.toLowerCase();
-        const pass = document.getElementById('pass').value;
-        const fakeEmail = `${nick}@sturgia.com`;
+    function openPassModal() {
+        document.getElementById('p-user').innerText = "Kullanıcı: " + document.getElementById('u-display').innerText;
+        document.getElementById('passModal').style.display = 'flex';
+    }
 
-        if(nick.length < 3 || pass.length < 6) { alert("Nickname en az 3, şifre en az 6 karakter olmalı!"); return; }
+    function closeAll() {
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    }
 
-        try {
-            // Önce giriş yapmayı dene
-            await signInWithEmailAndPassword(auth, fakeEmail, pass);
-        } catch (error) {
-            // Giriş başarısızsa yeni kayıt oluştur
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
-                const user = userCredential.user;
-                
-                // Firestore'a Deneme Üye olarak kaydet
-                await setDoc(doc(db, "users", user.uid), {
-                    nickname: nick,
-                    role: "deneme_uye",
-                    uid: user.uid
-                });
-                alert("Başarıyla kayıt oldun! Admin onayı bekleniyor.");
-            } catch (regError) {
-                alert("Hata: " + regError.message);
-            }
+    async function doReg() {
+        const n = document.getElementById('m-nick').value;
+        const p = document.getElementById('m-pass').value;
+        if(!n || !p) return alert("Eksik bilgi!");
+        await db.collection("users").add({ nick: n, pass: p, role: 'deneme_uye' });
+        alert("Kayıt başarılı! Onay bekleniyor.");
+        closeAll();
+    }
+
+    async function doLogin() {
+        const n = document.getElementById('m-nick').value;
+        const p = document.getElementById('m-pass').value;
+        const rem = document.getElementById('m-rem').checked;
+        const snap = await db.collection("users").where("nick", "==", n).where("pass", "==", p).get();
+        
+        if(snap.empty) return alert("Hatalı kullanıcı veya şifre!");
+        
+        const doc = snap.docs[0];
+        const user = doc.data();
+        if(rem) localStorage.setItem('sturgiaAuth', JSON.stringify({nick: user.nick, role: user.role, id: doc.id}));
+        loginStep(user.nick, user.role, doc.id);
+        closeAll();
+    }
+
+    function loginStep(nick, role, id) {
+        userDocId = id;
+        document.getElementById('auth-ui').style.display = 'none';
+        document.getElementById('user-ui').style.display = 'block';
+        document.getElementById('u-display').innerText = nick;
+        if(role === 'admin') {
+            document.getElementById('admin-panel').style.display = 'block';
+            loadPending();
         }
-    };
+    }
 
-    // KULLANICI DURUMU TAKİBİ
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            document.getElementById('auth-area').classList.add('hidden');
-            document.getElementById('member-area').classList.remove('hidden');
-            
-            const userRef = doc(db, "users", user.uid);
-            const snap = await getDoc(userRef);
-            const data = snap.data();
+    async function changePassword() {
+        const newP = document.getElementById('new-pass').value;
+        if(!newP || !userDocId) return alert("Yeni şifre girin!");
+        await db.collection("users").doc(userDocId).update({ pass: newP });
+        alert("Şifren başarıyla güncellendi!");
+        closeAll();
+    }
 
-            document.getElementById('welcome-text').innerText = `Selam, ${data.nickname.toUpperCase()}!`;
-            const badge = document.getElementById('role-badge');
-            badge.innerText = data.role === "admin" ? "KURUCU" : (data.role === "uye" ? "ASIL ÜYE" : "DENEME ÜYESİ");
-            badge.className = `status-badge ${data.role === "uye" ? 'asıl-uye' : (data.role === "admin" ? 'asıl-uye' : 'deneme')}`;
+    function logout() { localStorage.removeItem('sturgiaAuth'); location.reload(); }
 
-            if(data.role === "uye" || data.role === "admin") {
-                document.getElementById('exclusive-content').classList.remove('hidden');
-            }
-
-            if(data.role === "admin") {
-                loadAdminPanel();
-            }
-        } else {
-            document.getElementById('auth-area').classList.remove('hidden');
-            document.getElementById('member-area').classList.add('hidden');
-            document.getElementById('admin-area').classList.add('hidden');
-            document.getElementById('user-info').innerText = "Giriş yapmanız bekleniyor...";
-        }
-    });
-
-    // ADMIN PANELİ FONKSİYONU
-    async function loadAdminPanel() {
-        document.getElementById('admin-area').classList.remove('hidden');
-        const q = query(collection(db, "users"), where("role", "==", "deneme_uye"));
-        const querySnapshot = await getDocs(q);
-        const listDiv = document.getElementById('pending-users');
-        listDiv.innerHTML = "";
-
-        querySnapshot.forEach((uDoc) => {
-            const uData = uDoc.data();
-            listDiv.innerHTML += `
-                <div class="user-item">
-                    <span>${uData.nickname}</span>
-                    <button onclick="approveUser('${uDoc.id}')" style="width:auto; padding:5px 10px;">Onayla</button>
-                </div>
-            `;
+    async function loadPending() {
+        const list = document.getElementById('pending-list');
+        const snap = await db.collection("users").where("role", "==", "deneme_uye").get();
+        list.innerHTML = "";
+        snap.forEach(doc => {
+            list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; background:rgba(255,255,255,0.05); margin-bottom:5px">
+                <span>${doc.data().nick}</span>
+                <button class="btn btn-blue" onclick="approve('${doc.id}')" style="padding:2px 10px; font-size:12px">ONAYLA</button>
+            </div>`;
         });
     }
 
-    window.approveUser = async (uid) => {
-        await updateDoc(doc(db, "users", uid), { role: "uye" });
-        alert("Üye onaylandı! Sayfayı yenileyin.");
-        loadAdminPanel();
-    };
+    async function approve(id) {
+        await db.collection("users").doc(id).update({role:'uye'});
+        alert("Onaylandı!");
+        loadPending();
+        updateMemberCount();
+    }
 
-    window.logout = () => signOut(auth);
+    async function updateMemberCount() {
+        const snap = await db.collection("users").get();
+        document.getElementById('member-count').innerText = snap.size;
+    }
 </script>
-
 </body>
 </html>
