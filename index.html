@@ -3,214 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sturgia | Northern Kings</title>
+    <title>Sturgia Elite | Dashboard</title>
     
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --accent: #3498db; --bg: #05070a; --glass: rgba(13, 17, 23, 0.95); --border: rgba(255, 255, 255, 0.08); --text: #e6edf3; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-        
-        /* Arkaplan */
-        .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% -20%, rgba(52,152,219,0.1), transparent), url('https://images.alphacoders.com/100/1005370.jpg'); background-size: cover; background-position: center; z-index: -1; opacity: 0.4; }
-
-        /* Navigasyon */
-        nav { background: var(--glass); height: 70px; display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .nav-inner { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        .nav-links a { color: #8b949e; text-decoration: none; margin-right: 25px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
-        .nav-links a:hover { color: var(--accent); }
-
-        /* Hero & Logo */
-        .hero { padding: 60px 20px; text-align: center; }
-        .hero img { width: 160px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(52,152,219,0.3)); }
-        .hero h1 { font-family: 'Space Grotesk'; font-size: 3rem; letter-spacing: 4px; color: #fff; }
-
-        /* Main Layout */
-        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 300px; gap: 30px; padding: 20px; }
-        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
-        .card-title { font-family: 'Space Grotesk'; font-size: 1rem; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
-        .card-title::before { content: ''; width: 3px; height: 15px; background: var(--accent); }
-
-        /* User List Items */
-        .user-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; transition: 0.2s; }
-        .user-row:hover { border-color: var(--accent); background: rgba(52,152,219,0.05); }
-        .role-badge { font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; border: 1px solid currentColor; }
-
-        /* Modals */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #0d1117; padding: 40px; border-radius: 16px; border: 1px solid var(--border); width: 100%; max-width: 400px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; }
-        .btn { width: 100%; padding: 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; background: var(--accent); color: #fff; transition: 0.3s; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        .tab-content { display: none; }
-        .active-tab { display: block; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .accent-gradient { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body>
-    <div class="bg-overlay"></div>
-    <nav>
-        <div class="nav-inner">
-            <div class="nav-links">
-                <a onclick="switchTab('home')">ANASAYFA</a>
-                <a onclick="switchTab('list')">SAVAŞÇILAR</a>
+<body class="min-h-screen custom-scroll">
+
+    <nav class="sticky top-0 z-50 glass border-b border-slate-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="https://i.ibb.co/L8p6M5t/sturgia-logo-fix.png" class="w-10 h-10 object-contain" alt="Logo">
+                <span class="text-xl font-extrabold tracking-tighter">STURGIA</span>
             </div>
-            <div id="auth-section">
-                <button onclick="toggleModal('login', true)" style="background:transparent; color:var(--accent); border:1px solid var(--accent); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:700;">GİRİŞ</button>
-            </div>
-            <div id="user-section" style="display:none;">
-                <span id="user-name" style="color:var(--accent); font-weight:700; margin-right:15px; cursor:pointer;" onclick="toggleModal('pw', true)"></span>
-                <button onclick="logout()" style="color:#f85149; background:transparent; border:none; cursor:pointer; font-weight:700;">ÇIKIŞ</button>
+            <div class="flex items-center gap-6">
+                <button onclick="showPage('home')" class="hover:text-blue-400 transition font-medium">Anasayfa</button>
+                <button onclick="showPage('warriors')" class="hover:text-blue-400 transition font-medium text-slate-400">Savaşçılar</button>
+                <div id="auth-ui">
+                    <button onclick="openModal('auth')" class="accent-gradient px-5 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-500/20">Giriş Yap</button>
+                </div>
+                <div id="user-ui" class="hidden flex items-center gap-4">
+                    <span id="nav-username" class="text-blue-400 font-bold border-r border-slate-700 pr-4"></span>
+                    <button onclick="logout()" class="text-red-400 text-sm hover:underline">Çıkış</button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="hero">
-        <img src="https://i.ibb.co/L8p6M5t/sturgia-logo-fix.png" alt="Sturgia Logo">
-        <h1>STURGIA</h1>
-        <p style="color:#8b949e; letter-spacing:3px; font-size:0.75rem; margin-top:10px;">KUZEYİN SOĞUK NEFESİ</p>
-    </div>
-
-    <div class="container">
-        <div class="main-side">
-            <div id="tab-home" class="tab-content active-tab">
-                <div class="card">
-                    <div class="card-title">Klan Duyurusu</div>
-                    <p style="color:#8b949e; line-height:1.6;">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyin sert topraklarında hep beraber savaşıyoruz.</p>
+    <main class="max-w-7xl mx-auto p-6 mt-8">
+        
+        <div id="page-home" class="page-content grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass p-10 rounded-3xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl"></div>
+                    <h1 class="text-4xl font-extrabold mb-4 italic">Kuzeyin Soğuk Nefesi</h1>
+                    <p class="text-slate-400 leading-relaxed">
+                        Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyin sert topraklarında omuz omuza savaşıyoruz. Hoş geldin savaşçı.
+                    </p>
                 </div>
-                <div id="admin-tools" class="card" style="display:none;">
-                    <div class="card-title" style="color:#70a1ff;">Yönetim Paneli</div>
-                    <div id="admin-user-list"></div>
-                </div>
-            </div>
-            <div id="tab-list" class="tab-content">
-                <div class="card">
-                    <div class="card-title">Aktif Savaşçılar</div>
-                    <div id="main-user-list"></div>
+                
+                <div id="admin-panel" class="hidden glass p-8 rounded-3xl border-blue-500/30">
+                    <h3 class="text-blue-400 font-bold mb-4 flex items-center gap-2">🛡️ Yönetim Merkezi</h3>
+                    <div id="admin-list" class="space-y-3"></div>
                 </div>
             </div>
-        </div>
-        <div class="sidebar">
-            <div class="card" style="text-align:center;">
-                <div class="card-title" style="justify-content:center; border:none;">ORDU GÜCÜ</div>
-                <div id="army-count" style="font-size:3.5rem; font-family:'Space Grotesk';">0</div>
+            
+            <div class="space-y-6">
+                <div class="glass p-8 rounded-3xl text-center">
+                    <h4 class="text-slate-400 text-sm font-bold uppercase mb-2">Ordu Gücü</h4>
+                    <div id="army-count" class="text-6xl font-black text-white">0</div>
+                    <p class="text-slate-500 mt-2 text-xs">Aktif Savaşçı</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="login-modal" class="modal">
-        <div class="modal-box">
-            <h2 style="margin-bottom:20px;">Klan Girişi</h2>
-            <input type="text" id="log-nick" placeholder="Savaşçı Adı">
-            <input type="password" id="log-pass" placeholder="Şifre">
-            <label style="font-size:0.8rem; color:#8b949e;"><input type="checkbox" id="log-rem"> Beni Hatırla</label>
-            <button class="btn" style="margin-top:20px;" onclick="handleAuth()">DEVAM ET</button>
-            <p onclick="toggleModal('login', false)" style="text-align:center; margin-top:15px; font-size:0.8rem; cursor:pointer; color:gray;">Kapat</p>
+        <div id="page-warriors" class="page-content hidden">
+            <div class="glass p-8 rounded-3xl">
+                <h2 class="text-2xl font-bold mb-8 italic">Aktif Savaşçılar</h2>
+                <div id="warriors-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-auth" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+        <div class="glass max-w-md w-full p-10 rounded-[40px] shadow-2xl">
+            <h2 class="text-3xl font-black mb-8">Klan Girişi</h2>
+            <div class="space-y-4">
+                <input type="text" id="auth-nick" placeholder="Savaşçı Adı" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
+                <input type="password" id="auth-pass" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none focus:border-blue-500 transition">
+                <div class="flex items-center gap-3 px-2">
+                    <input type="checkbox" id="auth-remember" class="w-4 h-4 rounded border-slate-700 bg-slate-900">
+                    <label for="auth-remember" class="text-sm text-slate-400">Beni Hatırla</label>
+                </div>
+                <button onclick="handleAuth()" class="w-full accent-gradient py-4 rounded-2xl font-black text-lg mt-4 shadow-lg shadow-blue-500/30">Devam Et</button>
+            </div>
+            <button onclick="closeModal('auth')" class="w-full text-slate-500 text-sm mt-6 hover:text-slate-300">Kapat</button>
         </div>
     </div>
 
-    <div id="pw-modal" class="modal">
-        <div class="modal-box">
-            <h2 style="margin-bottom:20px;">Şifre Değiştir</h2>
-            <input type="password" id="new-pw" placeholder="Yeni Şifre">
-            <button class="btn" onclick="updatePassword()">GÜNCELLE</button>
-            <p onclick="toggleModal('pw', false)" style="text-align:center; margin-top:15px; font-size:0.8rem; cursor:pointer; color:gray;">İptal</p>
-        </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, onSnapshot, addDoc, getDocs, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
-        // FIREBASE CONFIG - Burayı kendi bilgilerinle doldur kanka!
-        const firebaseConfig = { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let me = null;
-        const roles = {
-            'admin': { n: '</> Yönetici', c: '#70a1ff' },
-            'westra': { n: 'Westra / Abak 🌊', c: '#54a0ff' },
-            'rehber_plus': { n: 'Sturgiyalı Rehber+', c: '#000080' },
-            'ally': { n: 'Ally', c: '#ff00ff' },
-            '216': { n: '216', c: '#74b9ff' },
-            'asistan': { n: 'Sturgiyalı Asistan', c: '#8e44ad' },
-            'rehber': { n: 'Sturgiyalı Rehber', c: '#27ae60' },
-            'buyuk': { n: 'Büyük Sturgiyalı', c: '#c0392b' },
-            'onemli': { n: 'Önemli Sturgiyalı', c: '#8e44ad' },
-            'sturgiyali': { n: 'Sturgiyalı', c: '#3498db' }
+        // Senin Gönderdiğin Firebase Bilgileri
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
+            authDomain: "sturgia-clan.firebaseapp.com",
+            projectId: "sturgia-clan",
+            storageBucket: "sturgia-clan.firebasestorage.app",
+            messagingSenderId: "257587521790",
+            appId: "1:257587521790:web:59b1a1b38029d1564dddaf"
         };
 
-        // CANLI VERİ TAKİBİ (Snapshot) - Liste asla silinmez
-        db.collection("users").onSnapshot(snap => {
-            const list = document.getElementById('main-user-list');
-            const admList = document.getElementById('admin-user-list');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentUser = JSON.parse(localStorage.getItem('sturgia_final_user')) || null;
+
+        const roles = {
+            'admin': { n: '</> Yönetici', c: 'bg-blue-500 shadow-blue-500/40' },
+            'westra': { n: 'Westra / Abak 🌊', c: 'bg-cyan-500 shadow-cyan-500/40' },
+            'rehber_plus': { n: 'Rehber+', c: 'bg-indigo-600 shadow-indigo-600/40' },
+            'ally': { n: 'Ally', c: 'bg-pink-500 shadow-pink-500/40' },
+            '216': { n: '216', c: 'bg-sky-400 shadow-sky-400/40' },
+            'asistan': { n: 'Asistan', c: 'bg-purple-600 shadow-purple-600/40' },
+            'rehber': { n: 'Rehber', c: 'bg-emerald-600 shadow-emerald-600/40' },
+            'buyuk': { n: 'Büyük Sturgiyalı', c: 'bg-red-600 shadow-red-600/40' },
+            'onemli': { n: 'Önemli Sturgiyalı', c: 'bg-violet-600 shadow-violet-600/40' },
+            'sturgiyali': { n: 'Sturgiyalı', c: 'bg-slate-600 shadow-slate-600/40' }
+        };
+
+        // Realtime Veri Akışı
+        onSnapshot(collection(db, "users"), (snap) => {
+            const list = document.getElementById('warriors-list');
+            const admList = document.getElementById('admin-list');
             const count = document.getElementById('army-count');
             
             list.innerHTML = "";
-            if(admList) admList.innerHTML = "";
+            admList.innerHTML = "";
             count.innerText = snap.size;
 
-            snap.forEach(doc => {
-                const u = doc.data();
+            snap.forEach(docSnap => {
+                const u = docSnap.data();
                 const r = roles[u.role] || roles['sturgiyali'];
                 
-                // Normal Liste
-                list.innerHTML += `<div class="user-row"><strong>${u.nick}</strong><span class="role-badge" style="color:${r.c}">${r.n}</span></div>`;
+                list.innerHTML += `
+                    <div class="glass p-5 rounded-2xl flex justify-between items-center border-l-4 border-l-${u.role === 'admin' ? 'blue' : 'slate'}-500">
+                        <span class="font-bold text-slate-200">${u.nick}</span>
+                        <span class="${r.c} text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter shadow-sm text-white">${r.n}</span>
+                    </div>`;
                 
-                // Admin Paneli (Sadece adminlere özel)
-                if(me && me.role === 'admin' && admList) {
-                    admList.innerHTML += `<div class="user-row"><span>${u.nick}</span><select onchange="setRole('${doc.id}', this.value)" style="background:#000; color:#fff; border:1px solid #333;">${Object.keys(roles).map(k => `<option value="${k}" ${u.role===k?'selected':''}>${roles[k].n}</option>`).join('')}</select></div>`;
+                if(currentUser?.role === 'admin') {
+                    admList.innerHTML += `
+                        <div class="flex justify-between items-center bg-slate-900/40 p-4 rounded-xl border border-slate-800">
+                            <span class="text-sm font-bold text-slate-300">${u.nick}</span>
+                            <select onchange="updateUserRole('${docSnap.id}', this.value)" class="bg-black text-xs p-1.5 rounded border border-slate-700 outline-none focus:border-blue-500">
+                                ${Object.keys(roles).map(k => `<option value="${k}" ${u.role === k ? 'selected' : ''}>${roles[k].n}</option>`).join('')}
+                            </select>
+                        </div>`;
                 }
             });
         });
 
-        async function handleAuth() {
-            const n = document.getElementById('log-nick').value, p = document.getElementById('log-pass').value, rem = document.getElementById('log-rem').checked;
-            if(!n || !p) return;
-            const snap = await db.collection("users").where("nick", "==", n).where("pass", "==", p).get();
-            
-            let userObj;
+        window.handleAuth = async () => {
+            const nick = document.getElementById('auth-nick').value;
+            const pass = document.getElementById('auth-pass').value;
+            const rem = document.getElementById('auth-remember').checked;
+
+            if(!nick || !pass) return alert("Bilgileri gir kanka!");
+
+            const q = query(collection(db, "users"), where("nick", "==", nick), where("pass", "==", pass));
+            const snap = await getDocs(q);
+
+            let user;
             if(snap.empty) {
-                const doc = await db.collection("users").add({ nick: n, pass: p, role: 'sturgiyali' });
-                userObj = { id: doc.id, nick: n, role: 'sturgiyali' };
+                const newDoc = await addDoc(collection(db, "users"), { nick, pass, role: 'sturgiyali' });
+                user = { id: newDoc.id, nick, role: 'sturgiyali' };
             } else {
                 const d = snap.docs[0];
-                userObj = { id: d.id, nick: d.data().nick, role: d.data().role };
+                user = { id: d.id, ...d.data() };
             }
 
-            if(rem) localStorage.setItem('sturgia_user', JSON.stringify(userObj));
-            applyLogin(userObj);
-            toggleModal('login', false);
-        }
-
-        function applyLogin(user) {
-            me = user;
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('user-section').style.display = 'flex';
-            document.getElementById('user-name').innerText = user.nick;
-            if(user.role === 'admin') document.getElementById('admin-tools').style.display = 'block';
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem('sturgia_user');
-            if(saved) applyLogin(JSON.parse(saved));
+            if(rem) localStorage.setItem('sturgia_final_user', JSON.stringify(user));
+            login(user);
+            closeModal('auth');
         };
 
-        async function updatePassword() {
-            const np = document.getElementById('new-pw').value;
-            if(!np || !me) return;
-            await db.collection("users").doc(me.id).update({ pass: np });
-            alert("Şifre güncellendi!");
-            toggleModal('pw', false);
+        window.updateUserRole = async (id, newRole) => {
+            await updateDoc(doc(db, "users", id), { role: newRole });
+        };
+
+        function login(user) {
+            currentUser = user;
+            document.getElementById('auth-ui').classList.add('hidden');
+            document.getElementById('user-ui').classList.remove('hidden');
+            document.getElementById('nav-username').innerText = user.nick;
+            if(user.role === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
         }
 
-        async function setRole(id, role) { await db.collection("users").doc(id).update({ role }); }
-        function switchTab(t) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab')); document.getElementById('tab-'+t).classList.add('active-tab'); }
-        function toggleModal(m, show) { document.getElementById(m+'-modal').style.display = show ? 'flex' : 'none'; }
-        function logout() { localStorage.removeItem('sturgia_user'); location.reload(); }
+        if(currentUser) login(currentUser);
+
+        window.logout = () => { localStorage.removeItem('sturgia_final_user'); location.reload(); };
+        window.showPage = (p) => { 
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('page-' + p).classList.remove('hidden');
+        };
+        window.openModal = (m) => document.getElementById('modal-' + m).classList.replace('hidden', 'flex');
+        window.closeModal = (m) => document.getElementById('modal-' + m).classList.replace('flex', 'hidden');
     </script>
 </body>
 </html>
