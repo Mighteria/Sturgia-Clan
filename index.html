@@ -2,98 +2,870 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sturgia Clan | Elite Dashboard</title>
-    
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <style>
-        :root { --sturgia-dark: #172b4d; --sturgia-blue: #5e72e4; }
-        body { background-color: #f8f9fe; font-family: 'Open Sans', sans-serif; }
-        .sidenav { background: var(--sturgia-dark) !important; }
-        .nav-link { color: rgba(255,255,255,.8) !important; font-weight: 600; }
-        .nav-link:hover, .nav-link.active { color: #fff !important; background: rgba(255,255,255,.1); border-radius: 8px; }
-        .main-content { margin-left: 250px; padding: 30px; }
-        .card { border: none; box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15); border-radius: 1rem; }
-        .sturgia-header { background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important; padding: 4rem 0; border-radius: 1rem; color: white; }
-        @media (max-width: 768px) { .main-content { margin-left: 0; } .sidenav { display: none; } }
+        :root {
+            --black: #050608;
+            --deep: #0b0d12;
+            --panel: #0f1118;
+            --card: #13161e;
+            --border: rgba(255,255,255,0.06);
+            --ice: #a8d8ea;
+            --frost: #c9e8f4;
+            --steel: #8096b0;
+            --gold: #c9a84c;
+            --gold-light: #e8c96a;
+            --red: #c0392b;
+            --text: #d4dce8;
+            --muted: #5a6a7e;
+            --sidebar-w: 270px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--black);
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── NOISE TEXTURE ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── SIDEBAR ─── */
+        .sidenav {
+            position: fixed;
+            left: 0; top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .sidenav::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 1px; height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--ice), var(--gold), transparent);
+            opacity: 0.15;
+        }
+
+        .clan-brand {
+            padding: 28px 24px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .clan-avatar-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 14px;
+        }
+
+        .clan-avatar-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: conic-gradient(var(--gold), var(--ice), var(--gold));
+            animation: spin 6s linear infinite;
+            z-index: -1;
+        }
+
+        .clan-avatar-wrap::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            background: var(--panel);
+            z-index: -1;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .clan-avatar {
+            width: 76px; height: 76px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            position: relative;
+        }
+
+        .clan-name {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: var(--gold-light);
+            text-transform: uppercase;
+        }
+
+        .clan-tagline {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .sidenav-menu {
+            flex: 1;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--steel) !important;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link i {
+            width: 16px;
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .nav-link:hover {
+            color: var(--frost) !important;
+            background: rgba(168, 216, 234, 0.06);
+            border-color: rgba(168, 216, 234, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--ice) !important;
+            background: rgba(168, 216, 234, 0.08);
+            border-color: rgba(168, 216, 234, 0.15);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 20%; bottom: 20%;
+            width: 2px;
+            background: var(--ice);
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 8px var(--ice);
+        }
+
+        .nav-link.admin-link {
+            color: var(--gold) !important;
+            border-color: rgba(201, 168, 76, 0.15);
+        }
+
+        .nav-link.admin-link:hover, .nav-link.admin-link.active {
+            color: var(--gold-light) !important;
+            background: rgba(201, 168, 76, 0.08);
+            border-color: rgba(201, 168, 76, 0.25);
+        }
+
+        .sidenav-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(168, 216, 234, 0.3);
+            border-radius: 8px;
+            color: var(--ice);
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(168,216,234,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-login:hover::before { opacity: 1; }
+        .btn-login:hover {
+            border-color: var(--ice);
+            box-shadow: 0 0 20px rgba(168,216,234,0.15), inset 0 0 20px rgba(168,216,234,0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 9px;
+            background: transparent;
+            border: 1px solid rgba(192, 57, 43, 0.4);
+            border-radius: 6px;
+            color: #e57373;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-logout:hover {
+            background: rgba(192, 57, 43, 0.12);
+            border-color: var(--red);
+        }
+
+        .user-nick {
+            display: block;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            color: var(--ice);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        /* ─── MAIN CONTENT ─── */
+        .main-content {
+            margin-left: var(--sidebar-w);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ─── HERO ─── */
+        .hero-section {
+            position: relative;
+            padding: 70px 48px 60px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(168,216,234,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 80% 50%, rgba(201,168,76,0.04) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(15,17,24,0.3) 0%, var(--black) 100%);
+        }
+
+        .hero-rune {
+            position: absolute;
+            font-size: 320px;
+            opacity: 0.018;
+            font-family: 'Cinzel', serif;
+            right: -20px;
+            top: -40px;
+            line-height: 1;
+            pointer-events: none;
+            color: var(--ice);
+            font-weight: 900;
+        }
+
+        .hero-subtitle {
+            font-size: 11px;
+            letter-spacing: 5px;
+            color: var(--ice);
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(28px, 4vw, 52px);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 14px;
+            text-shadow: 0 0 60px rgba(168,216,234,0.2);
+        }
+
+        .hero-title span {
+            color: var(--ice);
+        }
+
+        .hero-desc {
+            font-size: 15px;
+            color: var(--steel);
+            max-width: 480px;
+            letter-spacing: 0.3px;
+            line-height: 1.7;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, var(--gold), transparent);
+            margin: 24px 0;
+        }
+
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-block {
+            background: var(--black);
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+
+        .stat-block:hover { background: var(--panel); }
+
+        .stat-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--ice), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-block:hover::before { opacity: 0.3; }
+
+        .stat-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-family: 'Cinzel', serif;
+            font-size: 42px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .stat-block:hover .stat-value { color: var(--ice); }
+
+        .stat-icon {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            opacity: 0.05;
+        }
+
+        /* ─── PAGE SECTIONS ─── */
+        .page-body {
+            padding: 40px 48px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .section-rule {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--border), transparent);
+        }
+
+        /* ─── WARRIOR CARDS ─── */
+        .warrior-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warrior-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: var(--ice);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .warrior-card:hover {
+            border-color: rgba(168,216,234,0.15);
+            background: #161921;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .warrior-card:hover::before { opacity: 0.6; }
+
+        .warrior-name {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--frost);
+        }
+
+        .badge-rank {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .rank-admin { background: rgba(192,57,43,0.2); color: #e57373; border: 1px solid rgba(192,57,43,0.3); }
+        .rank-westra { background: rgba(168,216,234,0.1); color: var(--ice); border: 1px solid rgba(168,216,234,0.2); }
+        .rank-sturgiyali { background: rgba(128,150,176,0.1); color: var(--steel); border: 1px solid rgba(128,150,176,0.15); }
+
+        /* ─── SETTINGS ─── */
+        .settings-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 480px;
+        }
+
+        .settings-title {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .settings-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 32px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label-custom {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: rgba(168,216,234,0.3);
+            background: rgba(168,216,234,0.03);
+            box-shadow: 0 0 0 3px rgba(168,216,234,0.05);
+        }
+
+        .form-input::placeholder { color: var(--muted); }
+
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(168,216,234,0.12), rgba(168,216,234,0.06));
+            border: 1px solid rgba(168,216,234,0.25);
+            border-radius: 8px;
+            color: var(--ice);
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 24px;
+        }
+
+        .btn-action:hover {
+            background: linear-gradient(135deg, rgba(168,216,234,0.2), rgba(168,216,234,0.1));
+            border-color: rgba(168,216,234,0.4);
+            box-shadow: 0 0 24px rgba(168,216,234,0.12);
+            transform: translateY(-1px);
+        }
+
+        /* ─── ADMIN TABLE ─── */
+        .admin-table-wrap {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .admin-table-head {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead th {
+            padding: 12px 28px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 600;
+            background: rgba(255,255,255,0.01);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: background 0.15s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        tbody td {
+            padding: 14px 28px;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .form-select-dark {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-select-dark:focus { border-color: rgba(168,216,234,0.3); }
+        .form-select-dark option { background: #1a1d26; }
+
+        /* ─── MODAL ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: var(--panel);
+            border: 1px solid rgba(168,216,234,0.1);
+            border-radius: 16px;
+            padding: 48px 44px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03);
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.93) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 8px;
+        }
+
+        .modal-close:hover { color: var(--text); }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+        }
+
+        .modal-sub {
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 36px;
+        }
+
+        /* ─── ALERTS ─── */
+        .toast-msg {
+            position: fixed;
+            top: 24px; right: 24px;
+            background: var(--card);
+            border: 1px solid rgba(168,216,234,0.2);
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--ice);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast-msg.show { transform: translateX(0); }
+        .toast-msg i { color: var(--ice); }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            opacity: 0.2;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .sidenav { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .hero-section { padding: 40px 24px 32px; }
+            .page-body { padding: 24px; }
+            thead th, tbody td { padding: 12px 16px; }
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        section { animation: fadeIn 0.35s ease; }
     </style>
 </head>
 <body>
 
-    <nav class="sidenav fixed-start vertical-nav p-3 h-100 shadow" style="width: 250px; position: fixed;">
-        <div class="text-center mb-4">
-            <img src="https://i.ibb.co/3p3r3mH/image-16de68.jpg" class="rounded-circle border border-2 border-primary" style="width: 80px; height: 80px; object-fit: cover;" alt="Logo">
-            <h4 class="text-white mt-3 fw-bold tracking-tight">STURGIA</h4>
+    <!-- SIDEBAR -->
+    <nav class="sidenav">
+        <div class="clan-brand">
+            <div class="clan-avatar-wrap">
+                <img src="https://i.ibb.co/3p3r3mH/image-16de68.jpg" class="clan-avatar" alt="Sturgia Logo">
+            </div>
+            <div class="clan-name">Sturgia</div>
+            <div class="clan-tagline">Elite Clan</div>
         </div>
-        <hr class="text-white opacity-25">
-        <div class="nav flex-column">
-            <a href="#" onclick="show('home')" class="nav-link mb-2 active"><i class="fas fa-tv me-2"></i> Anasayfa</a>
-            <a href="#" onclick="show('warriors')" class="nav-link mb-2"><i class="fas fa-users me-2"></i> Savaşçılar</a>
-            <a href="#" onclick="show('settings')" class="nav-link mb-2"><i class="fas fa-key me-2"></i> Şifre Değiş</a>
+
+        <div class="sidenav-menu">
+            <a href="#" onclick="show('home')" class="nav-link active" id="nav-home">
+                <i class="fas fa-compass"></i> Anasayfa
+            </a>
+            <a href="#" onclick="show('warriors')" class="nav-link" id="nav-warriors">
+                <i class="fas fa-users"></i> Savaşçılar
+            </a>
+            <a href="#" onclick="show('settings')" class="nav-link" id="nav-settings">
+                <i class="fas fa-shield-alt"></i> Güvenlik
+            </a>
             <div id="admin-nav-item" class="d-none">
-                <a href="#" onclick="show('admin')" class="nav-link text-warning"><i class="fas fa-user-shield me-2"></i> Admin Paneli</a>
+                <a href="#" onclick="show('admin')" class="nav-link admin-link" id="nav-admin">
+                    <i class="fas fa-crown"></i> Admin Paneli
+                </a>
             </div>
         </div>
-        <div class="position-absolute bottom-0 start-0 w-100 p-3">
+
+        <div class="sidenav-footer">
             <div id="auth-section">
-                <button onclick="openModal()" class="btn btn-primary w-100 fw-bold">GİRİŞ YAP</button>
+                <button onclick="openModal()" class="btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i> Giriş Yap
+                </button>
             </div>
-            <div id="user-section" class="d-none text-center">
-                <span id="display-nick" class="text-info fw-bold d-block mb-2"></span>
-                <button onclick="logout()" class="btn btn-sm btn-outline-danger w-100">Çıkış Yap</button>
+            <div id="user-section" class="d-none">
+                <span id="display-nick" class="user-nick"></span>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt me-2"></i> Çıkış Yap
+                </button>
             </div>
         </div>
     </nav>
 
+    <!-- MAIN -->
     <main class="main-content">
+
+        <!-- HOME -->
         <section id="page-home">
-            <div class="sturgia-header text-center mb-5 shadow">
-                <h1 class="display-3 fw-bolder italic">KUZEYİN SOĞUK NEFESİ</h1>
-                <p class="lead opacity-80">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir.</p>
+            <div class="hero-section">
+                <div class="hero-bg"></div>
+                <div class="hero-rune">ᛋ</div>
+                <div style="position:relative">
+                    <div class="hero-subtitle">Klan Merkezi</div>
+                    <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
+                    <div class="hero-divider"></div>
+                    <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyden gelen savaşçıların destansı birliği.</p>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card p-4 text-center">
-                        <h6 class="text-uppercase text-muted ls-1 mb-1">Toplam Güç</h6>
-                        <h2 id="army-total" class="display-4 fw-bold mb-0">0</h2>
-                    </div>
+            <div class="stats-row">
+                <div class="stat-block">
+                    <div class="stat-label">Toplam Savaşçı</div>
+                    <div class="stat-value" id="army-total">0</div>
+                    <i class="fas fa-users stat-icon"></i>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">Aktif Rütbe</div>
+                    <div class="stat-value" style="font-size:28px; padding-top:6px" id="hero-rank">—</div>
+                    <i class="fas fa-medal stat-icon"></i>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">Klan Durumu</div>
+                    <div class="stat-value" style="font-size:22px; color: #4caf7d; padding-top:8px">AKTİF</div>
+                    <i class="fas fa-fire stat-icon"></i>
                 </div>
             </div>
         </section>
 
+        <!-- WARRIORS -->
         <section id="page-warriors" class="d-none">
-            <div class="card p-4">
-                <h3 class="fw-bold mb-4"><i class="fas fa-shield-alt text-primary"></i> Aktif Savaşçılar</h3>
+            <div class="page-body">
+                <div class="section-header">
+                    <div class="section-title">Aktif Savaşçılar</div>
+                    <div class="section-rule"></div>
+                </div>
                 <div id="warrior-grid" class="row g-3"></div>
             </div>
         </section>
 
+        <!-- SETTINGS -->
         <section id="page-settings" class="d-none">
-            <div class="card p-5 max-w-500 shadow">
-                <h3 class="fw-bold mb-4">Güvenlik Ayarları</h3>
-                <div class="form-group mb-3">
-                    <label class="form-label text-muted small fw-bold">YENİ ŞİFRE</label>
-                    <input type="password" id="new-password" class="form-control form-control-lg bg-light" placeholder="••••••••">
+            <div class="page-body">
+                <div class="section-header">
+                    <div class="section-title">Güvenlik Ayarları</div>
+                    <div class="section-rule"></div>
                 </div>
-                <button onclick="updatePassword()" class="btn btn-primary btn-lg w-100 fw-bold">ŞİFREYİ GÜNCELLE</button>
+                <div class="settings-card">
+                    <div class="settings-title">Şifre Değiştir</div>
+                    <div class="settings-sub">Hesabının güvenliğini güçlü bir şifreyle koru</div>
+                    <label class="form-label-custom">Yeni Şifre</label>
+                    <input type="password" id="new-password" class="form-input" placeholder="••••••••••">
+                    <button onclick="updatePassword()" class="btn-action">
+                        Şifreyi Güncelle
+                    </button>
+                </div>
             </div>
         </section>
 
+        <!-- ADMIN -->
         <section id="page-admin" class="d-none">
-            <div class="card shadow">
-                <div class="card-header border-0 bg-white">
-                    <h3 class="mb-0 fw-bold">Klan Yönetimi</h3>
+            <div class="page-body">
+                <div class="section-header">
+                    <div class="section-title">Klan Yönetimi</div>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead class="thead-light">
+                <div class="admin-table-wrap">
+                    <div class="admin-table-head">
+                        <span style="font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase">Savaşçı Listesi</span>
+                    </div>
+                    <table>
+                        <thead>
                             <tr>
                                 <th>Savaşçı</th>
                                 <th>Rütbe</th>
-                                <th class="text-end">İşlem</th>
+                                <th style="text-align:right">İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="admin-table-body"></tbody>
@@ -101,17 +873,33 @@
                 </div>
             </div>
         </section>
+
     </main>
 
-    <div class="modal fade" id="loginModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 p-4 shadow-lg">
-                <h2 class="fw-bold text-center mb-4">Klan Girişi</h2>
-                <input type="text" id="login-nick" class="form-control mb-3 p-3" placeholder="Savaşçı Adı">
-                <input type="password" id="login-pass" class="form-control mb-3 p-3" placeholder="Şifre">
-                <button onclick="processAuth()" class="btn btn-primary btn-lg w-100 fw-bold">DEVAM ET</button>
+    <!-- MODAL -->
+    <div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-title">Klan Girişi</div>
+            <div class="modal-sub">Kimliğini doğrula</div>
+            <div style="margin-bottom:16px">
+                <label class="form-label-custom">Savaşçı Adı</label>
+                <input type="text" id="login-nick" class="form-input" placeholder="Adını gir">
             </div>
+            <div style="margin-bottom:4px">
+                <label class="form-label-custom">Şifre</label>
+                <input type="password" id="login-pass" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')processAuth()">
+            </div>
+            <button onclick="processAuth()" class="btn-action" style="margin-top:28px">
+                Devam Et
+            </button>
         </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-msg" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-text">İşlem başarılı</span>
     </div>
 
     <script type="module">
@@ -132,58 +920,141 @@
         let user = JSON.parse(localStorage.getItem('st_session')) || null;
 
         const roles = {
-            'admin': { n: 'Yönetici', c: 'bg-danger' },
-            'westra': { n: 'Westra / Abak 🌊', c: 'bg-info text-dark' },
-            'sturgiyali': { n: 'Sturgiyalı', c: 'bg-secondary' }
+            'admin':      { n: 'Yönetici',         c: 'rank-admin' },
+            'westra':     { n: 'Westra / Abak 🌊',  c: 'rank-westra' },
+            'sturgiyali': { n: 'Sturgiyalı',        c: 'rank-sturgiyali' }
         };
 
-        // Otomatik Veri Güncelleme
+        // Live snapshot
         onSnapshot(collection(db, "users"), (snap) => {
             const grid = document.getElementById('warrior-grid');
             const table = document.getElementById('admin-table-body');
             const count = document.getElementById('army-total');
-            grid.innerHTML = ""; table.innerHTML = ""; count.innerText = snap.size;
+
+            grid.innerHTML = "";
+            table.innerHTML = "";
+            count.innerText = snap.size;
+
+            if (snap.empty) {
+                grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok</p></div></div>`;
+            }
 
             snap.forEach(s => {
                 const data = s.data();
                 const r = roles[data.role] || roles['sturgiyali'];
-                grid.innerHTML += `<div class="col-md-4"><div class="card p-3 d-flex flex-row justify-content-between"><b>${data.nick}</b><span class="badge ${r.c}">${r.n}</span></div></div>`;
-                if(user?.role === 'admin') {
-                    table.innerHTML += `<tr><td><b>${data.nick}</b></td><td>${r.n}</td><td class="text-end"><select onchange="updRole('${s.id}', this.value)" class="form-select form-select-sm w-auto d-inline">${Object.keys(roles).map(k => `<option value="${k}" ${data.role===k?'selected':''}>${roles[k].n}</option>`).join('')}</select></td></tr>`;
+
+                grid.innerHTML += `
+                    <div class="col-md-4 col-sm-6">
+                        <div class="warrior-card">
+                            <span class="warrior-name">${data.nick}</span>
+                            <span class="badge-rank ${r.c}">${r.n}</span>
+                        </div>
+                    </div>`;
+
+                if (user?.role === 'admin') {
+                    const opts = Object.keys(roles).map(k =>
+                        `<option value="${k}" ${data.role === k ? 'selected' : ''}>${roles[k].n}</option>`
+                    ).join('');
+
+                    table.innerHTML += `
+                        <tr>
+                            <td><span class="warrior-name">${data.nick}</span></td>
+                            <td><span class="badge-rank ${r.c}">${r.n}</span></td>
+                            <td style="text-align:right">
+                                <select class="form-select-dark" onchange="updRole('${s.id}', this.value)">${opts}</select>
+                            </td>
+                        </tr>`;
                 }
             });
         });
 
+        // Auth
         window.processAuth = async () => {
-            const n = document.getElementById('login-nick').value, p = document.getElementById('login-pass').value;
+            const n = document.getElementById('login-nick').value.trim();
+            const p = document.getElementById('login-pass').value;
+            if (!n || !p) { showToast('Tüm alanları doldur', true); return; }
+
             const q = query(collection(db, "users"), where("nick", "==", n), where("pass", "==", p));
             const snap = await getDocs(q);
             let d;
-            if(snap.empty) {
+
+            if (snap.empty) {
                 const res = await addDoc(collection(db, "users"), { nick: n, pass: p, role: 'sturgiyali' });
                 d = { id: res.id, nick: n, role: 'sturgiyali' };
-            } else { d = { id: snap.docs[0].id, ...snap.docs[0].data() }; }
+                showToast('Hesap oluşturuldu, hoş geldin!');
+            } else {
+                d = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                showToast('Tekrar hoş geldin, ' + d.nick + '!');
+            }
+
             localStorage.setItem('st_session', JSON.stringify(d));
-            location.reload();
+            setTimeout(() => location.reload(), 1200);
         };
 
         window.updatePassword = async () => {
             const np = document.getElementById('new-password').value;
-            if(user && np) { await updateDoc(doc(db, "users", user.id), { pass: np }); alert("Şifre Başarıyla Güncellendi!"); }
+            if (!user) { showToast('Önce giriş yap', true); return; }
+            if (!np || np.length < 4) { showToast('Şifre en az 4 karakter olmalı', true); return; }
+            await updateDoc(doc(db, "users", user.id), { pass: np });
+            showToast('Şifre başarıyla güncellendi');
+            document.getElementById('new-password').value = '';
         };
 
-        window.updRole = async (id, r) => { await updateDoc(doc(db, "users", id), { role: r }); };
+        window.updRole = async (id, r) => {
+            await updateDoc(doc(db, "users", id), { role: r });
+            showToast('Rütbe güncellendi');
+        };
 
-        if(user) {
+        // Session UI
+        if (user) {
             document.getElementById('auth-section').classList.add('d-none');
             document.getElementById('user-section').classList.remove('d-none');
             document.getElementById('display-nick').innerText = user.nick;
-            if(user.role === 'admin') document.getElementById('admin-nav-item').classList.remove('d-none');
+            if (user.role === 'admin') {
+                document.getElementById('admin-nav-item').classList.remove('d-none');
+            }
+            const heroRank = document.getElementById('hero-rank');
+            if (heroRank) {
+                const r = roles[user.role] || roles['sturgiyali'];
+                heroRank.innerText = r.n;
+            }
         }
 
         window.logout = () => { localStorage.removeItem('st_session'); location.reload(); };
-        window.show = (p) => { document.querySelectorAll('section').forEach(s => s.classList.add('d-none')); document.getElementById('page-'+p).classList.remove('d-none'); };
-        window.openModal = () => new bootstrap.Modal('#loginModal').show();
+
+        window.show = (p) => {
+            document.querySelectorAll('section').forEach(s => s.classList.add('d-none'));
+            document.getElementById('page-' + p).classList.remove('d-none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const nl = document.getElementById('nav-' + p);
+            if (nl) nl.classList.add('active');
+        };
+
+        window.openModal = () => {
+            document.getElementById('loginModal').classList.add('open');
+            setTimeout(() => document.getElementById('login-nick').focus(), 100);
+        };
+
+        window.closeModal = () => document.getElementById('loginModal').classList.remove('open');
+
+        window.handleOverlayClick = (e) => {
+            if (e.target === document.getElementById('loginModal')) closeModal();
+        };
+
+        // Toast
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            const tx = document.getElementById('toast-text');
+            tx.innerText = msg;
+            t.style.borderColor = isError ? 'rgba(192,57,43,0.4)' : 'rgba(168,216,234,0.2)';
+            t.style.color = isError ? '#e57373' : 'var(--ice)';
+            t.querySelector('i').style.color = isError ? '#e57373' : 'var(--ice)';
+            t.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        window.showToast = showToast;
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
