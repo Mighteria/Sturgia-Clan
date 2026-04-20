@@ -3,52 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sturgia Clan | Northern Kings</title>
+    <title>Sturgia | Northern Kings</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
-            --sturgia-blue: #3498db;
-            --sturgia-dark: #0a0e14;
-            --glass: rgba(15, 25, 35, 0.9);
-            --border: rgba(255, 255, 255, 0.08);
+            --accent: #3498db;
+            --bg: #05070a;
+            --glass: rgba(10, 12, 16, 0.8);
+            --border: rgba(255, 255, 255, 0.05);
+            --text: #e0e6ed;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
         body {
-            background: var(--sturgia-dark); color: #d1d8e0; min-height: 100vh;
-            background-image: linear-gradient(rgba(10, 14, 20, 0.85), rgba(10, 14, 20, 0.95)), url('https://images.alphacoders.com/100/1005370.jpg');
-            background-attachment: fixed; background-size: cover;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(52, 152, 219, 0.15), transparent),
+                url('https://images.alphacoders.com/100/1005370.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
         }
-        nav { background: rgba(10, 14, 20, 0.95); height: 70px; display: flex; align-items: center; border-bottom: 2px solid var(--sturgia-blue); position: sticky; top: 0; z-index: 1000; }
-        .nav-container { max-width: 1400px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
-        .nav-links a { color: #fff; text-decoration: none; margin-right: 30px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
-        .nav-links a:hover { color: var(--sturgia-blue); }
-        
-        .hero { height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .hero img { width: 100px; filter: drop-shadow(0 0 20px var(--sturgia-blue)); margin-bottom: 10px; }
-        
-        .wrapper { max-width: 1400px; margin: 20px auto 100px; display: grid; grid-template-columns: 1fr 350px; gap: 30px; padding: 0 30px; }
-        .tab-content { display: none; animation: fadeIn 0.5s ease; }
-        .active-tab { display: block; }
-        
-        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 10px; padding: 30px; margin-bottom: 25px; backdrop-filter: blur(10px); }
-        .card-header { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 20px; border-left: 5px solid var(--sturgia-blue); padding-left: 15px; }
-        
-        .role-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; font-family: 'Orbitron'; display: flex; align-items: center; gap: 5px; }
-        .role-admin { color: #70a1ff; border: 1px solid #70a1ff; }
 
-        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: rgba(255,255,255,0.02); margin-bottom: 8px; border-radius: 6px; border: 1px solid var(--border); }
+        /* Estetik Navigasyon */
+        nav {
+            background: var(--glass);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-        .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; font-family: 'Orbitron'; font-size: 0.8rem; }
-        .btn-blue { background: var(--sturgia-blue); color: white; }
+        .nav-container { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #101620; padding: 40px; width: 400px; border-radius: 15px; border: 1px solid var(--sturgia-blue); }
-        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid var(--border); color: white; }
+        .nav-links a {
+            color: #8892b0; text-decoration: none; margin-right: 25px; font-weight: 500; 
+            font-size: 0.9rem; letter-spacing: 1px; transition: 0.4s; cursor: pointer;
+        }
+        .nav-links a:hover { color: var(--accent); text-shadow: 0 0 15px rgba(52, 152, 219, 0.4); }
+
+        /* Modern Hero Alanı */
+        .hero { height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero h1 { 
+            font-family: 'Space+Grotesk', sans-serif; font-weight: 900; font-size: 4rem; 
+            letter-spacing: -2px; background: linear-gradient(to bottom, #fff, #636e72);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .wrapper { max-width: 1200px; margin: 0 auto 100px; display: grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 0 20px; }
+
+        /* Kart Tasarımları */
+        .card {
+            background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 32px; 
+            margin-bottom: 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .card-header { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+        .card-header::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 10px; }
+
+        /* Rütbe Etiketleri */
+        .role-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        
+        /* Butonlar */
+        .btn { 
+            padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; 
+            font-size: 0.85rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn-blue { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
+        .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4); }
+
+        /* Liste Öğeleri */
+        .user-item { 
+            display: flex; justify-content: space-between; align-items: center; padding: 16px; 
+            background: rgba(255,255,255,0.02); margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--border);
+        }
+
+        /* Modal Tasarımı */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #0d1117; padding: 40px; width: 380px; border-radius: 24px; border: 1px solid var(--border); }
+        .modal-content input { 
+            width: 100%; padding: 14px; margin: 12px 0; background: #161b22; 
+            border: 1px solid var(--border); color: white; border-radius: 10px; outline: none;
+        }
+        .modal-content input:focus { border-color: var(--accent); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content { display: none; animation: fadeIn 0.6s ease; }
+        .active-tab { display: block; }
     </style>
 </head>
 <body>
@@ -56,22 +107,22 @@
 <nav>
     <div class="nav-container">
         <div class="nav-links">
-            <a onclick="showTab('home')">Anasayfa</a>
-            <a onclick="showTab('warriors')">Savaşçılar</a>
+            <a onclick="showTab('home')">ANASAYFA</a>
+            <a onclick="showTab('warriors')">SAVAŞÇILAR</a>
         </div>
-        <div id="auth-ui">
-            <button class="btn btn-blue" onclick="openModal()">Giriş</button>
+        <div id="auth-links">
+            <button class="btn btn-blue" onclick="openModal('login')">GİRİŞ YAP</button>
         </div>
-        <div id="user-ui" style="display:none; align-items:center;">
-            <span id="u-display" style="color:var(--sturgia-blue); font-family:'Orbitron';"></span>
-            <button class="btn btn-blue" onclick="logout()" style="margin-left:15px; padding:5px 10px;">ÇIK</button>
+        <div id="profile-links" style="display:none; align-items: center;">
+            <span id="display-name" onclick="openModal('pass')" style="cursor:pointer; font-weight:700; color:var(--accent); font-family: 'Space Grotesk';"></span>
+            <button class="btn" onclick="logout()" style="color:#ff4757; background:transparent; font-size:12px; margin-left:10px;">ÇIK</button>
         </div>
     </div>
 </nav>
 
 <div class="hero">
-    <img src="https://static.wikia.nocookie.net/mountandblade/images/6/6e/Bannerlord_Sturgia_Banner.png">
-    <h1 style="font-family:'Montserrat'; letter-spacing:8px;">STURGIA</h1>
+    <h1>STURGIA</h1>
+    <p style="color:#8892b0; letter-spacing:3px; font-size: 0.8rem;">NORTHERN KINGS</p>
 </div>
 
 <div class="wrapper">
@@ -79,48 +130,63 @@
         <div id="home" class="tab-content active-tab">
             <div class="card">
                 <div class="card-header">Klan Ruhu</div>
-                <p>Sturgia bir aileden farksızdır. Kuzeyin sert rüzgarlarında birbirimize omuz veririz.</p>
+                <p style="line-height: 1.6; color: #8892b0;">Sturgia, sadece bir klan değil; sadakat ve onur üzerine kurulmuş bir kardeşliktir. Ş, Ç, Ö, Ğ harfleri artık burada özgürce yaşar.</p>
             </div>
             
-            <div id="admin-panel" class="card" style="display:none; border-color:#70a1ff;">
-                <div class="card-header" style="color:#70a1ff; border-left-color:#70a1ff;">Rütbe Dağılımı</div>
-                <div id="promote-list"></div>
+            <div id="adm-panel" class="card" style="display:none;">
+                <div class="card-header" style="color:var(--accent);">Yönetim Merkezi</div>
+                <div id="management-list"></div>
             </div>
         </div>
 
         <div id="warriors" class="tab-content">
             <div class="card">
-                <div class="card-header">Klan Üyeleri</div>
-                <div id="warrior-list"></div>
+                <div class="card-header">Savaşçı Listesi</div>
+                <div id="list-container"></div>
             </div>
         </div>
     </div>
 
     <div class="sidebar">
-        <div class="card" style="text-align:center;">
-            <div class="card-header" style="border:none; justify-content:center;">SAVAŞÇI SAYISI</div>
-            <div id="total-count" style="font-size:3rem; font-family:'Orbitron';">0</div>
+        <div class="card" style="text-align: center;">
+            <div class="card-header" style="justify-content:center; border:none;">ORDU GÜCÜ</div>
+            <div id="army-count" style="font-size: 3.5rem; font-family: 'Space Grotesk'; font-weight: 300;">0</div>
         </div>
     </div>
 </div>
 
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:#fff; font-family:'Orbitron';">GİRİŞ</h2>
-        <input type="text" id="m-nick" placeholder="İsim">
+        <h2 id="m-title" style="margin-bottom:20px; font-family:'Space Grotesk';">Giriş</h2>
+        <input type="text" id="m-nick" placeholder="Savaşçı Adı">
         <input type="password" id="m-pass" placeholder="Şifre">
-        <button class="btn btn-blue" onclick="doLogin()" style="width:100%; margin-top:10px;">DEVAM</button>
-        <p onclick="closeAll()" style="text-align:center; cursor:pointer; margin-top:15px; color:gray;">Kapat</p>
+        <div style="margin: 10px 0; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="m-remember" style="width:auto; margin:0;"> Beni Hatırla
+        </div>
+        <button class="btn btn-blue" id="m-action-btn" style="width:100%; margin-top:10px;">DEVAM ET</button>
+        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:20px; cursor:pointer; font-size:0.8rem;">Kapat</p>
+    </div>
+</div>
+
+<div id="passModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-bottom:20px; font-family:'Space Grotesk';">Şifre Güncelle</h2>
+        <input type="password" id="new-pw" placeholder="Yeni Şifre">
+        <button class="btn btn-blue" onclick="updatePw()" style="width:100%;">GÜNCELLE</button>
+        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:20px; cursor:pointer; font-size:0.8rem;">İptal</p>
     </div>
 </div>
 
 <script>
+    // FIREBASE CONFIG (Burayı doldurmayı unutma kanka)
     const firebaseConfig = { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const roles = {
-        'admin': { label: '</> Yönetici', class: 'role-admin' },
+    let currentUser = null;
+
+    const roleMap = {
+        'admin': { label: '</> Yönetici', color: '#70a1ff' },
         'westra': { label: 'Westra / Abak 🌊', color: '#54a0ff' },
         'rehber_plus': { label: 'Sturgiyalı Rehber+', color: '#000080' },
         'ally': { label: 'Ally', color: '#ff00ff' },
@@ -132,56 +198,72 @@
         'sturgiyali': { label: 'Sturgiyalı', color: '#3498db' }
     };
 
+    window.onload = () => {
+        const saved = localStorage.getItem('sturgia_session');
+        if(saved) {
+            const data = JSON.parse(saved);
+            loginStep(data.nick, data.role, data.id);
+        }
+        loadWarriors();
+    };
+
     function showTab(id) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
         document.getElementById(id).classList.add('active-tab');
         if(id === 'warriors') loadWarriors();
     }
 
-    async function loadWarriors() {
-        const snap = await db.collection("users").get();
-        const list = document.getElementById('warrior-list');
-        list.innerHTML = "";
-        snap.forEach(doc => {
-            const u = doc.data();
-            const role = roles[u.role] || roles['sturgiyali'];
-            list.innerHTML += `
-                <div class="user-item">
-                    <span style="font-weight:bold;">${u.nick}</span>
-                    <span class="role-tag ${role.class || ''}" style="color:${role.color || 'inherit'}">
-                        ${role.label}
-                    </span>
-                </div>`;
-        });
-        document.getElementById('total-count').innerText = snap.size;
-    }
-
     async function doLogin() {
-        const n = document.getElementById('m-nick').value, p = document.getElementById('m-pass').value;
+        const n = document.getElementById('m-nick').value, p = document.getElementById('m-pass').value, rem = document.getElementById('m-remember').checked;
+        if(!n || !p) return;
+        
         const snap = await db.collection("users").where("nick", "==", n).where("pass", "==", p).get();
         if(snap.empty) {
+            // Kayıt yoksa oluştur
             const doc = await db.collection("users").add({ nick: n, pass: p, role: 'sturgiyali' });
+            if(rem) saveSession(n, 'sturgiyali', doc.id);
             loginStep(n, 'sturgiyali', doc.id);
         } else {
             const d = snap.docs[0];
+            if(rem) saveSession(d.data().nick, d.data().role, d.id);
             loginStep(d.data().nick, d.data().role, d.id);
         }
-        closeAll();
+        closeModals();
+    }
+
+    function saveSession(nick, role, id) {
+        localStorage.setItem('sturgia_session', JSON.stringify({nick, role, id}));
     }
 
     function loginStep(nick, role, id) {
-        document.getElementById('auth-ui').style.display = 'none';
-        document.getElementById('user-ui').style.display = 'flex';
-        document.getElementById('u-display').innerText = nick;
+        currentUser = {id, nick, role};
+        document.getElementById('auth-links').style.display = 'none';
+        document.getElementById('profile-links').style.display = 'flex';
+        document.getElementById('display-name').innerText = nick;
         if(role === 'admin') {
-            document.getElementById('admin-panel').style.display = 'block';
-            loadAdminList();
+            document.getElementById('adm-panel').style.display = 'block';
+            loadAdminPanel();
         }
-        loadWarriors();
     }
 
-    async function loadAdminList() {
-        const list = document.getElementById('promote-list');
+    async function loadWarriors() {
+        const snap = await db.collection("users").get();
+        const container = document.getElementById('list-container');
+        container.innerHTML = "";
+        snap.forEach(doc => {
+            const u = doc.data();
+            const r = roleMap[u.role] || roleMap['sturgiyali'];
+            container.innerHTML += `
+                <div class="user-item">
+                    <span style="font-weight:700;">${u.nick}</span>
+                    <span class="role-tag" style="color:${r.color}; border: 1px solid ${r.color}33; background:${r.color}11">${r.label}</span>
+                </div>`;
+        });
+        document.getElementById('army-count').innerText = snap.size;
+    }
+
+    async function loadAdminPanel() {
+        const list = document.getElementById('management-list');
         const snap = await db.collection("users").get();
         list.innerHTML = "";
         snap.forEach(doc => {
@@ -189,21 +271,33 @@
             list.innerHTML += `
                 <div class="user-item">
                     <span>${u.nick}</span>
-                    <select onchange="updateRole('${doc.id}', this.value)">
-                        ${Object.keys(roles).map(r => `<option value="${r}" ${u.role === r ? 'selected' : ''}>${roles[r].label}</option>`).join('')}
+                    <select onchange="changeRole('${doc.id}', this.value)" style="background:#000; color:#fff; border:1px solid #333; padding:5px; border-radius:5px;">
+                        ${Object.keys(roleMap).map(k => `<option value="${k}" ${u.role===k?'selected':''}>${roleMap[k].label}</option>`).join('')}
                     </select>
                 </div>`;
         });
     }
 
-    async function updateRole(id, newRole) {
-        await db.collection("users").doc(id).update({ role: newRole });
+    async function changeRole(id, newRole) {
+        await db.collection("users").doc(id).update({role: newRole});
         loadWarriors();
     }
 
-    function openModal() { document.getElementById('authModal').style.display = 'flex'; }
-    function closeAll() { document.getElementById('authModal').style.display = 'none'; }
-    function logout() { location.reload(); }
+    async function updatePw() {
+        const np = document.getElementById('new-pw').value;
+        if(!np || !currentUser) return;
+        await db.collection("users").doc(currentUser.id).update({pass: np});
+        alert("Şifre başarıyla güncellendi kanka!");
+        closeModals();
+    }
+
+    function openModal(type) {
+        if(type === 'login') document.getElementById('authModal').style.display = 'flex';
+        if(type === 'pass') document.getElementById('passModal').style.display = 'flex';
+    }
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+    document.getElementById('m-action-btn').onclick = doLogin;
+    function logout() { localStorage.removeItem('sturgia_session'); location.reload(); }
 </script>
 </body>
 </html>
