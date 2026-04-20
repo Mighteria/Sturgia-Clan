@@ -13,7 +13,7 @@
         :root {
             --accent: #3498db;
             --bg: #05070a;
-            --glass: rgba(10, 12, 16, 0.8);
+            --glass: rgba(10, 12, 16, 0.85);
             --border: rgba(255, 255, 255, 0.05);
             --text: #e0e6ed;
         }
@@ -24,82 +24,70 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 50% -20%, rgba(52, 152, 219, 0.15), transparent),
-                url('https://images.alphacoders.com/100/1005370.jpg');
-            background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
+            /* Arkaplan görselini karlı bir savaş atmosferi yaptım */
+            background-image: linear-gradient(rgba(5, 7, 10, 0.9), rgba(5, 7, 10, 0.95)), url('https://images.alphacoders.com/100/1005370.jpg');
+            background-attachment: fixed; background-size: cover; background-position: center;
         }
 
-        /* Estetik Navigasyon */
+        /* Modern Navigasyon */
         nav {
-            background: var(--glass);
-            height: 80px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: var(--glass); height: 80px; display: flex; align-items: center;
+            border-bottom: 1px solid var(--border); backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 1000;
         }
 
         .nav-container { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        
-        .nav-links a {
-            color: #8892b0; text-decoration: none; margin-right: 25px; font-weight: 500; 
-            font-size: 0.9rem; letter-spacing: 1px; transition: 0.4s; cursor: pointer;
-        }
+        .nav-links a { color: #8892b0; text-decoration: none; margin-right: 25px; font-weight: 500; font-size: 0.9rem; letter-spacing: 1px; transition: 0.4s; cursor: pointer; }
         .nav-links a:hover { color: var(--accent); text-shadow: 0 0 15px rgba(52, 152, 219, 0.4); }
 
-        /* Modern Hero Alanı */
+        /* Estetik Hero Alanı (Logo Buraya Yerleştirildi) */
         .hero { height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .sturgia-logo {
+            width: 180px; /* Logonun büyüklüğü */
+            filter: drop-shadow(0 0 30px rgba(255,255,255,0.4)); /* Hafif bir parlama efekti klanı yüceltir */
+            margin-bottom: 15px;
+            transition: 0.4s ease;
+        }
+        .sturgia-logo:hover { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(52, 152, 219, 0.6)); }
+
         .hero h1 { 
-            font-family: 'Space+Grotesk', sans-serif; font-weight: 900; font-size: 4rem; 
-            letter-spacing: -2px; background: linear-gradient(to bottom, #fff, #636e72);
+            font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size: 3rem; 
+            letter-spacing: 5px; background: linear-gradient(to bottom, #fff, #a4b0be);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
+        /* Layout */
         .wrapper { max-width: 1200px; margin: 0 auto 100px; display: grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 0 20px; }
 
         /* Kart Tasarımları */
-        .card {
-            background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 32px; 
-            margin-bottom: 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-        .card-header { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .card-header { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px;}
         .card-header::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 10px; }
 
-        /* Rütbe Etiketleri */
-        .role-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        /* Rütbe Etiketleri (Modernize Edildi) */
+        .role-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Space Grotesk'; }
         
         /* Butonlar */
-        .btn { 
-            padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; 
-            font-size: 0.85rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
+        .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-blue { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
         .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4); }
 
-        /* Liste Öğeleri */
-        .user-item { 
-            display: flex; justify-content: space-between; align-items: center; padding: 16px; 
-            background: rgba(255,255,255,0.02); margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--border);
-        }
+        /* Liste Öğeleri (Estetik) */
+        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: rgba(255,255,255,0.015); margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--border); transition: 0.2s; }
+        .user-item:hover { border-color: rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.03); }
 
-        /* Modal Tasarımı */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-content { background: #0d1117; padding: 40px; width: 380px; border-radius: 24px; border: 1px solid var(--border); }
-        .modal-content input { 
-            width: 100%; padding: 14px; margin: 12px 0; background: #161b22; 
-            border: 1px solid var(--border); color: white; border-radius: 10px; outline: none;
-        }
+        /* Modal Tasarımları */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .modal-content { background: #0a0e14; padding: 45px; width: 400px; border-radius: 24px; border: 1px solid rgba(52, 152, 219, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.7); animation: modalIn 0.4s ease; }
+        .modal-content input { width: 100%; padding: 16px; margin: 12px 0; background: #05070a; border: 1px solid var(--border); color: white; border-radius: 10px; outline: none; font-size: 0.95rem; }
         .modal-content input:focus { border-color: var(--accent); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Animasyonlar */
         .tab-content { display: none; animation: fadeIn 0.6s ease; }
         .active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
 <body>
@@ -107,33 +95,34 @@
 <nav>
     <div class="nav-container">
         <div class="nav-links">
-            <a onclick="showTab('home')">ANASAYFA</a>
-            <a onclick="showTab('warriors')">SAVAŞÇILAR</a>
+            <a onclick="showTab('home')"><i class="fa fa-home"></i> ANASAYFA</a>
+            <a onclick="showTab('warriors')"><i class="fa fa-khanda"></i> SAVAŞÇILAR</a>
         </div>
         <div id="auth-links">
             <button class="btn btn-blue" onclick="openModal('login')">GİRİŞ YAP</button>
         </div>
         <div id="profile-links" style="display:none; align-items: center;">
             <span id="display-name" onclick="openModal('pass')" style="cursor:pointer; font-weight:700; color:var(--accent); font-family: 'Space Grotesk';"></span>
-            <button class="btn" onclick="logout()" style="color:#ff4757; background:transparent; font-size:12px; margin-left:10px;">ÇIK</button>
+            <button class="btn" onclick="logout()" style="color:#ff4757; background:transparent; font-size:12px; margin-left:12px;">ÇIK</button>
         </div>
     </div>
 </nav>
 
 <div class="hero">
+    <img src="https://i.ibb.co/V95wYwP/sturgia-logo.png" alt="Sturgia Logo" class="sturgia-logo">
     <h1>STURGIA</h1>
-    <p style="color:#8892b0; letter-spacing:3px; font-size: 0.8rem;">NORTHERN KINGS</p>
+    <p style="color:#8892b0; letter-spacing:4px; font-size: 0.8rem; font-family: 'Space Grotesk';">KUZEYİN SOĞUK NEFESİ</p>
 </div>
 
 <div class="wrapper">
     <div class="main">
         <div id="home" class="tab-content active-tab">
             <div class="card">
-                <div class="card-header">Klan Ruhu</div>
-                <p style="line-height: 1.6; color: #8892b0;">Sturgia, sadece bir klan değil; sadakat ve onur üzerine kurulmuş bir kardeşliktir. Ş, Ç, Ö, Ğ harfleri artık burada özgürce yaşar.</p>
+                <div class="card-header">Klan Safları</div>
+                <p style="line-height: 1.8; color: #8892b0;">Sadakat, kardeşlik ve onur. Kuzeyin sert topraklarında birbirimize omuz veriyor, her savaşta şanla ilerliyoruz. Hoş geldin savaşçı.</p>
             </div>
             
-            <div id="adm-panel" class="card" style="display:none;">
+            <div id="adm-panel" class="card" style="display:none; border-color:rgba(52, 152, 219, 0.4);">
                 <div class="card-header" style="color:var(--accent);">Yönetim Merkezi</div>
                 <div id="management-list"></div>
             </div>
@@ -149,36 +138,37 @@
 
     <div class="sidebar">
         <div class="card" style="text-align: center;">
-            <div class="card-header" style="justify-content:center; border:none;">ORDU GÜCÜ</div>
-            <div id="army-count" style="font-size: 3.5rem; font-family: 'Space Grotesk'; font-weight: 300;">0</div>
+            <div class="card-header" style="justify-content:center; border:none; margin-bottom: 10px;">ORDU GÜCÜ</div>
+            <div id="army-count" style="font-size: 4rem; font-family: 'Space Grotesk'; font-weight: 300;">0</div>
+            <p style="font-size: 0.8rem; color:#8892b0; text-transform:uppercase;">Kayıtlı Savaşçı</p>
         </div>
     </div>
 </div>
 
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h2 id="m-title" style="margin-bottom:20px; font-family:'Space Grotesk';">Giriş</h2>
+        <h2 id="m-title" style="margin-bottom:25px; font-family:'Space Grotesk'; text-align:center;">Giriş</h2>
         <input type="text" id="m-nick" placeholder="Savaşçı Adı">
         <input type="password" id="m-pass" placeholder="Şifre">
-        <div style="margin: 10px 0; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+        <div style="margin: 10px 0; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; color:#a4b0be;">
             <input type="checkbox" id="m-remember" style="width:auto; margin:0;"> Beni Hatırla
         </div>
-        <button class="btn btn-blue" id="m-action-btn" style="width:100%; margin-top:10px;">DEVAM ET</button>
-        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:20px; cursor:pointer; font-size:0.8rem;">Kapat</p>
+        <button class="btn btn-blue" id="m-action-btn" onclick="doLogin()" style="width:100%; margin-top:15px; padding: 14px;">DEVAM ET</button>
+        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:25px; cursor:pointer; font-size:0.8rem;">Geri Dön</p>
     </div>
 </div>
 
 <div id="passModal" class="modal">
     <div class="modal-content">
-        <h2 style="margin-bottom:20px; font-family:'Space Grotesk';">Şifre Güncelle</h2>
+        <h2 style="margin-bottom:25px; font-family:'Space Grotesk'; text-align:center;">Şifre Güncelle</h2>
         <input type="password" id="new-pw" placeholder="Yeni Şifre">
-        <button class="btn btn-blue" onclick="updatePw()" style="width:100%;">GÜNCELLE</button>
-        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:20px; cursor:pointer; font-size:0.8rem;">İptal</p>
+        <button class="btn btn-blue" onclick="updatePw()" style="width:100%; padding: 14px;">GÜNCELLE</button>
+        <p onclick="closeModals()" style="text-align:center; color:#8892b0; margin-top:25px; cursor:pointer; font-size:0.8rem;">Vazgeç</p>
     </div>
 </div>
 
 <script>
-    // FIREBASE CONFIG (Burayı doldurmayı unutma kanka)
+    // FIREBASE CONFIG (Kendi bilgilerini buraya koymayı unutma kanka)
     const firebaseConfig = { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -213,13 +203,24 @@
         if(id === 'warriors') loadWarriors();
     }
 
+    async function loadWarriors() {
+        const container = document.getElementById('list-container');
+        if(!container) return;
+        const snap = await db.collection("users").get();
+        container.innerHTML = "";
+        snap.forEach(doc => {
+            const u = doc.data();
+            const r = roleMap[u.role] || roleMap['sturgiyali'];
+            container.innerHTML += `<div class="user-item"><span style="font-weight:700;">${u.nick}</span><span class="role-tag" style="color:${r.color}; border: 1px solid ${r.color}33; background:${r.color}11">${r.label}</span></div>`;
+        });
+        document.getElementById('army-count').innerText = snap.size;
+    }
+
     async function doLogin() {
         const n = document.getElementById('m-nick').value, p = document.getElementById('m-pass').value, rem = document.getElementById('m-remember').checked;
-        if(!n || !p) return;
-        
+        if(!n || !p) return alert("Eksik bilgi kanka!");
         const snap = await db.collection("users").where("nick", "==", n).where("pass", "==", p).get();
         if(snap.empty) {
-            // Kayıt yoksa oluştur
             const doc = await db.collection("users").add({ nick: n, pass: p, role: 'sturgiyali' });
             if(rem) saveSession(n, 'sturgiyali', doc.id);
             loginStep(n, 'sturgiyali', doc.id);
@@ -231,35 +232,15 @@
         closeModals();
     }
 
-    function saveSession(nick, role, id) {
-        localStorage.setItem('sturgia_session', JSON.stringify({nick, role, id}));
-    }
+    function saveSession(nick, role, id) { localStorage.setItem('sturgia_session', JSON.stringify({nick, role, id})); }
 
     function loginStep(nick, role, id) {
         currentUser = {id, nick, role};
         document.getElementById('auth-links').style.display = 'none';
         document.getElementById('profile-links').style.display = 'flex';
         document.getElementById('display-name').innerText = nick;
-        if(role === 'admin') {
-            document.getElementById('adm-panel').style.display = 'block';
-            loadAdminPanel();
-        }
-    }
-
-    async function loadWarriors() {
-        const snap = await db.collection("users").get();
-        const container = document.getElementById('list-container');
-        container.innerHTML = "";
-        snap.forEach(doc => {
-            const u = doc.data();
-            const r = roleMap[u.role] || roleMap['sturgiyali'];
-            container.innerHTML += `
-                <div class="user-item">
-                    <span style="font-weight:700;">${u.nick}</span>
-                    <span class="role-tag" style="color:${r.color}; border: 1px solid ${r.color}33; background:${r.color}11">${r.label}</span>
-                </div>`;
-        });
-        document.getElementById('army-count').innerText = snap.size;
+        if(role === 'admin') { document.getElementById('adm-panel').style.display = 'block'; loadAdminPanel(); }
+        loadWarriors();
     }
 
     async function loadAdminPanel() {
@@ -268,35 +249,19 @@
         list.innerHTML = "";
         snap.forEach(doc => {
             const u = doc.data();
-            list.innerHTML += `
-                <div class="user-item">
-                    <span>${u.nick}</span>
-                    <select onchange="changeRole('${doc.id}', this.value)" style="background:#000; color:#fff; border:1px solid #333; padding:5px; border-radius:5px;">
-                        ${Object.keys(roleMap).map(k => `<option value="${k}" ${u.role===k?'selected':''}>${roleMap[k].label}</option>`).join('')}
-                    </select>
-                </div>`;
+            list.innerHTML += `<div class="user-item"><span>${u.nick}</span><select onchange="changeRole('${doc.id}', this.value)" style="background:#000; color:#fff; border:1px solid #333; padding:5px; border-radius:5px;">${Object.keys(roleMap).map(k => `<option value="${k}" ${u.role===k?'selected':''}>${roleMap[k].label}</option>`).join('')}</select></div>`;
         });
     }
 
-    async function changeRole(id, newRole) {
-        await db.collection("users").doc(id).update({role: newRole});
-        loadWarriors();
-    }
-
+    async function changeRole(id, newRole) { await db.collection("users").doc(id).update({role: newRole}); loadWarriors(); }
     async function updatePw() {
         const np = document.getElementById('new-pw').value;
         if(!np || !currentUser) return;
         await db.collection("users").doc(currentUser.id).update({pass: np});
-        alert("Şifre başarıyla güncellendi kanka!");
-        closeModals();
+        alert("Şifre güncellendi kanka!"); closeModals();
     }
-
-    function openModal(type) {
-        if(type === 'login') document.getElementById('authModal').style.display = 'flex';
-        if(type === 'pass') document.getElementById('passModal').style.display = 'flex';
-    }
+    function openModal(type) { if(type === 'login') document.getElementById('authModal').style.display = 'flex'; if(type === 'pass') document.getElementById('passModal').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-    document.getElementById('m-action-btn').onclick = doLogin;
     function logout() { localStorage.removeItem('sturgia_session'); location.reload(); }
 </script>
 </body>
