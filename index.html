@@ -2,33 +2,39 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Sturgia Clan | Elite Dashboard</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         :root {
-            --black: #050608;
-            --deep: #0b0d12;
-            --panel: #0f1118;
-            --card: #13161e;
-            --border: rgba(255,255,255,0.06);
+            --black: #030406;
+            --deep: #080b11;
+            --panel: #0c0f18;
+            --card: #10141f;
+            --card2: #141828;
+            --border: rgba(255,255,255,0.055);
+            --border2: rgba(255,255,255,0.09);
             --ice: #a8d8ea;
-            --frost: #c9e8f4;
-            --steel: #8096b0;
+            --ice2: #c5e8f5;
+            --frost: #e0f4ff;
+            --steel: #7a92a8;
             --gold: #c9a84c;
-            --gold-light: #e8c96a;
+            --gold2: #e8c96a;
+            --gold3: #f5dfa0;
             --red: #c0392b;
             --green: #4caf7d;
-            --text: #d4dce8;
-            --muted: #5a6a7e;
-            --sidebar-w: 270px;
+            --purple: #8b7fd4;
+            --text: #ccd6e4;
+            --muted: #4a5c70;
+            --sidebar-w: 280px;
+            --glow-ice: rgba(168,216,234,0.15);
+            --glow-gold: rgba(201,168,76,0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             background: var(--black);
@@ -38,28 +44,57 @@
             overflow-x: hidden;
         }
 
-        body::before {
-            content: '';
+        /* ══════════════════════════ AMBIENT BG ══════════════════════════ */
+        .ambient-bg {
             position: fixed;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
 
-        /* ─── SIDEBAR ─── */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.06;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb1 { width: 700px; height: 700px; background: var(--ice); top: -200px; left: -100px; animation-delay: 0s; }
+        .orb2 { width: 500px; height: 500px; background: var(--gold); top: 40%; right: -150px; animation-delay: -7s; }
+        .orb3 { width: 400px; height: 400px; background: var(--purple); bottom: -100px; left: 30%; animation-delay: -14s; opacity: 0.04; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-40px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.97); }
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ══════════════════════════ SIDEBAR ══════════════════════════ */
         .sidenav {
             position: fixed;
             left: 0; top: 0;
             width: var(--sidebar-w);
             height: 100vh;
-            background: var(--panel);
+            background: rgba(8,11,17,0.97);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            z-index: 100;
+            z-index: 200;
             overflow-y: auto;
             overflow-x: hidden;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
         }
 
         .sidenav::after {
@@ -67,21 +102,62 @@
             position: absolute;
             top: 0; right: 0;
             width: 1px; height: 100%;
-            background: linear-gradient(to bottom, transparent, var(--ice), var(--gold), transparent);
-            opacity: 0.15;
+            background: linear-gradient(to bottom, transparent 5%, var(--ice) 30%, var(--gold) 70%, transparent 95%);
+            opacity: 0.12;
             pointer-events: none;
         }
 
+        /* MOBILE OVERLAY */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 199;
+            backdrop-filter: blur(3px);
+        }
+
+        .nav-overlay.open { display: block; }
+
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 16px; left: 16px;
+            z-index: 300;
+            background: var(--card);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            width: 44px; height: 44px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--ice);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .hamburger:hover { background: var(--card2); border-color: rgba(168,216,234,0.25); }
+
+        /* Brand */
         .clan-brand {
-            padding: 28px 24px 20px;
+            padding: 32px 24px 24px;
             text-align: center;
             border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clan-brand::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(168,216,234,0.06), transparent);
         }
 
         .clan-avatar-wrap {
             position: relative;
             display: inline-block;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .clan-avatar-wrap::before {
@@ -89,53 +165,60 @@
             position: absolute;
             inset: -3px;
             border-radius: 50%;
-            background: conic-gradient(var(--gold), var(--ice), var(--gold));
-            animation: spin 6s linear infinite;
-            z-index: -1;
+            background: conic-gradient(var(--gold), var(--ice), var(--gold2), var(--ice), var(--gold));
+            animation: spinRing 8s linear infinite;
+            z-index: 0;
         }
 
         .clan-avatar-wrap::after {
             content: '';
             position: absolute;
-            inset: -1px;
+            inset: 0px;
             border-radius: 50%;
             background: var(--panel);
-            z-index: -1;
+            z-index: 1;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spinRing { to { transform: rotate(360deg); } }
 
         .clan-avatar {
-            width: 76px; height: 76px;
+            width: 80px; height: 80px;
             border-radius: 50%;
             object-fit: cover;
             display: block;
             position: relative;
+            z-index: 2;
         }
 
         .clan-name {
             font-family: 'Cinzel', serif;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 900;
-            letter-spacing: 6px;
-            color: var(--gold-light);
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, var(--gold2), var(--gold3), var(--gold2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-transform: uppercase;
+            position: relative;
         }
 
         .clan-tagline {
-            font-size: 10px;
-            letter-spacing: 2px;
+            font-size: 9px;
+            letter-spacing: 4px;
             color: var(--muted);
             text-transform: uppercase;
-            margin-top: 3px;
+            margin-top: 4px;
+            position: relative;
         }
 
+        /* Nav items */
         .sidenav-menu {
             flex: 1;
-            padding: 20px 16px;
+            padding: 20px 14px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .nav-section-label {
@@ -143,65 +226,70 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--muted);
-            padding: 12px 16px 6px;
-            opacity: 0.6;
+            padding: 14px 14px 6px;
+            opacity: 0.5;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 11px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--steel) !important;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             border: 1px solid transparent;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
-        .nav-link i { width: 16px; text-align: center; font-size: 12px; opacity: 0.7; }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 0;
+            background: linear-gradient(to right, var(--ice), transparent);
+            opacity: 0;
+            transition: all 0.3s;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .nav-link i { width: 16px; text-align: center; font-size: 12px; transition: transform 0.2s; }
+        .nav-link:hover i { transform: scale(1.2); }
 
         .nav-link:hover {
             color: var(--frost) !important;
-            background: rgba(168,216,234,0.06);
-            border-color: rgba(168,216,234,0.1);
+            background: rgba(168,216,234,0.05);
+            border-color: rgba(168,216,234,0.08);
+            transform: translateX(2px);
         }
 
         .nav-link.active {
             color: var(--ice) !important;
             background: rgba(168,216,234,0.08);
-            border-color: rgba(168,216,234,0.15);
+            border-color: rgba(168,216,234,0.14);
         }
 
         .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 20%; bottom: 20%;
             width: 2px;
-            background: var(--ice);
-            border-radius: 0 2px 2px 0;
-            box-shadow: 0 0 8px var(--ice);
+            opacity: 1;
         }
 
-        .nav-link.admin-link { color: var(--gold) !important; border-color: rgba(201,168,76,0.15); }
+        .nav-link.admin-link { color: var(--gold) !important; }
         .nav-link.admin-link:hover, .nav-link.admin-link.active {
-            color: var(--gold-light) !important;
-            background: rgba(201,168,76,0.08);
-            border-color: rgba(201,168,76,0.25);
+            color: var(--gold2) !important;
+            background: rgba(201,168,76,0.07);
+            border-color: rgba(201,168,76,0.18);
         }
 
-        .nav-link.discord-link { color: #7289da !important; border-color: rgba(114,137,218,0.15); }
-        .nav-link.discord-link:hover {
-            color: #aabbff !important;
-            background: rgba(114,137,218,0.08);
-            border-color: rgba(114,137,218,0.3);
-        }
+        .nav-link.discord-link { color: #7289da !important; }
+        .nav-link.discord-link:hover { background: rgba(114,137,218,0.07); border-color: rgba(114,137,218,0.15); }
 
         .sidenav-footer {
             padding: 16px;
@@ -210,13 +298,13 @@
 
         .btn-login {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: transparent;
-            border: 1px solid rgba(168,216,234,0.3);
-            border-radius: 8px;
+            border: 1px solid rgba(168,216,234,0.25);
+            border-radius: 10px;
             color: var(--ice);
             font-family: 'Cinzel', serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -226,21 +314,27 @@
             overflow: hidden;
         }
 
-        .btn-login:hover {
-            border-color: var(--ice);
-            box-shadow: 0 0 20px rgba(168,216,234,0.15), inset 0 0 20px rgba(168,216,234,0.05);
-            transform: translateY(-1px);
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(168,216,234,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+
+        .btn-login:hover::before { opacity: 1; }
+        .btn-login:hover { border-color: var(--ice); box-shadow: 0 0 24px rgba(168,216,234,0.12); transform: translateY(-1px); }
 
         .btn-logout {
             width: 100%;
             padding: 9px;
             background: transparent;
-            border: 1px solid rgba(192,57,43,0.4);
-            border-radius: 6px;
+            border: 1px solid rgba(192,57,43,0.3);
+            border-radius: 8px;
             color: #e57373;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 2px;
             cursor: pointer;
@@ -248,7 +342,7 @@
             margin-top: 8px;
         }
 
-        .btn-logout:hover { background: rgba(192,57,43,0.12); border-color: var(--red); }
+        .btn-logout:hover { background: rgba(192,57,43,0.1); border-color: var(--red); }
 
         .user-nick {
             display: block;
@@ -257,7 +351,7 @@
             font-size: 13px;
             color: var(--ice);
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .user-rank-badge {
@@ -269,17 +363,18 @@
             margin-bottom: 8px;
         }
 
-        /* ─── MAIN ─── */
+        /* ══════════════════════════ MAIN ══════════════════════════ */
         .main-content {
             margin-left: var(--sidebar-w);
             min-height: 100vh;
             position: relative;
+            z-index: 2;
         }
 
-        /* ─── HERO ─── */
+        /* ══════════════════════════ HERO ══════════════════════════ */
         .hero-section {
             position: relative;
-            padding: 70px 48px 60px;
+            padding: 80px 56px 64px;
             overflow: hidden;
             border-bottom: 1px solid var(--border);
         }
@@ -288,30 +383,84 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(168,216,234,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 30% at 80% 50%, rgba(201,168,76,0.04) 0%, transparent 50%),
-                linear-gradient(180deg, rgba(15,17,24,0.3) 0%, var(--black) 100%);
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(168,216,234,0.09) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 85% 60%, rgba(201,168,76,0.05) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(12,15,24,0.4) 0%, var(--black) 100%);
         }
 
         .hero-rune {
             position: absolute;
-            font-size: 320px;
-            opacity: 0.018;
+            font-size: 380px;
+            opacity: 0.015;
             font-family: 'Cinzel', serif;
-            right: -20px;
-            top: -40px;
+            right: -30px;
+            top: -50px;
             line-height: 1;
             pointer-events: none;
             color: var(--ice);
             font-weight: 900;
+            animation: runeGlow 8s ease-in-out infinite;
         }
 
-        .hero-subtitle { font-size: 11px; letter-spacing: 5px; color: var(--ice); text-transform: uppercase; opacity: 0.6; margin-bottom: 16px; }
-        .hero-title { font-family: 'Cinzel', serif; font-size: clamp(28px,4vw,52px); font-weight: 900; line-height: 1.05; color: #fff; margin-bottom: 14px; text-shadow: 0 0 60px rgba(168,216,234,0.2); }
-        .hero-title span { color: var(--ice); }
-        .hero-desc { font-size: 15px; color: var(--steel); max-width: 480px; letter-spacing: 0.3px; line-height: 1.7; }
-        .hero-divider { width: 60px; height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 24px 0; }
+        @keyframes runeGlow {
+            0%, 100% { opacity: 0.015; }
+            50% { opacity: 0.03; }
+        }
 
+        .hero-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hero-line-bar { width: 40px; height: 1px; background: linear-gradient(to right, var(--gold), transparent); }
+        .hero-subtitle { font-size: 10px; letter-spacing: 6px; color: var(--gold); text-transform: uppercase; }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(30px, 4.5vw, 58px);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 16px;
+            text-shadow: 0 0 80px rgba(168,216,234,0.15);
+            animation: heroReveal 1s cubic-bezier(0.4,0,0.2,1) both;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--ice), var(--frost), var(--ice2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes heroReveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-desc { font-size: 15px; color: var(--steel); max-width: 500px; letter-spacing: 0.3px; line-height: 1.8; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+
+        .hero-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 26px 0;
+            max-width: 300px;
+        }
+
+        .hero-divider::before, .hero-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+        }
+
+        .hero-divider::before { background: linear-gradient(to right, transparent, var(--gold)); }
+        .hero-divider::after { background: linear-gradient(to left, transparent, var(--gold)); }
+        .hero-divider-gem { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); box-shadow: 0 0 12px var(--gold); }
+
+        /* Stats */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -322,198 +471,241 @@
 
         .stat-block {
             background: var(--black);
-            padding: 28px 32px;
+            padding: 30px 36px;
             position: relative;
             overflow: hidden;
-            transition: background 0.2s;
+            transition: background 0.3s;
+            cursor: default;
         }
 
-        .stat-block:hover { background: var(--panel); }
-        .stat-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--ice), transparent); opacity: 0; transition: opacity 0.3s; }
-        .stat-block:hover::before { opacity: 0.3; }
-        .stat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-        .stat-value { font-family: 'Cinzel', serif; font-size: 42px; font-weight: 900; color: #fff; line-height: 1; transition: color 0.3s; }
-        .stat-block:hover .stat-value { color: var(--ice); }
-        .stat-icon { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 32px; opacity: 0.05; }
+        .stat-block:hover { background: rgba(10,13,20,1); }
 
-        /* ─── QUICK ACTIONS ─── */
+        .stat-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--ice), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-block:hover::before { opacity: 0.4; }
+
+        .stat-block::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 100%, rgba(168,216,234,0.03), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-block:hover::after { opacity: 1; }
+
+        .stat-label { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+        .stat-value { font-family: 'Cinzel', serif; font-size: 46px; font-weight: 900; color: #fff; line-height: 1; transition: all 0.3s; }
+        .stat-block:hover .stat-value { color: var(--ice); text-shadow: 0 0 30px rgba(168,216,234,0.3); }
+        .stat-icon { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); font-size: 36px; opacity: 0.04; transition: opacity 0.3s; }
+        .stat-block:hover .stat-icon { opacity: 0.08; }
+
+        /* Quick Actions */
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px;
-            padding: 32px 48px;
+            padding: 36px 56px;
             border-bottom: 1px solid var(--border);
         }
 
         .qa-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 22px 18px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             text-decoration: none;
-        }
-
-        .qa-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-        }
-
-        .qa-card.ice:hover { border-color: rgba(168,216,234,0.3); background: rgba(168,216,234,0.05); }
-        .qa-card.gold:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.05); }
-        .qa-card.discord:hover { border-color: rgba(114,137,218,0.3); background: rgba(114,137,218,0.05); }
-        .qa-card.green:hover { border-color: rgba(76,175,125,0.3); background: rgba(76,175,125,0.05); }
-
-        .qa-icon { font-size: 28px; margin-bottom: 10px; }
-        .qa-card.ice .qa-icon { color: var(--ice); }
-        .qa-card.gold .qa-icon { color: var(--gold); }
-        .qa-card.discord .qa-icon { color: #7289da; }
-        .qa-card.green .qa-icon { color: var(--green); }
-        .qa-label { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--text); }
-        .qa-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
-        /* ─── PAGE SECTIONS ─── */
-        .page-body { padding: 40px 48px; }
-        .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
-        .section-title { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px; }
-        .section-rule { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
-
-        /* ─── WARRIOR CARDS ─── */
-        .warrior-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .warrior-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--ice); opacity: 0; transition: opacity 0.3s; }
-        .warrior-card:hover { border-color: rgba(168,216,234,0.15); background: #161921; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .warrior-card:hover::before { opacity: 0.6; }
+        .qa-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 14px;
+        }
+
+        .qa-card.ice::before { background: radial-gradient(ellipse at 50% 0%, rgba(168,216,234,0.08), transparent 70%); }
+        .qa-card.gold::before { background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08), transparent 70%); }
+        .qa-card.discord::before { background: radial-gradient(ellipse at 50% 0%, rgba(114,137,218,0.08), transparent 70%); }
+        .qa-card.green::before { background: radial-gradient(ellipse at 50% 0%, rgba(76,175,125,0.08), transparent 70%); }
+
+        .qa-card:hover::before { opacity: 1; }
+        .qa-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+
+        .qa-card.ice:hover { border-color: rgba(168,216,234,0.25); }
+        .qa-card.gold:hover { border-color: rgba(201,168,76,0.25); }
+        .qa-card.discord:hover { border-color: rgba(114,137,218,0.25); }
+        .qa-card.green:hover { border-color: rgba(76,175,125,0.25); }
+
+        .qa-icon { font-size: 30px; margin-bottom: 12px; transition: transform 0.3s; }
+        .qa-card:hover .qa-icon { transform: scale(1.15); }
+        .qa-card.ice .qa-icon { color: var(--ice); }
+        .qa-card.gold .qa-icon { color: var(--gold); }
+        .qa-card.discord .qa-icon { color: #7289da; }
+        .qa-card.green .qa-icon { color: var(--green); }
+        .qa-label { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--text); }
+        .qa-sub { font-size: 11px; color: var(--muted); margin-top: 5px; letter-spacing: 0.5px; }
+
+        /* ══════════════════════════ PAGE BODY ══════════════════════════ */
+        .page-body { padding: 44px 56px; }
+        .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+        .section-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 3px; white-space: nowrap; }
+        .section-rule { flex: 1; height: 1px; background: linear-gradient(to right, rgba(168,216,234,0.15), transparent); }
+        .section-gem { width: 5px; height: 5px; background: var(--ice); transform: rotate(45deg); opacity: 0.5; }
+
+        /* ══════════════════════════ WARRIOR CARDS ══════════════════════════ */
+        .warrior-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warrior-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--ice), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .warrior-card:hover { border-color: rgba(168,216,234,0.12); background: var(--card2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+        .warrior-card:hover::before { opacity: 0.7; }
         .warrior-name { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--frost); }
 
         .badge-rank {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 4px;
         }
 
-        .rank-admin { background: rgba(192,57,43,0.2); color: #e57373; border: 1px solid rgba(192,57,43,0.3); }
-        .rank-westra { background: rgba(168,216,234,0.1); color: var(--ice); border: 1px solid rgba(168,216,234,0.2); }
-        .rank-sturgiyali { background: rgba(128,150,176,0.1); color: var(--steel); border: 1px solid rgba(128,150,176,0.15); }
-        .rank-muted { background: rgba(90,106,126,0.15); color: #666; border: 1px solid rgba(90,106,126,0.2); }
+        .rank-admin { background: rgba(192,57,43,0.15); color: #e57373; border: 1px solid rgba(192,57,43,0.25); }
+        .rank-westra { background: rgba(168,216,234,0.08); color: var(--ice); border: 1px solid rgba(168,216,234,0.18); }
+        .rank-sturgiyali { background: rgba(122,146,168,0.1); color: var(--steel); border: 1px solid rgba(122,146,168,0.15); }
+        .rank-muted { background: rgba(74,92,112,0.1); color: #555; border: 1px solid rgba(74,92,112,0.15); }
 
-        /* ─── CHAT ─── */
+        /* ══════════════════════════ CHAT ══════════════════════════ */
         .chat-wrapper {
             display: grid;
-            grid-template-columns: 1fr 280px;
+            grid-template-columns: 1fr 270px;
             gap: 20px;
-            height: calc(100vh - 160px);
+            height: calc(100vh - 180px);
         }
 
         .chat-main {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
         .chat-header {
-            padding: 16px 20px;
+            padding: 16px 22px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 10px;
+            background: rgba(255,255,255,0.01);
         }
 
         .chat-status-dot {
             width: 8px; height: 8px;
             border-radius: 50%;
             background: var(--green);
-            box-shadow: 0 0 6px var(--green);
+            box-shadow: 0 0 8px var(--green);
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
 
-        .chat-title { font-family: 'Cinzel', serif; font-size: 14px; color: #fff; letter-spacing: 1px; }
+        .chat-title { font-family: 'Cinzel', serif; font-size: 13px; color: #fff; letter-spacing: 2px; }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 20px;
+            padding: 20px 22px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .chat-messages::-webkit-scrollbar { width: 4px; }
         .chat-messages::-webkit-scrollbar-track { background: transparent; }
-        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 2px; }
 
-        .msg-group { margin-bottom: 10px; }
+        .msg-group { margin-bottom: 12px; }
 
         .msg-author-line {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
 
-        .msg-author {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
+        .msg-author { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; }
         .msg-author.admin { color: #e57373; }
         .msg-author.westra { color: var(--ice); }
         .msg-author.sturgiyali { color: var(--steel); }
-
-        .msg-time {
-            font-size: 10px;
-            color: var(--muted);
-            letter-spacing: 0.5px;
-        }
+        .msg-time { font-size: 10px; color: var(--muted); }
 
         .msg-bubble {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.025);
             border: 1px solid var(--border);
-            border-radius: 0 8px 8px 8px;
-            padding: 8px 14px;
+            border-radius: 0 10px 10px 10px;
+            padding: 9px 14px;
             font-size: 14px;
             line-height: 1.6;
             color: var(--text);
             max-width: 100%;
             word-break: break-word;
             position: relative;
+            transition: background 0.15s;
         }
+
+        .msg-bubble:hover { background: rgba(255,255,255,0.035); }
 
         .msg-bubble.own {
             background: rgba(168,216,234,0.05);
             border-color: rgba(168,216,234,0.1);
-            border-radius: 8px 0 8px 8px;
+            border-radius: 10px 0 10px 10px;
         }
 
         .msg-bubble:hover .msg-actions { opacity: 1; }
 
         .msg-actions {
             position: absolute;
-            right: 8px;
-            top: 50%;
+            right: 8px; top: 50%;
             transform: translateY(-50%);
             display: flex;
             gap: 4px;
@@ -535,7 +727,7 @@
         .msg-act-btn:hover { color: #e57373; border-color: rgba(192,57,43,0.3); }
 
         .chat-input-area {
-            padding: 12px 16px;
+            padding: 14px 18px;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 10px;
@@ -546,8 +738,8 @@
             flex: 1;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 14px;
+            border-radius: 10px;
+            padding: 11px 16px;
             color: var(--text);
             font-family: 'Rajdhani', sans-serif;
             font-size: 14px;
@@ -555,26 +747,26 @@
             transition: all 0.2s;
         }
 
-        .chat-input:focus { border-color: rgba(168,216,234,0.25); background: rgba(168,216,234,0.03); }
+        .chat-input:focus { border-color: rgba(168,216,234,0.22); background: rgba(168,216,234,0.03); box-shadow: 0 0 0 3px rgba(168,216,234,0.04); }
         .chat-input::placeholder { color: var(--muted); }
 
         .chat-send-btn {
-            background: linear-gradient(135deg, rgba(168,216,234,0.15), rgba(168,216,234,0.08));
-            border: 1px solid rgba(168,216,234,0.25);
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(168,216,234,0.14), rgba(168,216,234,0.07));
+            border: 1px solid rgba(168,216,234,0.22);
+            border-radius: 10px;
             color: var(--ice);
             font-size: 14px;
-            padding: 10px 16px;
+            padding: 11px 18px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .chat-send-btn:hover { background: rgba(168,216,234,0.2); border-color: rgba(168,216,234,0.4); }
+        .chat-send-btn:hover { background: rgba(168,216,234,0.18); border-color: rgba(168,216,234,0.38); box-shadow: 0 0 14px rgba(168,216,234,0.1); }
 
         .chat-sidebar {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -583,455 +775,675 @@
         .chat-sidebar-header {
             padding: 16px 18px;
             border-bottom: 1px solid var(--border);
-            font-size: 11px;
-            letter-spacing: 2px;
+            font-size: 10px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--muted);
+            background: rgba(255,255,255,0.01);
         }
 
-        .chat-members {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-        }
+        .chat-members { flex: 1; overflow-y: auto; padding: 10px; }
 
         .chat-member-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 7px 10px;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: background 0.15s;
         }
 
         .chat-member-item:hover { background: rgba(255,255,255,0.03); }
-
-        .chat-member-name {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            color: var(--text);
-        }
+        .chat-member-name { font-family: 'Cinzel', serif; font-size: 11px; color: var(--text); }
 
         .muted-tag {
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #e57373;
-            background: rgba(192,57,43,0.15);
-            border: 1px solid rgba(192,57,43,0.25);
-            padding: 2px 6px;
-            border-radius: 3px;
+            font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+            color: #e57373; background: rgba(192,57,43,0.12);
+            border: 1px solid rgba(192,57,43,0.22); padding: 2px 6px; border-radius: 3px;
         }
 
         .mute-btn {
-            background: none;
-            border: 1px solid rgba(192,57,43,0.3);
-            border-radius: 4px;
-            color: #e57373;
-            font-size: 10px;
-            padding: 3px 8px;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            transition: all 0.15s;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
+            background: none; border: 1px solid rgba(192,57,43,0.25); border-radius: 4px;
+            color: #e57373; font-size: 9px; padding: 3px 8px; cursor: pointer;
+            letter-spacing: 0.5px; transition: all 0.15s;
+            font-family: 'Rajdhani', sans-serif; font-weight: 700;
         }
 
-        .mute-btn:hover { background: rgba(192,57,43,0.15); }
+        .mute-btn:hover { background: rgba(192,57,43,0.12); }
 
         .muted-notice {
-            background: rgba(192,57,43,0.1);
-            border: 1px solid rgba(192,57,43,0.2);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 12px;
-            color: #e57373;
-            letter-spacing: 0.5px;
-            text-align: center;
+            background: rgba(192,57,43,0.08);
+            border: 1px solid rgba(192,57,43,0.18);
+            border-radius: 10px; padding: 10px 14px;
+            font-size: 12px; color: #e57373; letter-spacing: 0.5px; text-align: center;
         }
 
-        /* ─── FORUM ─── */
+        /* ══════════════════════════ FORUM ══════════════════════════ */
         .forum-post-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px 24px;
-            transition: all 0.2s;
+            border-radius: 12px;
+            padding: 22px 26px;
+            transition: all 0.3s;
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
-        .forum-post-card:hover { border-color: rgba(168,216,234,0.15); background: #161921; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .forum-post-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: 0; transition: opacity 0.3s; }
-        .forum-post-card:hover::before { opacity: 0.6; }
+        .forum-post-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--gold), var(--gold2));
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .forum-post-card:hover { border-color: rgba(201,168,76,0.15); background: var(--card2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.35); }
+        .forum-post-card:hover::before { opacity: 0.7; }
 
         .forum-tag {
             display: inline-block;
-            font-size: 9px;
-            letter-spacing: 2px;
+            font-size: 8px;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 3px;
-            margin-bottom: 10px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
-        .tag-general { background: rgba(128,150,176,0.15); color: var(--steel); border: 1px solid rgba(128,150,176,0.2); }
-        .tag-strategy { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); }
-        .tag-bug { background: rgba(192,57,43,0.12); color: #e57373; border: 1px solid rgba(192,57,43,0.2); }
-        .tag-event { background: rgba(76,175,125,0.12); color: var(--green); border: 1px solid rgba(76,175,125,0.2); }
-        .tag-suggestion { background: rgba(168,216,234,0.1); color: var(--ice); border: 1px solid rgba(168,216,234,0.15); }
+        .tag-general { background: rgba(122,146,168,0.12); color: var(--steel); border: 1px solid rgba(122,146,168,0.18); }
+        .tag-strategy { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.18); }
+        .tag-bug { background: rgba(192,57,43,0.1); color: #e57373; border: 1px solid rgba(192,57,43,0.18); }
+        .tag-event { background: rgba(76,175,125,0.1); color: var(--green); border: 1px solid rgba(76,175,125,0.18); }
+        .tag-suggestion { background: rgba(168,216,234,0.08); color: var(--ice); border: 1px solid rgba(168,216,234,0.14); }
 
-        .forum-post-title { font-family: 'Cinzel', serif; font-size: 16px; color: #fff; margin-bottom: 8px; }
-        .forum-post-preview { font-size: 13px; color: var(--steel); line-height: 1.6; margin-bottom: 14px; }
-        .forum-post-meta { display: flex; gap: 16px; align-items: center; font-size: 11px; color: var(--muted); }
-        .forum-post-meta i { font-size: 10px; }
+        .forum-post-title { font-family: 'Cinzel', serif; font-size: 16px; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+        .forum-post-preview { font-size: 13px; color: var(--steel); line-height: 1.6; margin-bottom: 16px; }
+        .forum-post-meta { display: flex; gap: 18px; align-items: center; font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
+        .forum-post-meta i { font-size: 9px; }
 
         .forum-compose {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
+            border-radius: 14px;
+            padding: 32px;
             margin-bottom: 24px;
         }
 
-        .compose-title { font-family: 'Cinzel', serif; font-size: 15px; color: #fff; margin-bottom: 20px; letter-spacing: 1px; }
+        .compose-title { font-family: 'Cinzel', serif; font-size: 15px; color: #fff; margin-bottom: 22px; letter-spacing: 2px; }
 
-        .form-label-custom { display: block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-        .form-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 15px; transition: all 0.2s; outline: none; }
-        .form-input:focus { border-color: rgba(168,216,234,0.3); background: rgba(168,216,234,0.03); box-shadow: 0 0 0 3px rgba(168,216,234,0.05); }
+        .form-label-custom { display: block; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+        .form-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 15px; transition: all 0.2s; outline: none; }
+        .form-input:focus { border-color: rgba(168,216,234,0.25); background: rgba(168,216,234,0.025); box-shadow: 0 0 0 3px rgba(168,216,234,0.04); }
         .form-input::placeholder { color: var(--muted); }
-
         textarea.form-input { resize: vertical; min-height: 100px; }
 
         .form-select-dark {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 10px 12px;
-            color: var(--text);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            outline: none;
-            transition: border-color 0.2s;
-            width: 100%;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; color: var(--text); font-family: 'Rajdhani', sans-serif;
+            font-size: 13px; cursor: pointer; outline: none; transition: border-color 0.2s; width: 100%;
         }
 
-        .form-select-dark:focus { border-color: rgba(168,216,234,0.3); }
-        .form-select-dark option { background: #1a1d26; }
+        .form-select-dark:focus { border-color: rgba(168,216,234,0.25); }
+        .form-select-dark option { background: #141828; }
 
         .btn-action {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, rgba(168,216,234,0.12), rgba(168,216,234,0.06));
-            border: 1px solid rgba(168,216,234,0.25);
-            border-radius: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, rgba(168,216,234,0.1), rgba(168,216,234,0.05));
+            border: 1px solid rgba(168,216,234,0.22);
+            border-radius: 10px;
             color: var(--ice);
             font-family: 'Cinzel', serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 3px;
             cursor: pointer;
             transition: all 0.3s;
-        }
-
-        .btn-action:hover { background: linear-gradient(135deg, rgba(168,216,234,0.2), rgba(168,216,234,0.1)); border-color: rgba(168,216,234,0.4); box-shadow: 0 0 24px rgba(168,216,234,0.12); transform: translateY(-1px); }
-        .btn-action-full { width: 100%; margin-top: 16px; }
-
-        /* ─── FORUM DETAIL ─── */
-        .forum-detail { display: none; }
-
-        .reply-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-        }
-
-        .reply-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
-        .reply-author { font-family: 'Cinzel', serif; font-size: 13px; }
-        .reply-author.admin { color: #e57373; }
-        .reply-author.westra { color: var(--ice); }
-        .reply-author.sturgiyali { color: var(--steel); }
-        .reply-time { font-size: 11px; color: var(--muted); }
-        .reply-text { font-size: 14px; color: var(--text); line-height: 1.6; }
-
-        /* ─── SETTINGS ─── */
-        .settings-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 480px; }
-        .settings-title { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; margin-bottom: 8px; }
-        .settings-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; letter-spacing: 0.3px; }
-
-        /* ─── ADMIN TABLE ─── */
-        .admin-table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        .admin-table-head { padding: 20px 28px; border-bottom: 1px solid var(--border); }
-
-        table { width: 100%; border-collapse: collapse; }
-        thead tr { border-bottom: 1px solid var(--border); }
-        thead th { padding: 12px 28px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); font-weight: 600; background: rgba(255,255,255,0.01); }
-        tbody tr { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
-        tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: rgba(255,255,255,0.02); }
-        tbody td { padding: 14px 28px; font-size: 14px; color: var(--text); }
-
-        /* ─── DISCORD SECTION ─── */
-        .discord-hero {
-            background: linear-gradient(135deg, rgba(114,137,218,0.08), rgba(114,137,218,0.03));
-            border: 1px solid rgba(114,137,218,0.15);
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
             position: relative;
             overflow: hidden;
-            margin-bottom: 28px;
         }
 
-        .discord-hero::before {
+        .btn-action::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(114,137,218,0.12), transparent);
+            background: linear-gradient(135deg, rgba(168,216,234,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .discord-logo { font-size: 64px; color: #7289da; margin-bottom: 20px; position: relative; }
-        .discord-heading { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 10px; position: relative; }
-        .discord-sub { font-size: 14px; color: var(--steel); max-width: 400px; margin: 0 auto 28px; line-height: 1.7; position: relative; }
+        .btn-action:hover::before { opacity: 1; }
+        .btn-action:hover { border-color: rgba(168,216,234,0.38); box-shadow: 0 0 28px rgba(168,216,234,0.1); transform: translateY(-1px); }
+        .btn-action-full { width: 100%; margin-top: 16px; }
 
-        .btn-discord {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, rgba(114,137,218,0.25), rgba(114,137,218,0.12));
-            border: 1px solid rgba(114,137,218,0.4);
+        /* Forum detail */
+        .forum-detail { display: none; }
+
+        .reply-card {
+            background: rgba(255,255,255,0.018);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            color: #aabbff;
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            transition: background 0.15s;
+        }
+
+        .reply-card:hover { background: rgba(255,255,255,0.028); }
+        .reply-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .reply-author { font-family: 'Cinzel', serif; font-size: 12px; }
+        .reply-author.admin { color: #e57373; }
+        .reply-author.westra { color: var(--ice); }
+        .reply-author.sturgiyali { color: var(--steel); }
+        .reply-time { font-size: 10px; color: var(--muted); }
+        .reply-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+        /* ══════════════════════════ GALLERY ══════════════════════════ */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            aspect-ratio: 16/10;
+            cursor: pointer;
+            group: true;
+        }
+
+        .gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), filter 0.4s;
+            filter: brightness(0.85) saturate(0.9);
+        }
+
+        .gallery-item:hover img { transform: scale(1.07); filter: brightness(1) saturate(1.1); }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.35s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+        }
+
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+        .gallery-caption { font-family: 'Cinzel', serif; font-size: 12px; color: #fff; letter-spacing: 1px; }
+        .gallery-meta { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 1px; }
+
+        .gallery-actions {
+            position: absolute;
+            top: 10px; right: 10px;
+            display: flex; gap: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-actions { opacity: 1; }
+
+        .gallery-btn {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 11px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Rajdhani', sans-serif;
             font-weight: 700;
-            letter-spacing: 2px;
-            text-decoration: none;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(8px);
+        }
+
+        .gallery-btn:hover { background: rgba(192,57,43,0.5); color: #fff; border-color: rgba(192,57,43,0.4); }
+        .gallery-btn.view-btn:hover { background: rgba(168,216,234,0.2); color: var(--ice); border-color: rgba(168,216,234,0.3); }
+
+        .gallery-upload-area {
+            background: var(--card);
+            border: 1px dashed rgba(168,216,234,0.2);
+            border-radius: 14px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 28px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
         }
 
-        .btn-discord:hover {
-            background: rgba(114,137,218,0.3);
-            border-color: rgba(114,137,218,0.6);
-            box-shadow: 0 0 30px rgba(114,137,218,0.2);
-            transform: translateY(-2px);
-            color: #fff;
+        .gallery-upload-area:hover { border-color: rgba(168,216,234,0.4); background: rgba(168,216,234,0.03); }
+        .gallery-upload-area:hover .upload-icon { transform: translateY(-3px) scale(1.1); color: var(--ice); }
+
+        .upload-icon { font-size: 32px; color: var(--muted); margin-bottom: 12px; transition: all 0.3s; display: block; }
+        .upload-hint { font-size: 12px; color: var(--muted); letter-spacing: 1px; margin-top: 6px; }
+
+        /* Gallery lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(12px);
         }
 
-        .discord-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            animation: lbIn 0.3s ease;
         }
+
+        @keyframes lbIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px; right: 24px;
+            background: none; border: none;
+            color: var(--text); font-size: 28px;
+            cursor: pointer; transition: color 0.2s;
+        }
+
+        .lightbox-close:hover { color: #fff; }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 28px; left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        /* ══════════════════════════ SETTINGS ══════════════════════════ */
+        .settings-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 44px; max-width: 500px; }
+        .settings-title { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; margin-bottom: 8px; }
+        .settings-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; letter-spacing: 0.3px; line-height: 1.6; }
+
+        .password-strength {
+            height: 3px;
+            border-radius: 2px;
+            margin-top: 8px;
+            background: var(--border);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s ease, background-color 0.3s;
+        }
+
+        .strength-label { font-size: 10px; letter-spacing: 1px; margin-top: 5px; }
+
+        /* ══════════════════════════ ADMIN TABLE ══════════════════════════ */
+        .admin-table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .admin-table-head { padding: 22px 30px; border-bottom: 1px solid var(--border); }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { border-bottom: 1px solid var(--border); }
+        thead th { padding: 13px 30px; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); font-weight: 600; background: rgba(255,255,255,0.01); }
+        tbody tr { border-bottom: 1px solid rgba(255,255,255,0.025); transition: background 0.15s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.018); }
+        tbody td { padding: 14px 30px; font-size: 14px; color: var(--text); vertical-align: middle; }
+
+        /* ══════════════════════════ DISCORD ══════════════════════════ */
+        .discord-hero {
+            background: linear-gradient(135deg, rgba(114,137,218,0.07), rgba(114,137,218,0.02));
+            border: 1px solid rgba(114,137,218,0.13);
+            border-radius: 18px; padding: 48px; text-align: center;
+            position: relative; overflow: hidden; margin-bottom: 28px;
+        }
+
+        .discord-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(114,137,218,0.1), transparent); }
+
+        .discord-logo { font-size: 68px; color: #7289da; margin-bottom: 22px; position: relative; animation: discordFloat 4s ease-in-out infinite; }
+        @keyframes discordFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        .discord-heading { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 12px; position: relative; }
+        .discord-sub { font-size: 14px; color: var(--steel); max-width: 400px; margin: 0 auto 32px; line-height: 1.8; position: relative; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; }
+
+        .btn-discord {
+            display: inline-flex; align-items: center; gap: 10px; padding: 15px 36px;
+            background: linear-gradient(135deg, rgba(114,137,218,0.22), rgba(114,137,218,0.1));
+            border: 1px solid rgba(114,137,218,0.35); border-radius: 12px;
+            color: #aabbff; font-family: 'Cinzel', serif; font-size: 12px;
+            font-weight: 700; letter-spacing: 2px; text-decoration: none; cursor: pointer;
+            transition: all 0.35s; position: relative;
+        }
+
+        .btn-discord:hover { background: rgba(114,137,218,0.28); border-color: rgba(114,137,218,0.55); box-shadow: 0 0 36px rgba(114,137,218,0.2); transform: translateY(-3px); color: #fff; }
+
+        .discord-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
         .dc-stat {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center;
+            transition: all 0.3s;
         }
 
-        .dc-stat-icon { font-size: 24px; color: #7289da; margin-bottom: 10px; }
+        .dc-stat:hover { border-color: rgba(114,137,218,0.2); transform: translateY(-2px); }
+        .dc-stat-icon { font-size: 26px; color: #7289da; margin-bottom: 12px; }
         .dc-stat-value { font-family: 'Cinzel', serif; font-size: 22px; color: #fff; margin-bottom: 4px; }
-        .dc-stat-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+        .dc-stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 
-        /* ─── MODAL ─── */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        /* ══════════════════════════ MODAL ══════════════════════════ */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
         .modal-overlay.open { display: flex; }
 
-        .modal-box { background: var(--panel); border: 1px solid rgba(168,216,234,0.1); border-radius: 16px; padding: 48px 44px; width: 100%; max-width: 420px; position: relative; box-shadow: 0 20px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03); animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.93) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-
-        .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; transition: color 0.2s; padding: 4px 8px; }
-        .modal-close:hover { color: var(--text); }
-        .modal-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 6px; letter-spacing: 2px; }
-        .modal-sub { font-size: 12px; color: var(--muted); text-align: center; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 36px; }
-
-        /* ─── TOAST ─── */
-        .toast-msg { position: fixed; top: 24px; right: 24px; background: var(--card); border: 1px solid rgba(168,216,234,0.2); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; color: var(--ice); box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 2000; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-        .toast-msg.show { transform: translateX(0); }
-
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-        .empty-state i { font-size: 48px; opacity: 0.2; margin-bottom: 16px; display: block; }
-
-        @media (max-width: 768px) {
-            .sidenav { transform: translateX(-100%); }
-            .main-content { margin-left: 0; }
-            .hero-section { padding: 40px 24px 32px; }
-            .page-body { padding: 24px; }
-            .chat-wrapper { grid-template-columns: 1fr; }
-            .chat-sidebar { display: none; }
-            .quick-actions { padding: 20px 24px; }
-            thead th, tbody td { padding: 12px 16px; }
+        .modal-box {
+            background: var(--panel);
+            border: 1px solid rgba(168,216,234,0.08);
+            border-radius: 20px; padding: 52px 48px; width: 100%; max-width: 440px;
+            position: relative;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.02);
+            animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            margin: 16px;
         }
 
-        section { animation: fadeIn 0.35s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(14px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-close { position: absolute; top: 18px; right: 18px; background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; transition: color 0.2s; padding: 6px 10px; border-radius: 6px; }
+        .modal-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .modal-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 6px; letter-spacing: 2px; }
+        .modal-sub { font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 38px; }
 
-        /* Scrollbar global */
+        /* ══════════════════════════ PENDING APPROVAL ══════════════════════════ */
+        .pending-card {
+            background: linear-gradient(135deg, rgba(201,168,76,0.05), rgba(201,168,76,0.02));
+            border: 1px solid rgba(201,168,76,0.18);
+            border-radius: 14px;
+            padding: 36px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .pending-icon { font-size: 48px; color: var(--gold); margin-bottom: 16px; opacity: 0.7; display: block; animation: pendingPulse 2s ease-in-out infinite; }
+        @keyframes pendingPulse { 0%,100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+
+        .pending-title { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold2); margin-bottom: 8px; letter-spacing: 2px; }
+        .pending-desc { font-size: 13px; color: var(--steel); line-height: 1.7; max-width: 360px; margin: 0 auto; }
+
+        /* Admin approve section */
+        .approve-badge {
+            font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--gold); background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.2); padding: 2px 8px; border-radius: 3px;
+        }
+
+        /* ══════════════════════════ TOAST ══════════════════════════ */
+        .toast-msg {
+            position: fixed; top: 24px; right: 24px;
+            background: var(--card);
+            border: 1px solid rgba(168,216,234,0.18);
+            border-radius: 12px; padding: 14px 22px;
+            display: flex; align-items: center; gap: 12px;
+            font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+            color: var(--ice);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.02);
+            z-index: 3000; transform: translateX(130%);
+            transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+            max-width: 320px;
+        }
+
+        .toast-msg.show { transform: translateX(0); }
+
+        /* ══════════════════════════ EMPTY / MISC ══════════════════════════ */
+        .empty-state { text-align: center; padding: 64px 20px; color: var(--muted); }
+        .empty-state i { font-size: 52px; opacity: 0.15; margin-bottom: 18px; display: block; }
+        .empty-state p { letter-spacing: 1px; font-size: 13px; }
+
+        .d-none { display: none !important; }
+
+        section { animation: fadeIn 0.38s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: var(--black); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
+
+        /* ══════════════════════════ RESPONSIVE ══════════════════════════ */
+        @media (max-width: 900px) {
+            .sidenav { transform: translateX(-100%); }
+            .sidenav.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .hero-section { padding: 60px 28px 44px; }
+            .page-body { padding: 28px 24px; }
+            .chat-wrapper { grid-template-columns: 1fr; height: auto; }
+            .chat-main { height: 65vh; }
+            .chat-sidebar { display: none; }
+            .quick-actions { padding: 24px; grid-template-columns: repeat(2, 1fr); }
+            .hamburger { display: flex; }
+            .discord-stats { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 500px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .modal-box { padding: 36px 24px; }
+            .hero-section { padding: 52px 20px 36px; }
+            .page-body { padding: 20px 16px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
-    <nav class="sidenav">
-        <div class="clan-brand">
-            <div class="clan-avatar-wrap">
-                <img src="https://i.ibb.co/3p3r3mH/image-16de68.jpg" class="clan-avatar" alt="Sturgia Logo">
-            </div>
-            <div class="clan-name">Sturgia</div>
-            <div class="clan-tagline">Elite Clan</div>
+<!-- AMBIENT -->
+<div class="ambient-bg">
+    <div class="ambient-orb orb1"></div>
+    <div class="ambient-orb orb2"></div>
+    <div class="ambient-orb orb3"></div>
+</div>
+<div class="noise-overlay"></div>
+
+<!-- HAMBURGER -->
+<button class="hamburger" onclick="toggleNav()" id="hamburger-btn">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- NAV OVERLAY -->
+<div class="nav-overlay" id="nav-overlay" onclick="closeNav()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidenav" id="sidenav">
+    <div class="clan-brand">
+        <div class="clan-avatar-wrap">
+            <img src="https://i.ibb.co/3p3r3mH/image-16de68.jpg" class="clan-avatar" alt="Sturgia Logo">
         </div>
+        <div class="clan-name">Sturgia</div>
+        <div class="clan-tagline">Elite Clan</div>
+    </div>
 
-        <div class="sidenav-menu">
-            <div class="nav-section-label">Genel</div>
-            <a href="#" onclick="show('home')" class="nav-link active" id="nav-home">
-                <i class="fas fa-compass"></i> Anasayfa
-            </a>
-            <a href="#" onclick="show('warriors')" class="nav-link" id="nav-warriors">
-                <i class="fas fa-users"></i> Savaşçılar
-            </a>
-            <a href="#" onclick="show('chat')" class="nav-link" id="nav-chat">
-                <i class="fas fa-comments"></i> Klan Sohbeti
-            </a>
-            <a href="#" onclick="show('forum')" class="nav-link" id="nav-forum">
-                <i class="fas fa-scroll"></i> Forum
-            </a>
+    <div class="sidenav-menu">
+        <div class="nav-section-label">Genel</div>
+        <a href="#" onclick="show('home')" class="nav-link active" id="nav-home">
+            <i class="fas fa-compass"></i> Anasayfa
+        </a>
+        <a href="#" onclick="show('warriors')" class="nav-link" id="nav-warriors">
+            <i class="fas fa-users"></i> Savaşçılar
+        </a>
+        <a href="#" onclick="showProtected('chat')" class="nav-link" id="nav-chat">
+            <i class="fas fa-comments"></i> Klan Sohbeti
+        </a>
+        <a href="#" onclick="showProtected('forum')" class="nav-link" id="nav-forum">
+            <i class="fas fa-scroll"></i> Forum
+        </a>
+        <a href="#" onclick="show('gallery')" class="nav-link" id="nav-gallery">
+            <i class="fas fa-images"></i> Galeri
+        </a>
 
-            <div class="nav-section-label">Topluluğu</div>
-            <a href="#" onclick="show('discord')" class="nav-link discord-link" id="nav-discord">
-                <i class="fab fa-discord"></i> Discord
-            </a>
-            <a href="#" onclick="show('settings')" class="nav-link" id="nav-settings">
-                <i class="fas fa-shield-alt"></i> Güvenlik
-            </a>
+        <div class="nav-section-label">Topluluk</div>
+        <a href="#" onclick="show('discord')" class="nav-link discord-link" id="nav-discord">
+            <i class="fab fa-discord"></i> Discord
+        </a>
+        <a href="#" onclick="show('settings')" class="nav-link" id="nav-settings">
+            <i class="fas fa-shield-alt"></i> Güvenlik
+        </a>
 
-            <div id="admin-nav-item" class="d-none">
-                <div class="nav-section-label">Yönetim</div>
-                <a href="#" onclick="show('admin')" class="nav-link admin-link" id="nav-admin">
-                    <i class="fas fa-crown"></i> Admin Paneli
-                </a>
-            </div>
+        <div id="admin-nav-item" class="d-none">
+            <div class="nav-section-label">Yönetim</div>
+            <a href="#" onclick="show('admin')" class="nav-link admin-link" id="nav-admin">
+                <i class="fas fa-crown"></i> Admin Paneli
+            </a>
         </div>
+    </div>
 
-        <div class="sidenav-footer">
-            <div id="auth-section">
-                <button onclick="openModal()" class="btn-login">
-                    <i class="fas fa-sign-in-alt me-2"></i> Giriş Yap
-                </button>
-            </div>
-            <div id="user-section" class="d-none">
-                <span id="display-nick" class="user-nick"></span>
-                <span id="display-rank" class="user-rank-badge"></span>
-                <button onclick="logout()" class="btn-logout">
-                    <i class="fas fa-sign-out-alt me-2"></i> Çıkış Yap
-                </button>
-            </div>
+    <div class="sidenav-footer">
+        <div id="auth-section">
+            <button onclick="openModal()" class="btn-login">
+                <i class="fas fa-sign-in-alt" style="margin-right:8px"></i> Giriş Yap
+            </button>
         </div>
-    </nav>
+        <div id="user-section" class="d-none">
+            <span id="display-nick" class="user-nick"></span>
+            <span id="display-rank" class="user-rank-badge"></span>
+            <button onclick="logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt" style="margin-right:6px"></i> Çıkış Yap
+            </button>
+        </div>
+    </div>
+</nav>
 
-    <!-- MAIN -->
-    <main class="main-content">
+<!-- MAIN -->
+<main class="main-content">
 
-        <!-- HOME -->
-        <section id="page-home">
-            <div class="hero-section">
-                <div class="hero-bg"></div>
-                <div class="hero-rune">ᛋ</div>
-                <div style="position:relative">
+    <!-- HOME -->
+    <section id="page-home">
+        <div class="hero-section">
+            <div class="hero-bg"></div>
+            <div class="hero-rune">ᛋ</div>
+            <div style="position:relative">
+                <div class="hero-line">
+                    <div class="hero-line-bar"></div>
                     <div class="hero-subtitle">Klan Merkezi</div>
-                    <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
-                    <div class="hero-divider"></div>
-                    <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyden gelen savaşçıların destansı birliği.</p>
+                </div>
+                <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
+                <div class="hero-divider"><div class="hero-divider-gem"></div></div>
+                <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Kuzeyden gelen savaşçıların destansı birliği.</p>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-block">
+                <div class="stat-label">Toplam Savaşçı</div>
+                <div class="stat-value" id="army-total">0</div>
+                <i class="fas fa-users stat-icon"></i>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Aktif Rütbe</div>
+                <div class="stat-value" style="font-size:24px; padding-top:10px" id="hero-rank">—</div>
+                <i class="fas fa-medal stat-icon"></i>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Forum Konuları</div>
+                <div class="stat-value" id="forum-count">0</div>
+                <i class="fas fa-scroll stat-icon"></i>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Klan Durumu</div>
+                <div class="stat-value" style="font-size:20px; color: var(--green); padding-top:10px">AKTİF</div>
+                <i class="fas fa-fire stat-icon"></i>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <a href="#" onclick="showProtected('chat')" class="qa-card ice">
+                <div class="qa-icon"><i class="fas fa-comments"></i></div>
+                <div class="qa-label">Sohbet</div>
+                <div class="qa-sub">Klanla konuş</div>
+            </a>
+            <a href="#" onclick="showProtected('forum')" class="qa-card gold">
+                <div class="qa-icon"><i class="fas fa-scroll"></i></div>
+                <div class="qa-label">Forum</div>
+                <div class="qa-sub">Konu aç</div>
+            </a>
+            <a href="#" onclick="show('gallery')" class="qa-card green">
+                <div class="qa-icon"><i class="fas fa-images"></i></div>
+                <div class="qa-label">Galeri</div>
+                <div class="qa-sub">Fotoğraflar</div>
+            </a>
+            <a href="#" onclick="show('discord')" class="qa-card discord">
+                <div class="qa-icon"><i class="fab fa-discord"></i></div>
+                <div class="qa-label">Discord</div>
+                <div class="qa-sub">Sunucuya katıl</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- WARRIORS -->
+    <section id="page-warriors" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Aktif Savaşçılar</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+            <div id="warrior-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px"></div>
+        </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="page-chat" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Klan Sohbeti</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+
+            <!-- PENDING STATE -->
+            <div id="chat-pending" class="d-none">
+                <div class="pending-card">
+                    <i class="fas fa-hourglass-half pending-icon"></i>
+                    <div class="pending-title">Onay Bekleniyor</div>
+                    <div class="pending-desc">Hesabın henüz bir admin tarafından onaylanmadı. Onaylandıktan sonra klan sohbetine erişebilirsin.</div>
                 </div>
             </div>
 
-            <div class="stats-row">
-                <div class="stat-block">
-                    <div class="stat-label">Toplam Savaşçı</div>
-                    <div class="stat-value" id="army-total">0</div>
-                    <i class="fas fa-users stat-icon"></i>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-label">Aktif Rütbe</div>
-                    <div class="stat-value" style="font-size:28px; padding-top:6px" id="hero-rank">—</div>
-                    <i class="fas fa-medal stat-icon"></i>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-label">Forum Konuları</div>
-                    <div class="stat-value" id="forum-count">0</div>
-                    <i class="fas fa-scroll stat-icon"></i>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-label">Klan Durumu</div>
-                    <div class="stat-value" style="font-size:22px; color: #4caf7d; padding-top:8px">AKTİF</div>
-                    <i class="fas fa-fire stat-icon"></i>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <a href="#" onclick="show('chat')" class="qa-card ice">
-                    <div class="qa-icon"><i class="fas fa-comments"></i></div>
-                    <div class="qa-label">Sohbet</div>
-                    <div class="qa-sub">Klanla konuş</div>
-                </a>
-                <a href="#" onclick="show('forum')" class="qa-card gold">
-                    <div class="qa-icon"><i class="fas fa-scroll"></i></div>
-                    <div class="qa-label">Forum</div>
-                    <div class="qa-sub">Konu aç</div>
-                </a>
-                <a href="#" onclick="show('discord')" class="qa-card discord">
-                    <div class="qa-icon"><i class="fab fa-discord"></i></div>
-                    <div class="qa-label">Discord</div>
-                    <div class="qa-sub">Sunucuya katıl</div>
-                </a>
-                <a href="#" onclick="show('warriors')" class="qa-card green">
-                    <div class="qa-icon"><i class="fas fa-users"></i></div>
-                    <div class="qa-label">Savaşçılar</div>
-                    <div class="qa-sub">Üyeleri gör</div>
-                </a>
-            </div>
-        </section>
-
-        <!-- WARRIORS -->
-        <section id="page-warriors" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Aktif Savaşçılar</div>
-                    <div class="section-rule"></div>
-                </div>
-                <div id="warrior-grid" class="row g-3"></div>
-            </div>
-        </section>
-
-        <!-- CHAT -->
-        <section id="page-chat" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Klan Sohbeti</div>
-                    <div class="section-rule"></div>
-                </div>
+            <!-- CHAT CONTENT -->
+            <div id="chat-content" class="d-none">
                 <div class="chat-wrapper">
                     <div class="chat-main">
                         <div class="chat-header">
                             <div class="chat-status-dot"></div>
                             <div class="chat-title">Genel Kanal</div>
-                            <div style="margin-left:auto; font-size:11px; color:var(--muted); letter-spacing:1px"># STURGIA</div>
+                            <div style="margin-left:auto; font-size:10px; color:var(--muted); letter-spacing:2px"># STURGIA</div>
                         </div>
                         <div class="chat-messages" id="chat-messages">
                             <div class="empty-state">
@@ -1046,37 +1458,67 @@
                             </button>
                         </div>
                         <div id="muted-notice" class="d-none" style="padding:12px 16px; border-top:1px solid var(--border)">
-                            <div class="muted-notice"><i class="fas fa-volume-mute me-2"></i> Susturuldunuz. Kalan süre: <span id="mute-countdown"></span></div>
+                            <div class="muted-notice"><i class="fas fa-volume-mute" style="margin-right:8px"></i>Susturuldunuz. Kalan süre: <span id="mute-countdown"></span></div>
                         </div>
                     </div>
                     <div class="chat-sidebar">
                         <div class="chat-sidebar-header">
-                            <i class="fas fa-users me-2"></i> Üyeler
+                            <i class="fas fa-users" style="margin-right:8px"></i> Üyeler
                         </div>
                         <div class="chat-members" id="chat-members-list"></div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- FORUM -->
-        <section id="page-forum" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Klan Forumu</div>
-                    <div class="section-rule"></div>
+            <!-- NOT LOGGED IN -->
+            <div id="chat-login-prompt" class="d-none">
+                <div class="pending-card" style="border-color: rgba(168,216,234,0.15); background: rgba(168,216,234,0.03)">
+                    <i class="fas fa-lock pending-icon" style="color: var(--ice)"></i>
+                    <div class="pending-title" style="color: var(--ice)">Giriş Gerekli</div>
+                    <div class="pending-desc">Klan sohbetine katılmak için <a href="#" onclick="openModal()" style="color:var(--ice)">giriş yap</a>.</div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Forum list -->
+    <!-- FORUM -->
+    <section id="page-forum" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Klan Forumu</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+
+            <!-- PENDING STATE -->
+            <div id="forum-pending" class="d-none">
+                <div class="pending-card">
+                    <i class="fas fa-hourglass-half pending-icon"></i>
+                    <div class="pending-title">Onay Bekleniyor</div>
+                    <div class="pending-desc">Hesabın henüz bir admin tarafından onaylanmadı. Onaylandıktan sonra forum'a erişebilirsin.</div>
+                </div>
+            </div>
+
+            <!-- NOT LOGGED IN -->
+            <div id="forum-login-prompt" class="d-none">
+                <div class="pending-card" style="border-color: rgba(168,216,234,0.15); background: rgba(168,216,234,0.03)">
+                    <i class="fas fa-lock pending-icon" style="color: var(--ice)"></i>
+                    <div class="pending-title" style="color: var(--ice)">Giriş Gerekli</div>
+                    <div class="pending-desc">Forum'u görüntülemek için <a href="#" onclick="openModal()" style="color:var(--ice)">giriş yap</a>.</div>
+                </div>
+            </div>
+
+            <!-- FORUM CONTENT -->
+            <div id="forum-content" class="d-none">
                 <div id="forum-list-view">
                     <div id="forum-compose-area" class="d-none">
                         <div class="forum-compose">
-                            <div class="compose-title"><i class="fas fa-pen me-2" style="color:var(--gold)"></i>Yeni Konu Aç</div>
-                            <div class="mb-3">
+                            <div class="compose-title"><i class="fas fa-pen" style="color:var(--gold); margin-right:10px"></i>Yeni Konu Aç</div>
+                            <div style="margin-bottom:16px">
                                 <label class="form-label-custom">Başlık</label>
                                 <input type="text" id="forum-title-input" class="form-input" placeholder="Konu başlığı...">
                             </div>
-                            <div class="mb-3">
+                            <div style="margin-bottom:16px">
                                 <label class="form-label-custom">Kategori</label>
                                 <select id="forum-tag-input" class="form-select-dark">
                                     <option value="general">Genel</option>
@@ -1086,696 +1528,1076 @@
                                     <option value="bug">Hata Bildiri</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <div style="margin-bottom:16px">
                                 <label class="form-label-custom">İçerik</label>
                                 <textarea id="forum-body-input" class="form-input" placeholder="Ne sormak ya da paylaşmak istiyorsun?"></textarea>
                             </div>
                             <div style="display:flex; gap:10px">
-                                <button onclick="submitForumPost()" class="btn-action">
-                                    <i class="fas fa-paper-plane me-2"></i>Gönder
-                                </button>
-                                <button onclick="document.getElementById('forum-compose-area').classList.add('d-none')" class="btn-action" style="background: transparent; border-color: rgba(255,255,255,0.1); color: var(--muted)">
-                                    İptal
-                                </button>
+                                <button onclick="submitForumPost()" class="btn-action"><i class="fas fa-paper-plane" style="margin-right:8px"></i>Gönder</button>
+                                <button onclick="document.getElementById('forum-compose-area').classList.add('d-none')" class="btn-action" style="background:transparent; border-color:rgba(255,255,255,0.08); color:var(--muted)">İptal</button>
                             </div>
                         </div>
                     </div>
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
-                        <div id="forum-filter" style="display:flex; gap:8px; flex-wrap:wrap">
-                            <button onclick="filterForum('all')" class="btn-action" id="filter-all" style="padding:6px 14px; font-size:10px">Tümü</button>
-                            <button onclick="filterForum('general')" class="btn-action" style="padding:6px 14px; font-size:10px; background:transparent; border-color:rgba(128,150,176,0.2); color:var(--steel)">Genel</button>
-                            <button onclick="filterForum('strategy')" class="btn-action" style="padding:6px 14px; font-size:10px; background:transparent; border-color:rgba(201,168,76,0.2); color:var(--gold)">Strateji</button>
-                            <button onclick="filterForum('event')" class="btn-action" style="padding:6px 14px; font-size:10px; background:transparent; border-color:rgba(76,175,125,0.2); color:var(--green)">Etkinlik</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px">
+                        <div style="display:flex; gap:8px; flex-wrap:wrap">
+                            <button onclick="filterForum('all')" class="btn-action" style="padding:6px 14px; font-size:9px">Tümü</button>
+                            <button onclick="filterForum('general')" class="btn-action" style="padding:6px 14px; font-size:9px; background:transparent; border-color:rgba(122,146,168,0.2); color:var(--steel)">Genel</button>
+                            <button onclick="filterForum('strategy')" class="btn-action" style="padding:6px 14px; font-size:9px; background:transparent; border-color:rgba(201,168,76,0.2); color:var(--gold)">Strateji</button>
+                            <button onclick="filterForum('event')" class="btn-action" style="padding:6px 14px; font-size:9px; background:transparent; border-color:rgba(76,175,125,0.2); color:var(--green)">Etkinlik</button>
                         </div>
-                        <button onclick="toggleCompose()" id="btn-new-post" class="btn-action" style="padding:8px 18px">
-                            <i class="fas fa-plus me-2"></i>Yeni Konu
+                        <button onclick="toggleCompose()" class="btn-action" style="padding:9px 20px">
+                            <i class="fas fa-plus" style="margin-right:8px"></i>Yeni Konu
                         </button>
                     </div>
 
-                    <div id="forum-posts" class="d-flex flex-column gap-3"></div>
+                    <div id="forum-posts" style="display:flex; flex-direction:column; gap:14px"></div>
                 </div>
 
-                <!-- Forum detail -->
                 <div id="forum-detail-view" class="forum-detail">
-                    <button onclick="backToForum()" class="btn-action" style="margin-bottom:24px; padding:8px 18px; background:transparent; border-color:rgba(255,255,255,0.1); color:var(--muted)">
-                        <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                    <button onclick="backToForum()" class="btn-action" style="margin-bottom:24px; padding:8px 18px; background:transparent; border-color:rgba(255,255,255,0.08); color:var(--muted)">
+                        <i class="fas fa-arrow-left" style="margin-right:8px"></i>Geri Dön
                     </button>
                     <div id="forum-detail-content"></div>
-                    <div style="margin-top:28px">
-                        <div class="section-header" style="margin-bottom:16px">
-                            <div class="section-title" style="font-size:15px">Yanıtlar</div>
+                    <div style="margin-top:32px">
+                        <div class="section-header" style="margin-bottom:18px">
+                            <div class="section-title" style="font-size:14px">Yanıtlar</div>
                             <div class="section-rule"></div>
                         </div>
                         <div id="forum-replies"></div>
-                        <div id="reply-compose" class="mt-3" style="display:none">
+                        <div id="reply-compose" style="display:none; margin-top:16px">
                             <textarea id="reply-input" class="form-input" placeholder="Yanıtını yaz..." style="min-height:80px; margin-bottom:12px"></textarea>
-                            <button onclick="submitReply()" class="btn-action">
-                                <i class="fas fa-reply me-2"></i>Yanıtla
+                            <button onclick="submitReply()" class="btn-action"><i class="fas fa-reply" style="margin-right:8px"></i>Yanıtla</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="page-gallery" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Klan Galerisi</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+
+            <div id="gallery-upload-wrap">
+                <!-- Only shown to logged in users -->
+            </div>
+
+            <div id="gallery-grid" class="gallery-grid">
+                <div class="empty-state" style="grid-column:1/-1">
+                    <i class="fas fa-images"></i>
+                    <p>Henüz fotoğraf yok</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DISCORD -->
+    <section id="page-discord" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Discord Sunucusu</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+
+            <div class="discord-hero">
+                <div class="discord-logo"><i class="fab fa-discord"></i></div>
+                <div class="discord-heading">Sturgia Discord</div>
+                <div class="discord-sub">Klanın resmi Discord sunucusuna katıl. Sesli sohbet, etkinlik duyuruları ve daha fazlası için hemen giriş yap.</div>
+                <a href="https://discord.gg/BURAYA_LINK_GEL" target="_blank" class="btn-discord">
+                    <i class="fab fa-discord"></i> SUNUCUYA KATIL
+                </a>
+            </div>
+
+            <div class="discord-stats">
+                <div class="dc-stat">
+                    <div class="dc-stat-icon"><i class="fas fa-microphone"></i></div>
+                    <div class="dc-stat-value">Sesli</div>
+                    <div class="dc-stat-label">Ses Kanalları</div>
+                </div>
+                <div class="dc-stat">
+                    <div class="dc-stat-icon"><i class="fas fa-bell"></i></div>
+                    <div class="dc-stat-value">Canlı</div>
+                    <div class="dc-stat-label">Etkinlik Duyuruları</div>
+                </div>
+                <div class="dc-stat">
+                    <div class="dc-stat-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="dc-stat-value">Güvenli</div>
+                    <div class="dc-stat-label">Moderasyon</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Güvenlik Ayarları</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+            <div class="settings-card">
+                <div class="settings-title">Şifre Değiştir</div>
+                <div class="settings-sub">Hesabını güçlü bir şifreyle koru. En az 8 karakter, büyük/küçük harf ve rakam içermesini öneririz.</div>
+                <label class="form-label-custom">Mevcut Şifre</label>
+                <input type="password" id="current-password" class="form-input" placeholder="••••••••" style="margin-bottom:14px">
+                <label class="form-label-custom">Yeni Şifre</label>
+                <input type="password" id="new-password" class="form-input" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strength-bar" style="width:0%"></div>
+                </div>
+                <div class="strength-label" id="strength-label" style="color:var(--muted)">Şifre gücü</div>
+                <label class="form-label-custom" style="margin-top:16px">Şifreyi Onayla</label>
+                <input type="password" id="confirm-password" class="form-input" placeholder="••••••••">
+                <button onclick="updatePassword()" class="btn-action btn-action-full">
+                    <i class="fas fa-key" style="margin-right:8px"></i> Şifreyi Güncelle
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="page-admin" class="d-none">
+        <div class="page-body">
+            <div class="section-header">
+                <div class="section-title">Klan Yönetimi</div>
+                <div class="section-gem"></div>
+                <div class="section-rule"></div>
+            </div>
+
+            <!-- Pending approvals -->
+            <div id="pending-approvals-section" style="margin-bottom:28px">
+                <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:10px">
+                    <i class="fas fa-clock"></i> ONAY BEKLEYENLER
+                    <span id="pending-count-badge" style="background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:2px 8px; font-size:10px">0</span>
+                </div>
+                <div id="pending-list" style="display:flex; flex-direction:column; gap:10px"></div>
+            </div>
+
+            <div class="admin-table-wrap">
+                <div class="admin-table-head">
+                    <span style="font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase">Savaşçı Listesi & Yönetim</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Savaşçı</th>
+                            <th>Rütbe</th>
+                            <th>Durum</th>
+                            <th style="text-align:right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-title">Klan Girişi</div>
+        <div class="modal-sub">Kimliğini doğrula</div>
+        <div style="margin-bottom:16px">
+            <label class="form-label-custom">Savaşçı Adı</label>
+            <input type="text" id="login-nick" class="form-input" placeholder="Adını gir" autocomplete="username">
+        </div>
+        <div style="margin-bottom:6px">
+            <label class="form-label-custom">Şifre</label>
+            <input type="password" id="login-pass" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')processAuth()" autocomplete="current-password">
+        </div>
+        <div id="login-strength-wrap" style="margin-bottom:16px; display:none">
+            <div class="password-strength"><div class="password-strength-bar" id="reg-strength-bar" style="width:0%"></div></div>
+            <div class="strength-label" id="reg-strength-label" style="color:var(--muted)"></div>
+        </div>
+        <div id="confirm-pass-wrap" style="margin-bottom:16px; display:none">
+            <label class="form-label-custom">Şifreyi Onayla</label>
+            <input type="password" id="login-pass-confirm" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')processAuth()" autocomplete="new-password">
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:20px; text-align:center; letter-spacing:0.5px">
+            Hesabın yoksa otomatik oluşturulur
+        </div>
+        <button onclick="processAuth()" class="btn-action btn-action-full">
+            <i class="fas fa-arrow-right" style="margin-right:10px"></i>Devam Et
+        </button>
+    </div>
+</div>
+
+<!-- MUTE MODAL -->
+<div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
+    <div class="modal-box" style="max-width:380px">
+        <button class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-title" style="font-size:17px">Kullanıcıyı Sustur</div>
+        <div class="modal-sub" id="mute-target-name">Savaşçı</div>
+        <input type="hidden" id="mute-target-id">
+        <div style="margin-bottom:16px">
+            <label class="form-label-custom">Süre</label>
+            <select id="mute-duration" class="form-select-dark">
+                <option value="5">5 dakika</option>
+                <option value="15">15 dakika</option>
+                <option value="30">30 dakika</option>
+                <option value="60">1 saat</option>
+                <option value="120">2 saat</option>
+                <option value="1440">24 saat</option>
+                <option value="10080">7 gün</option>
+                <option value="99999">Kalıcı</option>
+            </select>
+        </div>
+        <div style="margin-bottom:16px">
+            <label class="form-label-custom">Sebep (opsiyonel)</label>
+            <input type="text" id="mute-reason" class="form-input" placeholder="Neden susturuyorsun?">
+        </div>
+        <button onclick="applyMute()" class="btn-action btn-action-full" style="background:rgba(192,57,43,0.12); border-color:rgba(192,57,43,0.35); color:#e57373">
+            <i class="fas fa-volume-mute" style="margin-right:8px"></i>Sustur
+        </button>
+    </div>
+</div>
+
+<!-- GALLERY IMAGE MODAL -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+    <img id="lightbox-img" src="" alt="Gallery Image">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-msg" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-text">İşlem başarılı</span>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+        getFirestore, collection, onSnapshot, query, where,
+        getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy,
+        serverTimestamp, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import {
+        getStorage, ref, uploadBytes, getDownloadURL, deleteObject
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
+        authDomain: "sturgia-clan.firebaseapp.com",
+        projectId: "sturgia-clan",
+        storageBucket: "sturgia-clan.firebasestorage.app",
+        messagingSenderId: "257587521790",
+        appId: "1:257587521790:web:59b1a1b38029d1564dddaf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    let user = JSON.parse(localStorage.getItem('st_session')) || null;
+    let currentForumPostId = null;
+    let currentFilter = 'all';
+
+    const roles = {
+        'admin':      { n: 'Yönetici',           c: 'rank-admin' },
+        'westra':     { n: 'Westra / Abak 🌊',   c: 'rank-westra' },
+        'sturgiyali': { n: 'Sturgiyalı',          c: 'rank-sturgiyali' }
+    };
+
+    const tagLabels = {
+        general: 'Genel', strategy: 'Strateji',
+        event: 'Etkinlik', suggestion: 'Öneri', bug: 'Hata'
+    };
+
+    // ═══════════════════════ PASSWORD UTILITIES ═══════════════════════
+    function hashSimple(str) {
+        // Simple deterministic hash — better than plaintext storage
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const c = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + c;
+            hash |= 0;
+        }
+        return 'h_' + Math.abs(hash).toString(36) + str.length.toString(36);
+    }
+
+    window.checkPasswordStrength = function(pass) {
+        const bar = document.getElementById('strength-bar');
+        const label = document.getElementById('strength-label');
+        if (!bar || !label) return;
+        const s = getStrength(pass);
+        bar.style.width = s.pct + '%';
+        bar.style.backgroundColor = s.color;
+        label.innerText = s.text;
+        label.style.color = s.color;
+    };
+
+    function checkRegStrength(pass) {
+        const bar = document.getElementById('reg-strength-bar');
+        const label = document.getElementById('reg-strength-label');
+        if (!bar || !label) return;
+        const s = getStrength(pass);
+        bar.style.width = s.pct + '%';
+        bar.style.backgroundColor = s.color;
+        label.innerText = s.text;
+        label.style.color = s.color;
+    }
+
+    function getStrength(pass) {
+        let score = 0;
+        if (!pass) return { pct: 0, color: '#333', text: 'Şifre gücü' };
+        if (pass.length >= 8) score++;
+        if (pass.length >= 12) score++;
+        if (/[A-Z]/.test(pass)) score++;
+        if (/[0-9]/.test(pass)) score++;
+        if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+        const levels = [
+            { pct: 10, color: '#c0392b', text: 'Çok Zayıf' },
+            { pct: 30, color: '#e67e22', text: 'Zayıf' },
+            { pct: 55, color: '#f39c12', text: 'Orta' },
+            { pct: 80, color: '#27ae60', text: 'Güçlü' },
+            { pct: 100, color: '#4caf7d', text: 'Çok Güçlü' },
+        ];
+        return levels[Math.min(score, 4)];
+    }
+
+    // ═══════════════════════ USERS SNAPSHOT ═══════════════════════
+    let allUsers = {};
+
+    onSnapshot(collection(db, "users"), (snap) => {
+        const grid = document.getElementById('warrior-grid');
+        const table = document.getElementById('admin-table-body');
+        const membersList = document.getElementById('chat-members-list');
+        const pendingList = document.getElementById('pending-list');
+        const pendingCount = document.getElementById('pending-count-badge');
+        const count = document.getElementById('army-total');
+
+        allUsers = {};
+        let pendingUsers = [];
+        let approvedCount = 0;
+
+        snap.forEach(s => {
+            allUsers[s.id] = { id: s.id, ...s.data() };
+            if (s.data().approved) approvedCount++;
+            else if (s.data().role !== 'admin') pendingUsers.push({ id: s.id, ...s.data() });
+        });
+
+        count.innerText = approvedCount;
+
+        // Warrior grid
+        grid.innerHTML = '';
+        if (snap.empty) {
+            grid.innerHTML = `<div style="grid-column:1/-1"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok</p></div></div>`;
+        }
+
+        snap.forEach(s => {
+            const data = s.data();
+            if (!data.approved && data.role !== 'admin') return;
+            const r = roles[data.role] || roles['sturgiyali'];
+            const isMuted = isMutedNow(data);
+            grid.innerHTML += `
+                <div class="warrior-card">
+                    <div>
+                        <span class="warrior-name">${escHtml(data.nick)}</span>
+                        ${isMuted ? '<div style="font-size:9px;color:#e57373;margin-top:4px;letter-spacing:1px">🔇 Susturuldu</div>' : ''}
+                    </div>
+                    <span class="badge-rank ${r.c}">${r.n}</span>
+                </div>`;
+        });
+
+        // Chat members
+        membersList.innerHTML = '';
+        snap.forEach(s => {
+            const data = s.data();
+            if (!data.approved && data.role !== 'admin') return;
+            const isMuted = isMutedNow(data);
+            membersList.innerHTML += `
+                <div class="chat-member-item">
+                    <span class="chat-member-name" style="${isMuted ? 'color:#555' : ''}">${escHtml(data.nick)}</span>
+                    <div style="display:flex;gap:6px;align-items:center">
+                        ${isMuted ? '<span class="muted-tag">mute</span>' : ''}
+                        ${user?.role === 'admin' && s.id !== user.id ? `<button onclick="openMuteModal('${s.id}','${escHtml(data.nick)}')" class="mute-btn">${isMuted ? 'Kaldır' : 'Mute'}</button>` : ''}
+                    </div>
+                </div>`;
+        });
+
+        // Pending approvals list (admin)
+        if (pendingList) {
+            pendingCount.innerText = pendingUsers.length;
+            if (pendingUsers.length === 0) {
+                pendingList.innerHTML = `<div style="font-size:12px; color:var(--muted); padding:12px 0; letter-spacing:0.5px">Bekleyen onay yok.</div>`;
+            } else {
+                pendingList.innerHTML = pendingUsers.map(u => `
+                    <div style="background:var(--card); border:1px solid rgba(201,168,76,0.15); border-radius:10px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+                        <div>
+                            <span style="font-family:'Cinzel',serif; font-size:13px; color:var(--text)">${escHtml(u.nick)}</span>
+                            <span class="approve-badge" style="margin-left:10px">Bekliyor</span>
+                        </div>
+                        <div style="display:flex; gap:8px">
+                            <button onclick="approveUser('${u.id}')" class="btn-action" style="padding:7px 16px; font-size:9px; background:rgba(76,175,125,0.12); border-color:rgba(76,175,125,0.3); color:var(--green)">
+                                <i class="fas fa-check" style="margin-right:6px"></i>Onayla
+                            </button>
+                            <button onclick="rejectUser('${u.id}')" class="btn-action" style="padding:7px 16px; font-size:9px; background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.3); color:#e57373">
+                                <i class="fas fa-times" style="margin-right:6px"></i>Reddet
                             </button>
                         </div>
-                        <div id="reply-login-notice" style="display:none">
-                            <div class="muted-notice" style="background: rgba(168,216,234,0.05); border-color: rgba(168,216,234,0.1); color: var(--steel);">
-                                Yanıt yazabilmek için <a href="#" onclick="openModal()" style="color:var(--ice)">giriş yap</a>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- DISCORD -->
-        <section id="page-discord" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Discord Sunucusu</div>
-                    <div class="section-rule"></div>
-                </div>
-
-                <div class="discord-hero">
-                    <div class="discord-logo"><i class="fab fa-discord"></i></div>
-                    <div class="discord-heading">Sturgia Discord</div>
-                    <div class="discord-sub">Klanın resmi Discord sunucusuna katıl. Sesli sohbet, etkinlik duyuruları ve daha fazlası için hemen giriş yap.</div>
-                    <!-- Buraya kendi Discord davet linkini gir -->
-                    <a href="https://discord.gg/BURAYA_LINK_GEL" target="_blank" class="btn-discord">
-                        <i class="fab fa-discord"></i> SUNUCUYA KATIL
-                    </a>
-                </div>
-
-                <div class="discord-stats">
-                    <div class="dc-stat">
-                        <div class="dc-stat-icon"><i class="fas fa-microphone"></i></div>
-                        <div class="dc-stat-value">Sesli</div>
-                        <div class="dc-stat-label">Ses Kanalları</div>
-                    </div>
-                    <div class="dc-stat">
-                        <div class="dc-stat-icon"><i class="fas fa-bell"></i></div>
-                        <div class="dc-stat-value">Canlı</div>
-                        <div class="dc-stat-label">Etkinlik Duyuruları</div>
-                    </div>
-                    <div class="dc-stat">
-                        <div class="dc-stat-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="dc-stat-value">Güvenli</div>
-                        <div class="dc-stat-label">Moderasyon</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SETTINGS -->
-        <section id="page-settings" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Güvenlik Ayarları</div>
-                    <div class="section-rule"></div>
-                </div>
-                <div class="settings-card">
-                    <div class="settings-title">Şifre Değiştir</div>
-                    <div class="settings-sub">Hesabının güvenliğini güçlü bir şifreyle koru</div>
-                    <label class="form-label-custom">Yeni Şifre</label>
-                    <input type="password" id="new-password" class="form-input" placeholder="••••••••••">
-                    <button onclick="updatePassword()" class="btn-action btn-action-full">
-                        Şifreyi Güncelle
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADMIN -->
-        <section id="page-admin" class="d-none">
-            <div class="page-body">
-                <div class="section-header">
-                    <div class="section-title">Klan Yönetimi</div>
-                    <div class="section-rule"></div>
-                </div>
-                <div class="admin-table-wrap">
-                    <div class="admin-table-head">
-                        <span style="font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase">Savaşçı Listesi & Rütbe / Mute Yönetimi</span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Savaşçı</th>
-                                <th>Rütbe</th>
-                                <th>Durum</th>
-                                <th style="text-align:right">İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- LOGIN MODAL -->
-    <div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div class="modal-title">Klan Girişi</div>
-            <div class="modal-sub">Kimliğini doğrula</div>
-            <div style="margin-bottom:16px">
-                <label class="form-label-custom">Savaşçı Adı</label>
-                <input type="text" id="login-nick" class="form-input" placeholder="Adını gir">
-            </div>
-            <div style="margin-bottom:4px">
-                <label class="form-label-custom">Şifre</label>
-                <input type="password" id="login-pass" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')processAuth()">
-            </div>
-            <button onclick="processAuth()" class="btn-action btn-action-full">
-                Devam Et
-            </button>
-        </div>
-    </div>
-
-    <!-- MUTE MODAL -->
-    <div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
-        <div class="modal-box" style="max-width:380px">
-            <button class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
-            <div class="modal-title" style="font-size:18px">Kullanıcıyı Sustur</div>
-            <div class="modal-sub" id="mute-target-name">Savaşçı</div>
-            <input type="hidden" id="mute-target-id">
-            <div style="margin-bottom:16px">
-                <label class="form-label-custom">Süre</label>
-                <select id="mute-duration" class="form-select-dark">
-                    <option value="5">5 dakika</option>
-                    <option value="15">15 dakika</option>
-                    <option value="30">30 dakika</option>
-                    <option value="60">1 saat</option>
-                    <option value="120">2 saat</option>
-                    <option value="1440">24 saat</option>
-                    <option value="10080">7 gün</option>
-                    <option value="99999">Kalıcı</option>
-                </select>
-            </div>
-            <div style="margin-bottom:16px">
-                <label class="form-label-custom">Sebep (opsiyonel)</label>
-                <input type="text" id="mute-reason" class="form-input" placeholder="Neden susturuyorsun?">
-            </div>
-            <button onclick="applyMute()" class="btn-action btn-action-full" style="background: rgba(192,57,43,0.15); border-color: rgba(192,57,43,0.4); color: #e57373;">
-                <i class="fas fa-volume-mute me-2"></i>Sustur
-            </button>
-        </div>
-    </div>
-
-    <!-- TOAST -->
-    <div class="toast-msg" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-text">İşlem başarılı</span>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import {
-            getFirestore, collection, onSnapshot, query, where,
-            getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp, getDoc
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
-            authDomain: "sturgia-clan.firebaseapp.com",
-            projectId: "sturgia-clan",
-            storageBucket: "sturgia-clan.firebasestorage.app",
-            messagingSenderId: "257587521790",
-            appId: "1:257587521790:web:59b1a1b38029d1564dddaf"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        let user = JSON.parse(localStorage.getItem('st_session')) || null;
-        let currentForumPostId = null;
-        let currentFilter = 'all';
-
-        const roles = {
-            'admin':      { n: 'Yönetici',        c: 'rank-admin' },
-            'westra':     { n: 'Westra / Abak 🌊', c: 'rank-westra' },
-            'sturgiyali': { n: 'Sturgiyalı',       c: 'rank-sturgiyali' }
-        };
-
-        const tagLabels = {
-            general: 'Genel', strategy: 'Strateji',
-            event: 'Etkinlik', suggestion: 'Öneri', bug: 'Hata'
-        };
-
-        // ─── USERS SNAPSHOT ───
-        let allUsers = {};
-        onSnapshot(collection(db, "users"), (snap) => {
-            const grid = document.getElementById('warrior-grid');
-            const table = document.getElementById('admin-table-body');
-            const membersList = document.getElementById('chat-members-list');
-            const count = document.getElementById('army-total');
-
-            allUsers = {};
-            snap.forEach(s => { allUsers[s.id] = { id: s.id, ...s.data() }; });
-
-            count.innerText = snap.size;
-            grid.innerHTML = '';
-            membersList.innerHTML = '';
-
-            if (snap.empty) {
-                grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok</p></div></div>`;
+                    </div>`).join('');
             }
+        }
 
+        // Admin table
+        if (table && user?.role === 'admin') {
+            table.innerHTML = '';
             snap.forEach(s => {
                 const data = s.data();
                 const r = roles[data.role] || roles['sturgiyali'];
                 const isMuted = isMutedNow(data);
-
-                grid.innerHTML += `
-                    <div class="col-md-4 col-sm-6">
-                        <div class="warrior-card">
-                            <div>
-                                <span class="warrior-name">${data.nick}</span>
-                                ${isMuted ? '<div style="font-size:10px;color:#e57373;margin-top:4px;letter-spacing:1px">🔇 Susturuldu</div>' : ''}
+                const opts = Object.keys(roles).map(k =>
+                    `<option value="${k}" ${data.role === k ? 'selected' : ''}>${roles[k].n}</option>`
+                ).join('');
+                table.innerHTML += `
+                    <tr>
+                        <td><span class="warrior-name">${escHtml(data.nick)}</span>${!data.approved && data.role !== 'admin' ? '<span class="approve-badge" style="margin-left:8px">Bekliyor</span>' : ''}</td>
+                        <td><span class="badge-rank ${r.c}">${r.n}</span></td>
+                        <td>${isMuted ? '<span class="muted-tag">🔇 Mute</span>' : '<span style="font-size:11px;color:var(--green);letter-spacing:1px">Aktif</span>'}</td>
+                        <td style="text-align:right">
+                            <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center; flex-wrap:wrap">
+                                <select class="form-select-dark" onchange="updRole('${s.id}', this.value)" style="width:auto; padding:6px 10px; font-size:12px">${opts}</select>
+                                ${s.id !== user.id ? `
+                                    <button onclick="openMuteModal('${s.id}','${escHtml(data.nick)}')" class="mute-btn">${isMuted ? '🔊 Unmute' : '🔇 Mute'}</button>
+                                    ${isMuted ? `<button onclick="unmute('${s.id}')" class="mute-btn" style="border-color:rgba(76,175,125,0.3);color:var(--green)">Kaldır</button>` : ''}
+                                ` : ''}
                             </div>
-                            <span class="badge-rank ${r.c}">${r.n}</span>
-                        </div>
-                    </div>`;
-
-                // Chat members
-                membersList.innerHTML += `
-                    <div class="chat-member-item">
-                        <span class="chat-member-name ${isMuted ? 'rank-muted' : ''}" style="${isMuted ? 'color:#666' : ''}">${data.nick}</span>
-                        <div style="display:flex;gap:6px;align-items:center">
-                            ${isMuted ? '<span class="muted-tag">mute</span>' : ''}
-                            ${user?.role === 'admin' && s.id !== user.id ? `<button onclick="openMuteModal('${s.id}','${data.nick}')" class="mute-btn">${isMuted ? 'Kaldır' : 'Mute'}</button>` : ''}
-                        </div>
-                    </div>`;
+                        </td>
+                    </tr>`;
             });
-
-            // Admin table
-            if (table) {
-                table.innerHTML = '';
-                if (user?.role === 'admin') {
-                    snap.forEach(s => {
-                        const data = s.data();
-                        const r = roles[data.role] || roles['sturgiyali'];
-                        const isMuted = isMutedNow(data);
-                        const opts = Object.keys(roles).map(k =>
-                            `<option value="${k}" ${data.role === k ? 'selected' : ''}>${roles[k].n}</option>`
-                        ).join('');
-
-                        table.innerHTML += `
-                            <tr>
-                                <td><span class="warrior-name">${data.nick}</span></td>
-                                <td><span class="badge-rank ${r.c}">${r.n}</span></td>
-                                <td>${isMuted ? `<span class="muted-tag">🔇 Mute</span>` : '<span style="font-size:11px;color:var(--green);letter-spacing:1px">Aktif</span>'}</td>
-                                <td style="text-align:right; display:flex; gap:8px; justify-content:flex-end; padding:14px 28px">
-                                    <select class="form-select-dark" onchange="updRole('${s.id}', this.value)" style="width:auto">${opts}</select>
-                                    ${s.id !== user.id ? `
-                                        <button onclick="openMuteModal('${s.id}','${data.nick}')" class="mute-btn">${isMuted ? '🔊 Unmute' : '🔇 Mute'}</button>
-                                        ${isMuted ? `<button onclick="unmute('${s.id}')" class="mute-btn" style="border-color:rgba(76,175,125,0.3);color:var(--green)">Kaldır</button>` : ''}
-                                    ` : ''}
-                                </td>
-                            </tr>`;
-                    });
-                }
-            }
-
-            // Update current user's mute status
-            if (user) {
-                const freshUser = snap.docs.find(d => d.id === user.id);
-                if (freshUser) {
-                    const fd = freshUser.data();
-                    const muted = isMutedNow(fd);
-                    document.getElementById('chat-input-area').style.display = muted ? 'none' : 'flex';
-                    document.getElementById('muted-notice').classList.toggle('d-none', !muted);
-                    if (muted && fd.muteUntil) {
-                        startMuteCountdown(fd.muteUntil);
-                    }
-                }
-            }
-        });
-
-        function isMutedNow(data) {
-            if (!data.muteUntil) return false;
-            if (data.muteUntil === 'permanent') return true;
-            return new Date(data.muteUntil) > new Date();
         }
 
-        let countdownInterval = null;
-        function startMuteCountdown(until) {
-            if (countdownInterval) clearInterval(countdownInterval);
-            const el = document.getElementById('mute-countdown');
-            if (until === 'permanent') { el.innerText = 'Kalıcı'; return; }
-            const end = new Date(until);
-            countdownInterval = setInterval(() => {
-                const diff = end - new Date();
-                if (diff <= 0) { clearInterval(countdownInterval); location.reload(); return; }
-                const m = Math.floor(diff / 60000);
-                const s = Math.floor((diff % 60000) / 1000);
-                el.innerText = `${m}d ${s}s`;
-            }, 1000);
-        }
-
-        // ─── CHAT ───
-        onSnapshot(query(collection(db, "messages"), orderBy("ts")), (snap) => {
-            const box = document.getElementById('chat-messages');
-            if (snap.empty) {
-                box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`;
-                return;
-            }
-            box.innerHTML = '';
-            let lastAuthor = '';
-            snap.forEach(s => {
-                const d = s.data();
-                const isOwn = d.uid === user?.id;
-                const roleClass = d.role || 'sturgiyali';
-                const showHeader = lastAuthor !== d.uid;
-                lastAuthor = d.uid;
-                const time = d.ts ? new Date(d.ts.toDate()).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
-
-                box.innerHTML += `
-                    <div class="msg-group">
-                        ${showHeader ? `
-                            <div class="msg-author-line">
-                                <span class="msg-author ${roleClass}">${d.nick}</span>
-                                <span class="msg-time">${time}</span>
-                            </div>
-                        ` : ''}
-                        <div class="msg-bubble ${isOwn ? 'own' : ''}">
-                            ${escHtml(d.text)}
-                            ${user?.role === 'admin' && !isOwn ? `
-                                <div class="msg-actions">
-                                    <button onclick="deleteMsg('${s.id}')" class="msg-act-btn" title="Sil"><i class="fas fa-trash"></i></button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        });
-
-        window.sendMessage = async () => {
-            if (!user) { showToast('Önce giriş yapmalısın', true); openModal(); return; }
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            // Check mute
-            const userDoc = await getDoc(doc(db, "users", user.id));
-            const ud = userDoc.data();
-            if (isMutedNow(ud)) { showToast('Susturuldunuz, mesaj gönderemezsiniz.', true); return; }
-
-            await addDoc(collection(db, "messages"), {
-                uid: user.id,
-                nick: user.nick,
-                role: user.role,
-                text,
-                ts: serverTimestamp()
-            });
-            input.value = '';
-        };
-
-        window.deleteMsg = async (id) => {
-            if (user?.role !== 'admin') return;
-            await deleteDoc(doc(db, "messages", id));
-            showToast('Mesaj silindi');
-        };
-
-        // ─── MUTE ───
-        window.openMuteModal = (id, nick) => {
-            const data = allUsers[id];
-            if (data && isMutedNow(data)) {
-                unmute(id);
-                return;
-            }
-            document.getElementById('mute-target-id').value = id;
-            document.getElementById('mute-target-name').innerText = nick + ' adlı savaşçı';
-            document.getElementById('muteModal').classList.add('open');
-        };
-
-        window.closeMuteModal = () => document.getElementById('muteModal').classList.remove('open');
-
-        window.applyMute = async () => {
-            const id = document.getElementById('mute-target-id').value;
-            const mins = parseInt(document.getElementById('mute-duration').value);
-            let until;
-            if (mins === 99999) {
-                until = 'permanent';
-            } else {
-                const d = new Date();
-                d.setMinutes(d.getMinutes() + mins);
-                until = d.toISOString();
-            }
-            await updateDoc(doc(db, "users", id), { muteUntil: until });
-            showToast('Kullanıcı susturuldu');
-            closeMuteModal();
-        };
-
-        window.unmute = async (id) => {
-            await updateDoc(doc(db, "users", id), { muteUntil: null });
-            showToast('Mute kaldırıldı');
-        };
-
-        // ─── FORUM ───
-        let forumPosts = [];
-
-        onSnapshot(query(collection(db, "forum_posts"), orderBy("ts", "desc")), (snap) => {
-            forumPosts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            document.getElementById('forum-count').innerText = snap.size;
-            renderForum();
-        });
-
-        function renderForum() {
-            const container = document.getElementById('forum-posts');
-            const filtered = currentFilter === 'all' ? forumPosts : forumPosts.filter(p => p.tag === currentFilter);
-            if (!container) return;
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok</p></div>`;
-                return;
-            }
-            container.innerHTML = filtered.map(p => {
-                const time = p.ts ? new Date(p.ts.toDate()).toLocaleDateString('tr-TR') : '';
-                return `
-                    <div class="forum-post-card" onclick="openForumPost('${p.id}')">
-                        <span class="forum-tag tag-${p.tag || 'general'}">${tagLabels[p.tag] || 'Genel'}</span>
-                        <div class="forum-post-title">${escHtml(p.title)}</div>
-                        <div class="forum-post-preview">${escHtml((p.body || '').slice(0, 140))}${(p.body||'').length > 140 ? '...' : ''}</div>
-                        <div class="forum-post-meta">
-                            <span><i class="fas fa-user me-1"></i>${p.nick}</span>
-                            <span><i class="fas fa-calendar me-1"></i>${time}</span>
-                            <span><i class="fas fa-comment me-1"></i>${p.replyCount || 0} yanıt</span>
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        window.filterForum = (tag) => {
-            currentFilter = tag;
-            renderForum();
-        };
-
-        window.toggleCompose = () => {
-            if (!user) { showToast('Konu açmak için giriş yap', true); openModal(); return; }
-            document.getElementById('forum-compose-area').classList.toggle('d-none');
-        };
-
-        window.submitForumPost = async () => {
-            if (!user) { showToast('Giriş yapmalısın', true); return; }
-            const title = document.getElementById('forum-title-input').value.trim();
-            const body = document.getElementById('forum-body-input').value.trim();
-            const tag = document.getElementById('forum-tag-input').value;
-            if (!title || !body) { showToast('Başlık ve içerik gerekli', true); return; }
-            await addDoc(collection(db, "forum_posts"), {
-                title, body, tag,
-                nick: user.nick,
-                uid: user.id,
-                role: user.role,
-                replyCount: 0,
-                ts: serverTimestamp()
-            });
-            document.getElementById('forum-title-input').value = '';
-            document.getElementById('forum-body-input').value = '';
-            document.getElementById('forum-compose-area').classList.add('d-none');
-            showToast('Konu açıldı!');
-        };
-
-        window.openForumPost = async (id) => {
-            currentForumPostId = id;
-            const post = forumPosts.find(p => p.id === id);
-            if (!post) return;
-
-            document.getElementById('forum-list-view').style.display = 'none';
-            document.getElementById('forum-detail-view').style.display = 'block';
-
-            const time = post.ts ? new Date(post.ts.toDate()).toLocaleDateString('tr-TR') : '';
-            document.getElementById('forum-detail-content').innerHTML = `
-                <div class="forum-compose" style="cursor:default">
-                    <span class="forum-tag tag-${post.tag || 'general'}">${tagLabels[post.tag] || 'Genel'}</span>
-                    <div class="forum-post-title" style="font-size:22px; margin-bottom:12px">${escHtml(post.title)}</div>
-                    <div style="font-size:14px; color:var(--text); line-height:1.8; margin-bottom:16px">${escHtml(post.body).replace(/\n/g,'<br>')}</div>
-                    <div class="forum-post-meta">
-                        <span><i class="fas fa-user me-1"></i>${post.nick}</span>
-                        <span><i class="fas fa-calendar me-1"></i>${time}</span>
-                    </div>
-                    ${user?.role === 'admin' || user?.id === post.uid ? `
-                        <button onclick="deletePost('${id}')" class="mute-btn" style="margin-top:16px"><i class="fas fa-trash me-1"></i>Konuyu Sil</button>
-                    ` : ''}
-                </div>`;
-
-            loadReplies(id);
-
-            if (user) {
-                document.getElementById('reply-compose').style.display = 'block';
-                document.getElementById('reply-login-notice').style.display = 'none';
-            } else {
-                document.getElementById('reply-compose').style.display = 'none';
-                document.getElementById('reply-login-notice').style.display = 'block';
-            }
-        };
-
-        async function loadReplies(postId) {
-            const container = document.getElementById('forum-replies');
-            const snap = await getDocs(query(collection(db, "forum_posts", postId, "replies"), orderBy("ts")));
-            if (snap.empty) {
-                container.innerHTML = `<div style="color:var(--muted); font-size:13px; padding:16px 0">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
-                return;
-            }
-            container.innerHTML = snap.docs.map(d => {
-                const r = d.data();
-                const t = r.ts ? new Date(r.ts.toDate()).toLocaleString('tr-TR') : '';
-                return `
-                    <div class="reply-card">
-                        <div class="reply-header">
-                            <span class="reply-author ${r.role || 'sturgiyali'}">${r.nick}</span>
-                            <span class="badge-rank rank-${r.role || 'sturgiyali'}" style="font-size:9px">${(roles[r.role] || roles['sturgiyali']).n}</span>
-                            <span class="reply-time">${t}</span>
-                        </div>
-                        <div class="reply-text">${escHtml(r.text).replace(/\n/g,'<br>')}</div>
-                    </div>`;
-            }).join('');
-        }
-
-        window.submitReply = async () => {
-            if (!user) return;
-            const text = document.getElementById('reply-input').value.trim();
-            if (!text) { showToast('Yanıt boş olamaz', true); return; }
-            await addDoc(collection(db, "forum_posts", currentForumPostId, "replies"), {
-                nick: user.nick, uid: user.id, role: user.role, text, ts: serverTimestamp()
-            });
-            await updateDoc(doc(db, "forum_posts", currentForumPostId), {
-                replyCount: (forumPosts.find(p => p.id === currentForumPostId)?.replyCount || 0) + 1
-            });
-            document.getElementById('reply-input').value = '';
-            loadReplies(currentForumPostId);
-            showToast('Yanıt gönderildi!');
-        };
-
-        window.deletePost = async (id) => {
-            await deleteDoc(doc(db, "forum_posts", id));
-            backToForum();
-            showToast('Konu silindi');
-        };
-
-        window.backToForum = () => {
-            currentForumPostId = null;
-            document.getElementById('forum-list-view').style.display = '';
-            document.getElementById('forum-detail-view').style.display = 'none';
-        };
-
-        // ─── AUTH ───
-        window.processAuth = async () => {
-            const n = document.getElementById('login-nick').value.trim();
-            const p = document.getElementById('login-pass').value;
-            if (!n || !p) { showToast('Tüm alanları doldur', true); return; }
-
-            const q = query(collection(db, "users"), where("nick", "==", n), where("pass", "==", p));
-            const snap = await getDocs(q);
-            let d;
-
-            if (snap.empty) {
-                const res = await addDoc(collection(db, "users"), { nick: n, pass: p, role: 'sturgiyali', muteUntil: null });
-                d = { id: res.id, nick: n, role: 'sturgiyali' };
-                showToast('Hesap oluşturuldu, hoş geldin!');
-            } else {
-                d = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                showToast('Tekrar hoş geldin, ' + d.nick + '!');
-            }
-
-            localStorage.setItem('st_session', JSON.stringify(d));
-            setTimeout(() => location.reload(), 1200);
-        };
-
-        window.updatePassword = async () => {
-            const np = document.getElementById('new-password').value;
-            if (!user) { showToast('Önce giriş yap', true); return; }
-            if (!np || np.length < 4) { showToast('Şifre en az 4 karakter olmalı', true); return; }
-            await updateDoc(doc(db, "users", user.id), { pass: np });
-            showToast('Şifre güncellendi');
-            document.getElementById('new-password').value = '';
-        };
-
-        window.updRole = async (id, r) => {
-            await updateDoc(doc(db, "users", id), { role: r });
-            showToast('Rütbe güncellendi');
-        };
-
-        // ─── SESSION UI ───
+        // Update current user mute status
         if (user) {
-            document.getElementById('auth-section').classList.add('d-none');
-            document.getElementById('user-section').classList.remove('d-none');
-            document.getElementById('display-nick').innerText = user.nick;
-            const r = roles[user.role] || roles['sturgiyali'];
-            document.getElementById('display-rank').innerText = r.n;
-            if (user.role === 'admin') {
-                document.getElementById('admin-nav-item').classList.remove('d-none');
+            const freshUser = snap.docs.find(d => d.id === user.id);
+            if (freshUser) {
+                const fd = freshUser.data();
+                const muted = isMutedNow(fd);
+                const inputArea = document.getElementById('chat-input-area');
+                const mutedNotice = document.getElementById('muted-notice');
+                if (inputArea) inputArea.style.display = muted ? 'none' : 'flex';
+                if (mutedNotice) mutedNotice.classList.toggle('d-none', !muted);
+                if (muted && fd.muteUntil) startMuteCountdown(fd.muteUntil);
             }
-            const heroRank = document.getElementById('hero-rank');
-            if (heroRank) heroRank.innerText = r.n;
         }
+    });
 
-        window.logout = () => { localStorage.removeItem('st_session'); location.reload(); };
+    window.approveUser = async (id) => {
+        await updateDoc(doc(db, "users", id), { approved: true });
+        showToast('Kullanıcı onaylandı ✓');
+    };
 
-        window.show = (p) => {
-            document.querySelectorAll('section').forEach(s => s.classList.add('d-none'));
-            document.getElementById('page-' + p).classList.remove('d-none');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            const nl = document.getElementById('nav-' + p);
-            if (nl) nl.classList.add('active');
-            if (p === 'chat') {
-                setTimeout(() => {
-                    const box = document.getElementById('chat-messages');
-                    box.scrollTop = box.scrollHeight;
-                }, 100);
+    window.rejectUser = async (id) => {
+        await deleteDoc(doc(db, "users", id));
+        showToast('Kullanıcı reddedildi');
+    };
+
+    function isApproved(userData) {
+        return userData.approved === true || userData.role === 'admin';
+    }
+
+    function isMutedNow(data) {
+        if (!data.muteUntil) return false;
+        if (data.muteUntil === 'permanent') return true;
+        return new Date(data.muteUntil) > new Date();
+    }
+
+    let countdownInterval = null;
+    function startMuteCountdown(until) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        const el = document.getElementById('mute-countdown');
+        if (!el) return;
+        if (until === 'permanent') { el.innerText = 'Kalıcı'; return; }
+        const end = new Date(until);
+        countdownInterval = setInterval(() => {
+            const diff = end - new Date();
+            if (diff <= 0) { clearInterval(countdownInterval); location.reload(); return; }
+            const m = Math.floor(diff / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            el.innerText = `${m}d ${s}s`;
+        }, 1000);
+    }
+
+    // ═══════════════════════ PROTECTED NAVIGATION ═══════════════════════
+    window.showProtected = (page) => {
+        show(page);
+        // Render state based on login + approval
+        if (page === 'chat') {
+            const chatPending = document.getElementById('chat-pending');
+            const chatContent = document.getElementById('chat-content');
+            const chatLoginPrompt = document.getElementById('chat-login-prompt');
+            if (!user) {
+                chatPending.classList.add('d-none');
+                chatContent.classList.add('d-none');
+                chatLoginPrompt.classList.remove('d-none');
+            } else {
+                const userData = allUsers[user.id];
+                if (!userData || !isApproved(userData)) {
+                    chatPending.classList.remove('d-none');
+                    chatContent.classList.add('d-none');
+                    chatLoginPrompt.classList.add('d-none');
+                } else {
+                    chatPending.classList.add('d-none');
+                    chatContent.classList.remove('d-none');
+                    chatLoginPrompt.classList.add('d-none');
+                }
             }
-        };
+        }
+        if (page === 'forum') {
+            const forumPending = document.getElementById('forum-pending');
+            const forumContent = document.getElementById('forum-content');
+            const forumLoginPrompt = document.getElementById('forum-login-prompt');
+            if (!user) {
+                forumPending.classList.add('d-none');
+                forumContent.classList.add('d-none');
+                forumLoginPrompt.classList.remove('d-none');
+            } else {
+                const userData = allUsers[user.id];
+                if (!userData || !isApproved(userData)) {
+                    forumPending.classList.remove('d-none');
+                    forumContent.classList.add('d-none');
+                    forumLoginPrompt.classList.add('d-none');
+                } else {
+                    forumPending.classList.add('d-none');
+                    forumContent.classList.remove('d-none');
+                    forumLoginPrompt.classList.add('d-none');
+                }
+            }
+        }
+    };
 
-        window.openModal = () => {
-            document.getElementById('loginModal').classList.add('open');
-            setTimeout(() => document.getElementById('login-nick').focus(), 100);
-        };
+    // ═══════════════════════ CHAT ═══════════════════════
+    onSnapshot(query(collection(db, "messages"), orderBy("ts")), (snap) => {
+        const box = document.getElementById('chat-messages');
+        if (!box) return;
+        if (snap.empty) {
+            box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`;
+            return;
+        }
+        box.innerHTML = '';
+        let lastAuthor = '';
+        snap.forEach(s => {
+            const d = s.data();
+            const isOwn = d.uid === user?.id;
+            const roleClass = d.role || 'sturgiyali';
+            const showHeader = lastAuthor !== d.uid;
+            lastAuthor = d.uid;
+            const time = d.ts ? new Date(d.ts.toDate()).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
+            box.innerHTML += `
+                <div class="msg-group">
+                    ${showHeader ? `<div class="msg-author-line"><span class="msg-author ${roleClass}">${escHtml(d.nick)}</span><span class="msg-time">${time}</span></div>` : ''}
+                    <div class="msg-bubble ${isOwn ? 'own' : ''}">
+                        ${escHtml(d.text)}
+                        ${user?.role === 'admin' && !isOwn ? `<div class="msg-actions"><button onclick="deleteMsg('${s.id}')" class="msg-act-btn"><i class="fas fa-trash"></i></button></div>` : ''}
+                    </div>
+                </div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+    });
 
-        window.closeModal = () => document.getElementById('loginModal').classList.remove('open');
+    window.sendMessage = async () => {
+        if (!user) { showToast('Önce giriş yapmalısın', true); openModal(); return; }
+        const userData = allUsers[user.id];
+        if (!userData || !isApproved(userData)) { showToast('Hesabın henüz onaylanmadı', true); return; }
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        const userDoc = await getDoc(doc(db, "users", user.id));
+        const ud = userDoc.data();
+        if (isMutedNow(ud)) { showToast('Susturuldunuz, mesaj gönderemezsiniz.', true); return; }
+        await addDoc(collection(db, "messages"), {
+            uid: user.id, nick: user.nick, role: user.role, text, ts: serverTimestamp()
+        });
+        input.value = '';
+    };
 
-        window.handleOverlayClick = (e) => {
-            if (e.target === document.getElementById('loginModal')) closeModal();
-        };
+    window.deleteMsg = async (id) => {
+        if (user?.role !== 'admin') return;
+        await deleteDoc(doc(db, "messages", id));
+        showToast('Mesaj silindi');
+    };
 
-        // ─── HELPERS ───
-        function escHtml(s) {
-            return String(s||'')
-                .replace(/&/g,'&amp;')
-                .replace(/</g,'&lt;')
-                .replace(/>/g,'&gt;')
-                .replace(/"/g,'&quot;');
+    // ═══════════════════════ MUTE ═══════════════════════
+    window.openMuteModal = (id, nick) => {
+        const data = allUsers[id];
+        if (data && isMutedNow(data)) { unmute(id); return; }
+        document.getElementById('mute-target-id').value = id;
+        document.getElementById('mute-target-name').innerText = nick + ' adlı savaşçı';
+        document.getElementById('muteModal').classList.add('open');
+    };
+    window.closeMuteModal = () => document.getElementById('muteModal').classList.remove('open');
+
+    window.applyMute = async () => {
+        const id = document.getElementById('mute-target-id').value;
+        const mins = parseInt(document.getElementById('mute-duration').value);
+        let until;
+        if (mins === 99999) { until = 'permanent'; }
+        else {
+            const d = new Date();
+            d.setMinutes(d.getMinutes() + mins);
+            until = d.toISOString();
+        }
+        await updateDoc(doc(db, "users", id), { muteUntil: until });
+        showToast('Kullanıcı susturuldu');
+        closeMuteModal();
+    };
+
+    window.unmute = async (id) => {
+        await updateDoc(doc(db, "users", id), { muteUntil: null });
+        showToast('Mute kaldırıldı');
+    };
+
+    // ═══════════════════════ FORUM ═══════════════════════
+    let forumPosts = [];
+
+    onSnapshot(query(collection(db, "forum_posts"), orderBy("ts", "desc")), (snap) => {
+        forumPosts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        document.getElementById('forum-count').innerText = snap.size;
+        renderForum();
+    });
+
+    function renderForum() {
+        const container = document.getElementById('forum-posts');
+        if (!container) return;
+        const filtered = currentFilter === 'all' ? forumPosts : forumPosts.filter(p => p.tag === currentFilter);
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok</p></div>`;
+            return;
+        }
+        container.innerHTML = filtered.map(p => {
+            const time = p.ts ? new Date(p.ts.toDate()).toLocaleDateString('tr-TR') : '';
+            return `
+                <div class="forum-post-card" onclick="openForumPost('${p.id}')">
+                    <span class="forum-tag tag-${p.tag || 'general'}">${tagLabels[p.tag] || 'Genel'}</span>
+                    <div class="forum-post-title">${escHtml(p.title)}</div>
+                    <div class="forum-post-preview">${escHtml((p.body || '').slice(0, 140))}${(p.body || '').length > 140 ? '...' : ''}</div>
+                    <div class="forum-post-meta">
+                        <span><i class="fas fa-user" style="margin-right:5px"></i>${escHtml(p.nick)}</span>
+                        <span><i class="fas fa-calendar" style="margin-right:5px"></i>${time}</span>
+                        <span><i class="fas fa-comment" style="margin-right:5px"></i>${p.replyCount || 0} yanıt</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    window.filterForum = (tag) => { currentFilter = tag; renderForum(); };
+    window.toggleCompose = () => {
+        if (!user) { showToast('Konu açmak için giriş yap', true); openModal(); return; }
+        document.getElementById('forum-compose-area').classList.toggle('d-none');
+    };
+
+    window.submitForumPost = async () => {
+        if (!user) return;
+        const title = document.getElementById('forum-title-input').value.trim();
+        const body = document.getElementById('forum-body-input').value.trim();
+        const tag = document.getElementById('forum-tag-input').value;
+        if (!title || !body) { showToast('Başlık ve içerik gerekli', true); return; }
+        await addDoc(collection(db, "forum_posts"), {
+            title, body, tag, nick: user.nick, uid: user.id, role: user.role, replyCount: 0, ts: serverTimestamp()
+        });
+        document.getElementById('forum-title-input').value = '';
+        document.getElementById('forum-body-input').value = '';
+        document.getElementById('forum-compose-area').classList.add('d-none');
+        showToast('Konu açıldı!');
+    };
+
+    window.openForumPost = async (id) => {
+        currentForumPostId = id;
+        const post = forumPosts.find(p => p.id === id);
+        if (!post) return;
+        document.getElementById('forum-list-view').style.display = 'none';
+        document.getElementById('forum-detail-view').style.display = 'block';
+        const time = post.ts ? new Date(post.ts.toDate()).toLocaleDateString('tr-TR') : '';
+        document.getElementById('forum-detail-content').innerHTML = `
+            <div class="forum-compose" style="cursor:default">
+                <span class="forum-tag tag-${post.tag || 'general'}">${tagLabels[post.tag] || 'Genel'}</span>
+                <div class="forum-post-title" style="font-size:22px; margin-bottom:14px">${escHtml(post.title)}</div>
+                <div style="font-size:14px; color:var(--text); line-height:1.8; margin-bottom:18px">${escHtml(post.body).replace(/\n/g,'<br>')}</div>
+                <div class="forum-post-meta">
+                    <span><i class="fas fa-user" style="margin-right:5px"></i>${escHtml(post.nick)}</span>
+                    <span><i class="fas fa-calendar" style="margin-right:5px"></i>${time}</span>
+                </div>
+                ${user?.role === 'admin' || user?.id === post.uid ? `
+                    <button onclick="deletePost('${id}')" class="mute-btn" style="margin-top:16px"><i class="fas fa-trash" style="margin-right:6px"></i>Konuyu Sil</button>
+                ` : ''}
+            </div>`;
+        loadReplies(id);
+        if (user) {
+            document.getElementById('reply-compose').style.display = 'block';
+        }
+    };
+
+    async function loadReplies(postId) {
+        const container = document.getElementById('forum-replies');
+        const snap = await getDocs(query(collection(db, "forum_posts", postId, "replies"), orderBy("ts")));
+        if (snap.empty) {
+            container.innerHTML = `<div style="color:var(--muted); font-size:13px; padding:16px 0; letter-spacing:0.5px">Henüz yanıt yok. İlk yanıtı sen yaz!</div>`;
+            return;
+        }
+        container.innerHTML = snap.docs.map(d => {
+            const r = d.data();
+            const t = r.ts ? new Date(r.ts.toDate()).toLocaleString('tr-TR') : '';
+            return `
+                <div class="reply-card">
+                    <div class="reply-header">
+                        <span class="reply-author ${r.role || 'sturgiyali'}">${escHtml(r.nick)}</span>
+                        <span class="badge-rank rank-${r.role || 'sturgiyali'}" style="font-size:9px">${(roles[r.role] || roles['sturgiyali']).n}</span>
+                        <span class="reply-time">${t}</span>
+                    </div>
+                    <div class="reply-text">${escHtml(r.text).replace(/\n/g,'<br>')}</div>
+                </div>`;
+        }).join('');
+    }
+
+    window.submitReply = async () => {
+        if (!user) return;
+        const text = document.getElementById('reply-input').value.trim();
+        if (!text) { showToast('Yanıt boş olamaz', true); return; }
+        await addDoc(collection(db, "forum_posts", currentForumPostId, "replies"), {
+            nick: user.nick, uid: user.id, role: user.role, text, ts: serverTimestamp()
+        });
+        await updateDoc(doc(db, "forum_posts", currentForumPostId), {
+            replyCount: (forumPosts.find(p => p.id === currentForumPostId)?.replyCount || 0) + 1
+        });
+        document.getElementById('reply-input').value = '';
+        loadReplies(currentForumPostId);
+        showToast('Yanıt gönderildi!');
+    };
+
+    window.deletePost = async (id) => {
+        await deleteDoc(doc(db, "forum_posts", id));
+        backToForum();
+        showToast('Konu silindi');
+    };
+
+    window.backToForum = () => {
+        currentForumPostId = null;
+        document.getElementById('forum-list-view').style.display = '';
+        document.getElementById('forum-detail-view').style.display = 'none';
+    };
+
+    // ═══════════════════════ GALLERY ═══════════════════════
+    let galleryItems = [];
+
+    onSnapshot(query(collection(db, "gallery"), orderBy("ts", "desc")), (snap) => {
+        galleryItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderGallery();
+    });
+
+    function renderGallery() {
+        const grid = document.getElementById('gallery-grid');
+        if (!grid) return;
+
+        // Upload area
+        const uploadWrap = document.getElementById('gallery-upload-wrap');
+        if (user) {
+            uploadWrap.innerHTML = `
+                <div class="gallery-upload-area" onclick="document.getElementById('gallery-file-input').click()">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div style="font-family:'Cinzel',serif; font-size:13px; color:var(--text); letter-spacing:1px">Fotoğraf Yükle</div>
+                    <div class="upload-hint">PNG, JPG, GIF — Max 10MB</div>
+                    <input type="file" id="gallery-file-input" accept="image/*" style="display:none" onchange="handleGalleryUpload(event)">
+                    <div id="gallery-upload-progress" style="display:none; margin-top:12px">
+                        <div style="background:rgba(168,216,234,0.1); border-radius:4px; height:4px; overflow:hidden; width:200px; margin:0 auto">
+                            <div id="gallery-progress-bar" style="height:100%; width:0%; background:var(--ice); border-radius:4px; transition:width 0.3s"></div>
+                        </div>
+                        <div style="font-size:10px; color:var(--muted); margin-top:6px">Yükleniyor...</div>
+                    </div>
+                </div>`;
+        } else {
+            uploadWrap.innerHTML = '';
         }
 
-        function showToast(msg, isError = false) {
-            const t = document.getElementById('toast');
-            const tx = document.getElementById('toast-text');
-            tx.innerText = msg;
-            t.style.borderColor = isError ? 'rgba(192,57,43,0.4)' : 'rgba(168,216,234,0.2)';
-            t.style.color = isError ? '#e57373' : 'var(--ice)';
-            t.querySelector('i').style.color = isError ? '#e57373' : 'var(--ice)';
-            t.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+        if (galleryItems.length === 0) {
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-images"></i><p>Henüz fotoğraf yok</p></div>`;
+            return;
         }
 
-        window.showToast = showToast;
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        grid.innerHTML = galleryItems.map(item => `
+            <div class="gallery-item">
+                <img src="${item.url}" alt="${escHtml(item.caption || '')}" loading="lazy">
+                <div class="gallery-overlay">
+                    <div class="gallery-caption">${escHtml(item.caption || 'Sturgia Klanı')}</div>
+                    <div class="gallery-meta"><i class="fas fa-user" style="margin-right:5px"></i>${escHtml(item.nick || '')}</div>
+                </div>
+                <div class="gallery-actions">
+                    <button onclick="openLightbox('${item.url}','${escHtml(item.caption || '')}')" class="gallery-btn view-btn"><i class="fas fa-expand"></i></button>
+                    ${user?.role === 'admin' || user?.id === item.uid ? `<button onclick="deleteGalleryItem('${item.id}','${item.storagePath || ''}')" class="gallery-btn"><i class="fas fa-trash"></i></button>` : ''}
+                </div>
+            </div>`).join('');
+    }
+
+    window.handleGalleryUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) { showToast('Dosya çok büyük (max 10MB)', true); return; }
+
+        const progressWrap = document.getElementById('gallery-upload-progress');
+        const progressBar = document.getElementById('gallery-progress-bar');
+        progressWrap.style.display = 'block';
+        progressBar.style.width = '30%';
+
+        try {
+            const caption = prompt('Fotoğraf başlığı (opsiyonel):') || '';
+            progressBar.style.width = '50%';
+            const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            progressBar.style.width = '80%';
+            const url = await getDownloadURL(storageRef);
+            progressBar.style.width = '90%';
+            await addDoc(collection(db, "gallery"), {
+                url, caption, nick: user.nick, uid: user.id,
+                storagePath: storageRef.fullPath, ts: serverTimestamp()
+            });
+            progressBar.style.width = '100%';
+            setTimeout(() => { progressWrap.style.display = 'none'; progressBar.style.width = '0%'; }, 800);
+            showToast('Fotoğraf yüklendi!');
+        } catch (e) {
+            progressWrap.style.display = 'none';
+            showToast('Yükleme hatası: ' + e.message, true);
+        }
+        event.target.value = '';
+    };
+
+    window.deleteGalleryItem = async (id, storagePath) => {
+        if (!confirm('Bu fotoğrafı silmek istediğinden emin misin?')) return;
+        await deleteDoc(doc(db, "gallery", id));
+        if (storagePath) {
+            try { await deleteObject(ref(storage, storagePath)); } catch(e) {}
+        }
+        showToast('Fotoğraf silindi');
+    };
+
+    window.openLightbox = (url, caption) => {
+        document.getElementById('lightbox-img').src = url;
+        document.getElementById('lightbox-caption').innerText = caption || '';
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeLightbox = () => {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    };
+
+    // ═══════════════════════ AUTH ═══════════════════════
+    // Show confirm password field for new registrations
+    document.getElementById('login-pass').addEventListener('input', async function() {
+        const nick = document.getElementById('login-nick').value.trim();
+        const pass = this.value;
+
+        checkRegStrength(pass);
+
+        const strengthWrap = document.getElementById('login-strength-wrap');
+        if (pass.length > 0) {
+            strengthWrap.style.display = 'block';
+        } else {
+            strengthWrap.style.display = 'none';
+        }
+    });
+
+    document.getElementById('login-nick').addEventListener('blur', async function() {
+        const nick = this.value.trim();
+        if (!nick) return;
+        const q = query(collection(db, "users"), where("nick", "==", nick));
+        const snap = await getDocs(q);
+        const confirmWrap = document.getElementById('confirm-pass-wrap');
+        if (snap.empty) {
+            confirmWrap.style.display = 'block'; // New user, show confirm
+        } else {
+            confirmWrap.style.display = 'none';
+        }
+    });
+
+    window.processAuth = async () => {
+        const n = document.getElementById('login-nick').value.trim();
+        const p = document.getElementById('login-pass').value;
+        if (!n || !p) { showToast('Tüm alanları doldur', true); return; }
+
+        const q = query(collection(db, "users"), where("nick", "==", n));
+        const snap = await getDocs(q);
+        let d;
+
+        if (snap.empty) {
+            // New user registration
+            if (p.length < 6) { showToast('Şifre en az 6 karakter olmalı', true); return; }
+            const confirm = document.getElementById('login-pass-confirm').value;
+            if (confirm && confirm !== p) { showToast('Şifreler eşleşmiyor', true); return; }
+            const hashed = hashSimple(p);
+            const res = await addDoc(collection(db, "users"), {
+                nick: n, pass: hashed, role: 'sturgiyali', approved: false, muteUntil: null
+            });
+            d = { id: res.id, nick: n, role: 'sturgiyali', approved: false };
+            showToast('Hesap oluşturuldu! Admin onayı bekleniyor.');
+        } else {
+            const docData = snap.docs[0].data();
+            // Support both hashed and legacy plaintext passwords
+            const passMatch = docData.pass === p || docData.pass === hashSimple(p);
+            if (!passMatch) { showToast('Şifre hatalı', true); return; }
+            d = { id: snap.docs[0].id, ...docData };
+            showToast('Hoş geldin, ' + d.nick + '!');
+        }
+
+        localStorage.setItem('st_session', JSON.stringify(d));
+        setTimeout(() => location.reload(), 1200);
+    };
+
+    window.updatePassword = async () => {
+        if (!user) { showToast('Önce giriş yap', true); return; }
+        const currentPass = document.getElementById('current-password').value;
+        const newPass = document.getElementById('new-password').value;
+        const confirmPass = document.getElementById('confirm-password').value;
+
+        if (!currentPass || !newPass || !confirmPass) { showToast('Tüm alanları doldur', true); return; }
+        if (newPass.length < 6) { showToast('Şifre en az 6 karakter olmalı', true); return; }
+        if (newPass !== confirmPass) { showToast('Şifreler eşleşmiyor', true); return; }
+
+        // Verify current password
+        const userDoc = await getDoc(doc(db, "users", user.id));
+        const ud = userDoc.data();
+        const currentMatch = ud.pass === currentPass || ud.pass === hashSimple(currentPass);
+        if (!currentMatch) { showToast('Mevcut şifre hatalı', true); return; }
+
+        const strength = getStrength(newPass);
+        if (strength.pct < 30) { showToast('Daha güçlü bir şifre seç', true); return; }
+
+        await updateDoc(doc(db, "users", user.id), { pass: hashSimple(newPass) });
+        showToast('Şifre güncellendi ✓');
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+
+        // Update session
+        const updatedSession = { ...user };
+        localStorage.setItem('st_session', JSON.stringify(updatedSession));
+    };
+
+    window.updRole = async (id, r) => {
+        await updateDoc(doc(db, "users", id), { role: r });
+        showToast('Rütbe güncellendi');
+    };
+
+    // ═══════════════════════ SESSION UI ═══════════════════════
+    if (user) {
+        document.getElementById('auth-section').classList.add('d-none');
+        document.getElementById('user-section').classList.remove('d-none');
+        document.getElementById('display-nick').innerText = user.nick;
+        const r = roles[user.role] || roles['sturgiyali'];
+        document.getElementById('display-rank').innerText = r.n;
+        if (user.role === 'admin') {
+            document.getElementById('admin-nav-item').classList.remove('d-none');
+        }
+        const heroRank = document.getElementById('hero-rank');
+        if (heroRank) heroRank.innerText = r.n;
+    }
+
+    window.logout = () => { localStorage.removeItem('st_session'); location.reload(); };
+
+    window.show = (p) => {
+        document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
+        const target = document.getElementById('page-' + p);
+        if (target) target.classList.remove('d-none');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        const nl = document.getElementById('nav-' + p);
+        if (nl) nl.classList.add('active');
+        closeNav();
+        if (p === 'chat') {
+            setTimeout(() => {
+                const box = document.getElementById('chat-messages');
+                if (box) box.scrollTop = box.scrollHeight;
+            }, 100);
+        }
+        if (p === 'gallery') renderGallery();
+    };
+
+    window.openModal = () => {
+        document.getElementById('loginModal').classList.add('open');
+        setTimeout(() => document.getElementById('login-nick').focus(), 100);
+    };
+
+    window.closeModal = () => document.getElementById('loginModal').classList.remove('open');
+    window.handleOverlayClick = (e) => { if (e.target === document.getElementById('loginModal')) closeModal(); };
+
+    // ═══════════════════════ HELPERS ═══════════════════════
+    function escHtml(s) {
+        return String(s || '')
+            .replace(/&/g,'&amp;')
+            .replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;');
+    }
+
+    function showToast(msg, isError = false) {
+        const t = document.getElementById('toast');
+        const tx = document.getElementById('toast-text');
+        tx.innerText = msg;
+        t.style.borderColor = isError ? 'rgba(192,57,43,0.35)' : 'rgba(168,216,234,0.18)';
+        t.style.color = isError ? '#e57373' : 'var(--ice)';
+        t.querySelector('i').style.color = isError ? '#e57373' : 'var(--ice)';
+        t.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    window.showToast = showToast;
+
+    function getStrength(pass) {
+        let score = 0;
+        if (!pass) return { pct: 0, color: '#333', text: 'Şifre gücü' };
+        if (pass.length >= 6) score++;
+        if (pass.length >= 10) score++;
+        if (/[A-Z]/.test(pass)) score++;
+        if (/[0-9]/.test(pass)) score++;
+        if (/[^A-Za-z0-9]/.test(pass)) score++;
+        const levels = [
+            { pct: 10, color: '#c0392b', text: 'Çok Zayıf' },
+            { pct: 30, color: '#e67e22', text: 'Zayıf' },
+            { pct: 55, color: '#f39c12', text: 'Orta' },
+            { pct: 80, color: '#27ae60', text: 'Güçlü' },
+            { pct: 100, color: '#4caf7d', text: 'Çok Güçlü' },
+        ];
+        return levels[Math.min(score, 4)];
+    }
+</script>
+
+<script>
+    // Mobile nav
+    window.toggleNav = function() {
+        const nav = document.getElementById('sidenav');
+        const overlay = document.getElementById('nav-overlay');
+        nav.classList.toggle('open');
+        overlay.classList.toggle('open');
+    };
+    window.closeNav = function() {
+        document.getElementById('sidenav').classList.remove('open');
+        document.getElementById('nav-overlay').classList.remove('open');
+    };
+
+    // ESC closes modals
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.getElementById('loginModal').classList.remove('open');
+            document.getElementById('muteModal').classList.remove('open');
+            const lb = document.getElementById('lightbox');
+            if (lb.classList.contains('open')) {
+                lb.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+    });
+</script>
 </body>
 </html>
