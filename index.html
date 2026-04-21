@@ -1292,33 +1292,33 @@
 
     <div class="sidenav-menu">
         <div class="nav-section-label">Genel</div>
-        <a href="#" onclick="show('home')" class="nav-link active" id="nav-home">
+        <a href="#" data-page="home" class="nav-link active" id="nav-home">
             <i class="fas fa-compass"></i> Anasayfa
         </a>
-        <a href="#" onclick="show('warriors')" class="nav-link" id="nav-warriors">
+        <a href="#" data-page="warriors" class="nav-link" id="nav-warriors">
             <i class="fas fa-users"></i> Savaşçılar
         </a>
-        <a href="#" onclick="showProtected('chat')" class="nav-link" id="nav-chat">
+        <a href="#" data-page="chat" data-protected="1" class="nav-link" id="nav-chat">
             <i class="fas fa-comments"></i> Klan Sohbeti
         </a>
-        <a href="#" onclick="showProtected('forum')" class="nav-link" id="nav-forum">
+        <a href="#" data-page="forum" data-protected="1" class="nav-link" id="nav-forum">
             <i class="fas fa-scroll"></i> Forum
         </a>
-        <a href="#" onclick="show('gallery')" class="nav-link" id="nav-gallery">
+        <a href="#" data-page="gallery" class="nav-link" id="nav-gallery">
             <i class="fas fa-images"></i> Galeri
         </a>
 
         <div class="nav-section-label">Topluluk</div>
-        <a href="#" onclick="show('discord')" class="nav-link discord-link" id="nav-discord">
+        <a href="#" data-page="discord" class="nav-link discord-link" id="nav-discord">
             <i class="fab fa-discord"></i> Discord
         </a>
-        <a href="#" onclick="show('settings')" class="nav-link" id="nav-settings">
+        <a href="#" data-page="settings" class="nav-link" id="nav-settings">
             <i class="fas fa-shield-alt"></i> Güvenlik
         </a>
 
         <div id="admin-nav-item" class="d-none">
             <div class="nav-section-label">Yönetim</div>
-            <a href="#" onclick="show('admin')" class="nav-link admin-link" id="nav-admin">
+            <a href="#" data-page="admin" class="nav-link admin-link" id="nav-admin">
                 <i class="fas fa-crown"></i> Admin Paneli
             </a>
         </div>
@@ -1383,22 +1383,22 @@
         </div>
 
         <div class="quick-actions">
-            <a href="#" onclick="showProtected('chat')" class="qa-card ice">
+            <a href="#" data-page="chat" data-protected="1" class="qa-card ice">
                 <div class="qa-icon"><i class="fas fa-comments"></i></div>
                 <div class="qa-label">Sohbet</div>
                 <div class="qa-sub">Klanla konuş</div>
             </a>
-            <a href="#" onclick="showProtected('forum')" class="qa-card gold">
+            <a href="#" data-page="forum" data-protected="1" class="qa-card gold">
                 <div class="qa-icon"><i class="fas fa-scroll"></i></div>
                 <div class="qa-label">Forum</div>
                 <div class="qa-sub">Konu aç</div>
             </a>
-            <a href="#" onclick="show('gallery')" class="qa-card green">
+            <a href="#" data-page="gallery" class="qa-card green">
                 <div class="qa-icon"><i class="fas fa-images"></i></div>
                 <div class="qa-label">Galeri</div>
                 <div class="qa-sub">Fotoğraflar</div>
             </a>
-            <a href="#" onclick="show('discord')" class="qa-card discord">
+            <a href="#" data-page="discord" class="qa-card discord">
                 <div class="qa-icon"><i class="fab fa-discord"></i></div>
                 <div class="qa-label">Discord</div>
                 <div class="qa-sub">Sunucuya katıl</div>
@@ -2596,6 +2596,20 @@
                 lb.classList.remove('open');
                 document.body.style.overflow = '';
             }
+        }
+    });
+
+    // Nav delegation — waits for module to expose window.show / window.showProtected
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('[data-page]');
+        if (!link) return;
+        e.preventDefault();
+        const page = link.dataset.page;
+        const isProtected = link.dataset.protected === '1';
+        if (isProtected && typeof window.showProtected === 'function') {
+            window.showProtected(page);
+        } else if (typeof window.show === 'function') {
+            window.show(page);
         }
     });
 </script>
