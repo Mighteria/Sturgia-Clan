@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Sturgia Clan | Elite Dashboard</title>
+  <title>Sturgia Clan | Luxury Neon Hub</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Exo+2:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -11,273 +11,555 @@
 
   <style>
     :root{
-      --black:#03040a;--deep:#070a14;--panel:#0a0d1a;--card:#0d1120;
-      --ice:#a8d8ea;--frost:#d4eef8;--steel:#7a96b4;--gold:#c9a84c;--gold-light:#f0d070;
-      --red:#c0392b;--green:#4caf7d;--text:#c8d8e8;--muted:#445566;--sidebar-w:280px;
+      --black:#03040a; --panel:#0a0d1a; --card:#0d1120;
+      --ice:#a8d8ea; --frost:#d4eef8; --steel:#7a96b4;
+      --gold:#c9a84c; --gold-light:#f0d070;
+      --red:#c0392b; --green:#4caf7d;
+      --text:#c8d8e8; --muted:#4f6279;
+      --sidebar-w:286px;
+      --mx:50%; --my:50%;
     }
+
     *{margin:0;padding:0;box-sizing:border-box}
-    body{background:var(--black);font-family:'Exo 2',sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden}
+    body{
+      background:
+        radial-gradient(circle at 12% 18%, rgba(0,180,255,.08), transparent 35%),
+        radial-gradient(circle at 88% 12%, rgba(140,80,255,.10), transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(0,255,180,.05), transparent 38%),
+        #03040a;
+      color:var(--text);
+      font-family:'Exo 2',sans-serif;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
     #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+    #mouse-neon{
+      position:fixed; inset:0; z-index:2; pointer-events:none;
+      background:radial-gradient(240px circle at var(--mx) var(--my),
+        rgba(168,216,234,.13),
+        rgba(114,137,218,.07) 35%,
+        transparent 68%);
+      transition: background .05s linear;
+    }
+
     .d-none{display:none!important}
 
+    .glass{
+      background:rgba(168,216,234,.05);
+      backdrop-filter:blur(20px) saturate(180%);
+      -webkit-backdrop-filter:blur(20px) saturate(180%);
+      border:1px solid rgba(168,216,234,.14);
+      border-top-color:rgba(168,216,234,.3);
+    }
+
     .btn-glass{
-      position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;
-      background:rgba(168,216,234,.08);backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);
-      border:1px solid rgba(168,216,234,.2);border-top-color:rgba(255,255,255,.25);border-left-color:rgba(255,255,255,.15);
-      border-radius:12px;color:var(--frost);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-      cursor:pointer;transition:all .3s;text-decoration:none
+      position:relative;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px 22px;
+      border-radius:12px;
+      border:1px solid rgba(168,216,234,.25);
+      border-top-color:rgba(255,255,255,.25);
+      border-left-color:rgba(255,255,255,.16);
+      background:rgba(168,216,234,.09);
+      backdrop-filter:blur(20px) saturate(200%);
+      -webkit-backdrop-filter:blur(20px) saturate(200%);
+      color:var(--frost);
+      font-family:'Cinzel',serif;
+      font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      cursor:pointer;text-decoration:none;
+      transition:all .28s ease;
     }
     .btn-glass:hover{
-      background:rgba(168,216,234,.14);border-color:rgba(168,216,234,.35);
-      box-shadow:0 0 18px rgba(168,216,234,.22),0 10px 28px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.2);
-      transform:translateY(-2px);color:#fff
+      transform:translateY(-2px);
+      border-color:rgba(168,216,234,.4);
+      color:#fff;
+      box-shadow:
+        0 0 20px rgba(168,216,234,.28),
+        0 0 40px rgba(114,137,218,.18),
+        0 10px 28px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.22);
     }
-    .btn-glass-sm{padding:8px 14px;font-size:10px;letter-spacing:1.3px}
-    .btn-glass-red{background:rgba(192,57,43,.12);border-color:rgba(192,57,43,.3);color:#ff7070}
-    .btn-glass-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.3);color:var(--gold-light)}
-    .btn-discord-glass{background:rgba(114,137,218,.12);border-color:rgba(114,137,218,.3);color:#b0c0ff}
+    .btn-glass-sm{padding:7px 12px;font-size:10px;letter-spacing:1.4px}
+    .btn-glass-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.34);color:var(--gold-light)}
+    .btn-glass-red{background:rgba(192,57,43,.12);border-color:rgba(192,57,43,.35);color:#ff8080}
+    .btn-discord-glass{background:rgba(114,137,218,.12);border-color:rgba(114,137,218,.35);color:#bccbff}
+
+    .hamburger{
+      display:none; position:fixed; top:14px; left:14px; z-index:300;
+      background:rgba(8,11,20,.9); border:1px solid rgba(168,216,234,.2);
+      color:var(--ice); border-radius:10px; padding:10px 12px; cursor:pointer;
+    }
+    .sidenav-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:90}
 
     .sidenav{
-      position:fixed;left:0;top:0;width:var(--sidebar-w);height:100vh;z-index:100;overflow:auto;
-      background:rgba(5,7,15,.86);backdrop-filter:blur(32px);border-right:1px solid rgba(168,216,234,.08)
+      position:fixed;left:0;top:0;z-index:100;
+      width:var(--sidebar-w);height:100vh;
+      background:rgba(5,7,15,.84);
+      backdrop-filter:blur(32px) saturate(140%);
+      border-right:1px solid rgba(168,216,234,.08);
+      display:flex;flex-direction:column;overflow-y:auto;
     }
-    .clan-brand{padding:28px 20px;text-align:center;border-bottom:1px solid rgba(168,216,234,.08)}
-    .clan-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:12px}
-    .clan-name{font-family:'Cinzel Decorative',serif;font-size:16px;font-weight:900;letter-spacing:5px;color:var(--gold-light)}
-    .clan-tagline{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-top:4px}
-    .sidenav-menu{padding:12px}
-    .nav-section-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 12px 6px}
+    .clan-brand{
+      padding:28px 20px 22px;
+      border-bottom:1px solid rgba(168,216,234,.08);
+      text-align:center;
+      position:relative;
+    }
+    .clan-brand::before{
+      content:''; position:absolute; left:50%; top:-55px; transform:translateX(-50%);
+      width:220px;height:220px; border-radius:50%;
+      background:radial-gradient(circle, rgba(168,216,234,.12), transparent 65%);
+      pointer-events:none;
+    }
+    .clan-avatar{
+      width:84px;height:84px; border-radius:50%;
+      object-fit:cover; display:block; margin:0 auto 12px;
+      border:1px solid rgba(168,216,234,.35);
+      box-shadow:0 0 24px rgba(114,137,218,.25);
+    }
+    .clan-name{
+      font-family:'Cinzel Decorative',serif;
+      font-size:16px; font-weight:900; letter-spacing:5px;
+      color:var(--gold-light); text-transform:uppercase;
+      text-shadow:0 0 20px rgba(201,168,76,.34),0 0 36px rgba(114,137,218,.2);
+    }
+    .clan-tagline{font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:4px;text-transform:uppercase}
+
+    .sidenav-menu{flex:1;padding:12px}
+    .nav-section-label{
+      font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted);
+      padding:12px 10px 6px;
+    }
     .nav-link{
-      display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--steel)!important;text-decoration:none;cursor:pointer;
-      border:1px solid transparent;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:600;transition:.2s
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;
+      color:var(--steel)!important; text-decoration:none;
+      border-radius:10px; border:1px solid transparent;
+      transition:.2s; cursor:pointer;
+      font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
     }
-    .nav-link:hover{color:var(--frost)!important;border-color:rgba(168,216,234,.12);background:rgba(168,216,234,.04)}
-    .nav-link.active{color:var(--ice)!important;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.2)}
+    .nav-link:hover{background:rgba(168,216,234,.06);color:var(--frost)!important;border-color:rgba(168,216,234,.16)}
+    .nav-link.active{background:rgba(168,216,234,.09);color:var(--ice)!important;border-color:rgba(168,216,234,.26)}
     .nav-link.admin-link{color:var(--gold)!important}
     .sidenav-footer{padding:12px;border-top:1px solid rgba(168,216,234,.08)}
     .user-nick{display:block;text-align:center;font-family:'Cinzel',serif;font-size:13px;color:var(--ice);margin-bottom:2px}
     .user-rank-badge{display:block;text-align:center;font-size:10px;color:var(--muted);margin-bottom:10px}
 
-    .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1}
-    .hero-section{padding:64px 48px;border-bottom:1px solid rgba(168,216,234,.06);position:relative}
-    .hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,52px);color:#fff;line-height:1.1}
-    .hero-title span{
-      color:transparent;background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold-light));
-      -webkit-background-clip:text;background-clip:text
+    .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:3}
+    section{animation:fadeIn .35s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    .hero-section{
+      position:relative;
+      padding:72px 50px 58px;
+      border-bottom:1px solid rgba(168,216,234,.07);
+      overflow:hidden;
     }
-    .hero-desc{margin-top:18px;color:var(--steel);max-width:540px;line-height:1.7}
-    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(168,216,234,.04)}
-    .stat-block{background:rgba(5,7,15,.8);padding:24px 28px}
-    .stat-label{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase}
+    .hero-section::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle at 80% 10%, rgba(114,137,218,.14), transparent 42%);
+      pointer-events:none;
+    }
+    .hero-title{
+      font-family:'Cinzel Decorative',serif;
+      font-size:clamp(28px,3.8vw,56px);line-height:1.08;color:#fff;
+      text-shadow:0 0 30px rgba(168,216,234,.20),0 0 60px rgba(114,137,218,.16);
+    }
+    .hero-title span{
+      color:transparent;
+      background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold-light));
+      -webkit-background-clip:text;background-clip:text;
+    }
+    .hero-desc{margin-top:18px;max-width:530px;line-height:1.8;color:var(--steel)}
+
+    .stats-row{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:1px;background:rgba(168,216,234,.05);
+    }
+    .stat-block{background:rgba(5,7,15,.83);padding:24px 30px}
+    .stat-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
     .stat-value{font-family:'Cinzel',serif;font-size:38px;color:#fff;margin-top:8px}
 
-    .quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;padding:28px 48px;border-bottom:1px solid rgba(168,216,234,.05)}
-    .qa-card{
-      border:1px solid rgba(168,216,234,.08);border-radius:14px;padding:18px;background:rgba(168,216,234,.03);text-align:center;
-      text-decoration:none;color:var(--text);transition:.25s
+    .quick-actions{
+      padding:28px 50px; border-bottom:1px solid rgba(168,216,234,.06);
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;
     }
-    .qa-card:hover{transform:translateY(-3px);border-color:rgba(168,216,234,.25);background:rgba(168,216,234,.07)}
-    .qa-icon{font-size:26px;display:block;margin-bottom:8px;color:var(--ice)}
+    .qa-card{
+      text-decoration:none;color:var(--text);
+      border-radius:14px;border:1px solid rgba(168,216,234,.12);
+      background:rgba(168,216,234,.04);
+      padding:18px;text-align:center;transition:.22s;
+    }
+    .qa-card:hover{transform:translateY(-3px);background:rgba(168,216,234,.09);border-color:rgba(168,216,234,.32);box-shadow:0 0 24px rgba(114,137,218,.22)}
+    .qa-icon{font-size:27px;color:var(--ice);display:block;margin-bottom:9px}
     .qa-label{font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;text-transform:uppercase}
-    .qa-sub{font-size:10px;color:var(--muted);margin-top:4px}
+    .qa-sub{font-size:10px;color:var(--muted);margin-top:5px}
 
-    .page-body{padding:36px 48px}
-    .section-header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
-    .section-title{font-family:'Cinzel',serif;font-size:20px;letter-spacing:2px;color:#fff}
-    .section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(168,216,234,.18),transparent)}
+    .page-body{padding:36px 50px}
+    .section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+    .section-title{font-family:'Cinzel',serif;font-size:20px;color:#fff;letter-spacing:2px}
+    .section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(168,216,234,.2),transparent)}
 
     .warrior-card{
-      background:rgba(10,13,26,.65);border:1px solid rgba(168,216,234,.08);border-radius:12px;padding:14px 16px;
-      display:flex;align-items:center;justify-content:space-between;gap:12px
+      border-radius:12px;border:1px solid rgba(168,216,234,.1);
+      background:rgba(10,13,26,.68);
+      padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-    .warrior-name{font-family:'Cinzel',serif;font-size:14px;color:var(--frost)}
-    .badge-rank{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid transparent;font-weight:700}
-    .rank-admin{background:rgba(192,57,43,.15);color:#ff7070;border-color:rgba(192,57,43,.25)}
-    .rank-westra{background:rgba(168,216,234,.12);color:var(--ice);border-color:rgba(168,216,234,.2)}
-    .rank-sturgiyali{background:rgba(128,150,176,.12);color:var(--steel);border-color:rgba(128,150,176,.2)}
+    .warrior-name{font-family:'Cinzel',serif;color:var(--frost);font-size:14px}
+    .badge-rank{
+      font-size:10px;letter-spacing:1px;text-transform:uppercase;
+      padding:5px 10px;border-radius:6px;border:1px solid transparent;font-weight:700;
+    }
 
-    .access-wall{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56vh;text-align:center;padding:20px}
-    .access-wall-icon{font-size:64px;color:rgba(192,57,43,.45);margin-bottom:14px}
+    .access-wall{min-height:56vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .access-wall-icon{font-size:62px;color:rgba(192,57,43,.45);margin-bottom:12px}
     .access-wall-title{font-family:'Cinzel',serif;font-size:24px;color:#fff}
-    .access-wall-sub{margin-top:8px;color:var(--muted);max-width:420px;line-height:1.7}
-    .pending-notice{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;color:var(--gold);margin-bottom:10px}
+    .access-wall-sub{max-width:430px;line-height:1.7;color:var(--muted);margin:10px 0 18px}
+    .pending-notice{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(201,168,76,.11);border:1px solid rgba(201,168,76,.25);
+      padding:10px 14px;border-radius:10px;color:var(--gold);
+    }
 
-    .chat-wrapper{display:grid;grid-template-columns:1fr 280px;gap:16px;height:calc(100vh - 200px)}
-    .chat-main,.chat-sidebar-glass{
-      background:rgba(7,10,20,.72);backdrop-filter:blur(20px);border:1px solid rgba(168,216,234,.08);border-radius:14px;overflow:hidden
+    .chat-wrapper{
+      display:grid; grid-template-columns:1fr 290px; gap:16px;
+      height:calc(100vh - 200px);
+    }
+    .chat-main,.chat-sidebar{
+      border-radius:14px;border:1px solid rgba(168,216,234,.1);
+      background:rgba(7,10,20,.74);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      overflow:hidden;
     }
     .chat-main{display:flex;flex-direction:column}
-    .chat-header,.chat-sidebar-header{padding:14px 16px;border-bottom:1px solid rgba(168,216,234,.07);background:rgba(168,216,234,.02)}
-    .chat-status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);display:inline-block;margin-right:8px}
-    .chat-title{display:inline;font-family:'Cinzel',serif;color:#fff;font-size:14px}
+    .chat-head,.chat-members-head{
+      padding:14px 16px;border-bottom:1px solid rgba(168,216,234,.08);
+      background:rgba(168,216,234,.03);
+    }
+    .chat-status-dot{
+      display:inline-block; width:8px;height:8px;border-radius:50%;
+      background:var(--green); box-shadow:0 0 10px var(--green); margin-right:8px;
+    }
+    .chat-title{font-family:'Cinzel',serif;font-size:14px;color:#fff}
     .chat-messages{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-    .msg-author-line{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .msg-author-line{display:flex;gap:8px;align-items:center;margin-bottom:4px}
     .msg-author{font-family:'Cinzel',serif;font-size:12px}
     .msg-author.admin{color:#ff7070}.msg-author.westra{color:var(--ice)}.msg-author.sturgiyali{color:var(--steel)}
     .msg-time{font-size:10px;color:var(--muted)}
-    .msg-bubble{position:relative;background:rgba(168,216,234,.03);border:1px solid rgba(168,216,234,.08);border-radius:6px 12px 12px 12px;padding:10px 12px;font-size:14px;line-height:1.5}
-    .msg-bubble.own{background:rgba(168,216,234,.07);border-color:rgba(168,216,234,.16);border-radius:12px 6px 12px 12px}
-    .msg-actions{position:absolute;right:8px;top:8px;display:flex;gap:5px;opacity:0;transition:.2s}
+    .msg-bubble{
+      position:relative; border-radius:6px 12px 12px 12px;
+      background:rgba(168,216,234,.04); border:1px solid rgba(168,216,234,.1);
+      padding:10px 12px; line-height:1.55; font-size:14px;
+    }
+    .msg-bubble.own{
+      border-radius:12px 6px 12px 12px;
+      background:rgba(168,216,234,.08); border-color:rgba(168,216,234,.2);
+    }
+    .msg-actions{
+      position:absolute; right:8px; top:8px; display:flex; gap:5px;
+      opacity:0; transition:.18s;
+    }
     .msg-bubble:hover .msg-actions{opacity:1}
-    .msg-act-btn{background:rgba(5,7,15,.9);border:1px solid rgba(168,216,234,.35);color:var(--ice);border-radius:5px;padding:2px 7px;font-size:10px;cursor:pointer}
-    .msg-act-btn.danger{border-color:rgba(192,57,43,.35);color:#ff7070}
-    .chat-input-area{padding:12px;border-top:1px solid rgba(168,216,234,.07);display:flex;gap:8px}
-    .chat-input{flex:1;background:rgba(168,216,234,.04);border:1px solid rgba(168,216,234,.12);border-radius:10px;padding:10px 12px;color:var(--text);outline:none}
-    .chat-input:focus{border-color:rgba(168,216,234,.3)}
+    .msg-act-btn{
+      border-radius:5px; border:1px solid rgba(168,216,234,.35);
+      background:rgba(5,7,15,.9); color:var(--ice); cursor:pointer;
+      font-size:10px; padding:2px 7px;
+    }
+    .msg-act-btn.danger{border-color:rgba(192,57,43,.35);color:#ff8080}
+
+    .msg-edit-wrap{margin-top:8px;display:flex;gap:6px;align-items:center}
+    .msg-edit-input{
+      flex:1;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.25);
+      border-radius:8px;color:var(--text);padding:7px 9px;font-size:13px;outline:none;
+    }
+    .msg-edit-input:focus{
+      border-color:rgba(168,216,234,.46);box-shadow:0 0 0 2px rgba(168,216,234,.1);
+    }
+
+    .chat-input-area{
+      border-top:1px solid rgba(168,216,234,.08);
+      padding:12px; display:flex; gap:8px;
+    }
+    .chat-input{
+      flex:1; border-radius:10px; outline:none; padding:10px 12px;
+      border:1px solid rgba(168,216,234,.15);
+      background:rgba(168,216,234,.04); color:var(--text);
+    }
+    .chat-input:focus{border-color:rgba(168,216,234,.35)}
     .chat-members{padding:10px;overflow:auto}
-    .chat-member-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px}
-    .chat-member-item:hover{background:rgba(168,216,234,.04)}
+    .chat-member-item{padding:8px 10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between}
+    .chat-member-item:hover{background:rgba(168,216,234,.05)}
     .chat-member-name{font-family:'Cinzel',serif;font-size:12px}
-    .muted-tag{font-size:9px;color:#ff7070;background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.2);padding:2px 6px;border-radius:4px}
-    .muted-notice-bar{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);padding:10px;border-radius:8px;color:#ff7070;text-align:center;font-size:12px}
+    .muted-tag{
+      font-size:9px;text-transform:uppercase;
+      border:1px solid rgba(192,57,43,.25);
+      background:rgba(192,57,43,.14); color:#ff8080;
+      padding:2px 6px; border-radius:4px;
+    }
+    .muted-notice-bar{
+      background:rgba(192,57,43,.11); border:1px solid rgba(192,57,43,.2);
+      color:#ff8080; border-radius:8px; padding:10px 12px; text-align:center; font-size:12px;
+    }
 
     .forum-compose,.forum-post-card,.reply-card,.settings-card,.admin-table-wrap,.role-card{
-      background:rgba(10,13,26,.65);border:1px solid rgba(168,216,234,.08);border-radius:12px
+      border-radius:12px;border:1px solid rgba(168,216,234,.1);background:rgba(10,13,26,.68)
     }
-    .forum-compose{padding:20px;margin-bottom:20px}
+    .forum-compose{padding:20px;margin-bottom:18px}
     .forum-post-card{padding:18px;cursor:pointer;transition:.2s}
-    .forum-post-card:hover{border-color:rgba(201,168,76,.25);transform:translateY(-2px)}
-    .forum-tag{display:inline-block;padding:3px 9px;border-radius:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-    .tag-general{background:rgba(128,150,176,.14);color:var(--steel);border:1px solid rgba(128,150,176,.2)}
-    .tag-strategy{background:rgba(201,168,76,.13);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
-    .tag-event{background:rgba(76,175,125,.13);color:var(--green);border:1px solid rgba(76,175,125,.2)}
-    .tag-suggestion{background:rgba(168,216,234,.12);color:var(--ice);border:1px solid rgba(168,216,234,.2)}
-    .tag-bug{background:rgba(192,57,43,.13);color:#ff7070;border:1px solid rgba(192,57,43,.2)}
+    .forum-post-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(201,168,76,.28);
+      box-shadow:0 0 24px rgba(201,168,76,.12);
+    }
+    .forum-tag{
+      display:inline-block;padding:3px 9px;border-radius:5px;
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:700;
+    }
+    .tag-general{background:rgba(128,150,176,.14);border:1px solid rgba(128,150,176,.2);color:var(--steel)}
+    .tag-strategy{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.2);color:var(--gold)}
+    .tag-event{background:rgba(76,175,125,.13);border:1px solid rgba(76,175,125,.2);color:var(--green)}
+    .tag-suggestion{background:rgba(168,216,234,.12);border:1px solid rgba(168,216,234,.2);color:var(--ice)}
+    .tag-bug{background:rgba(192,57,43,.13);border:1px solid rgba(192,57,43,.2);color:#ff8080}
     .forum-post-title{font-family:'Cinzel',serif;font-size:16px;color:#fff;margin-bottom:8px}
-    .forum-post-preview{font-size:13px;color:var(--steel);line-height:1.7;margin-bottom:12px}
+    .forum-post-preview{font-size:13px;color:var(--steel);line-height:1.75;margin-bottom:12px}
     .forum-post-meta{font-size:11px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+
     .reply-card{padding:14px 16px;margin-bottom:10px}
-    .reply-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .reply-header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
     .reply-author{font-family:'Cinzel',serif;font-size:13px}
     .reply-author.admin{color:#ff7070}.reply-author.westra{color:var(--ice)}.reply-author.sturgiyali{color:var(--steel)}
     .reply-time{font-size:11px;color:var(--muted)}
     .reply-text{font-size:14px;line-height:1.6}
     .reply-actions{display:flex;gap:6px;margin-top:10px}
 
-    .form-label-custom{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .form-input,.form-select-dark{
-      width:100%;background:rgba(168,216,234,.04);border:1px solid rgba(168,216,234,.12);border-radius:10px;padding:11px 12px;
-      color:var(--text);outline:none
+    .form-label-custom{
+      display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      color:var(--muted);margin-bottom:6px;
     }
-    .form-input:focus,.form-select-dark:focus{border-color:rgba(168,216,234,.28)}
+    .form-input,.form-select-dark{
+      width:100%; border-radius:10px; outline:none;
+      border:1px solid rgba(168,216,234,.14);
+      background:rgba(168,216,234,.04);
+      color:var(--text); padding:11px 12px;
+    }
+    .form-input:focus,.form-select-dark:focus{
+      border-color:rgba(168,216,234,.38);
+      box-shadow:0 0 0 3px rgba(168,216,234,.08);
+    }
     textarea.form-input{resize:vertical;min-height:100px}
     .form-select-dark option{background:#0d1120}
 
+    .select-lux-wrap{position:relative}
+    .select-lux-wrap::before{
+      content:"\f0b0";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
+      position:absolute;left:12px;top:50%;transform:translateY(-50%);
+      color:var(--ice);font-size:12px;pointer-events:none;
+    }
+    .select-lux-wrap::after{
+      content:"\f078";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
+      position:absolute;right:12px;top:50%;transform:translateY(-50%);
+      color:var(--gold-light);font-size:11px;pointer-events:none;
+    }
+    .form-select-dark.lux{
+      appearance:none;-webkit-appearance:none;
+      padding-left:34px;padding-right:34px;border-radius:12px;
+      border:1px solid rgba(168,216,234,.25);
+      background:linear-gradient(135deg, rgba(168,216,234,.09), rgba(114,137,218,.07)), rgba(10,13,26,.85);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(168,216,234,.06);
+    }
+    .form-select-dark.lux:focus{
+      border-color:rgba(168,216,234,.45);
+      box-shadow:0 0 0 3px rgba(168,216,234,.1),0 0 18px rgba(114,137,218,.18);
+    }
+
     .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-    .gallery-item{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:1px solid rgba(168,216,234,.1);cursor:pointer;background:rgba(10,13,26,.6)}
-    .gallery-item img{width:100%;height:100%;object-fit:cover;filter:brightness(.9);transition:.25s}
+    .gallery-item{
+      position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;
+      border:1px solid rgba(168,216,234,.12);background:rgba(10,13,26,.7);cursor:pointer;
+    }
+    .gallery-item img{
+      width:100%;height:100%;object-fit:cover;filter:brightness(.9);
+      transition:.25s;
+    }
     .gallery-item:hover img{filter:brightness(1);transform:scale(1.03)}
-    .gallery-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,7,15,.85),transparent 55%);display:flex;align-items:flex-end;padding:10px}
-    .gallery-item-caption{font-size:12px;font-family:'Cinzel',serif;color:var(--frost)}
+    .gallery-item-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(5,7,15,.86), transparent 55%);
+      display:flex;align-items:flex-end;padding:10px;
+    }
+    .gallery-item-caption{font-family:'Cinzel',serif;font-size:12px;color:var(--frost)}
     .gallery-delete-btn,.gallery-approve-btn{
-      position:absolute;top:10px;border:none;border-radius:6px;color:#fff;font-size:11px;padding:4px 8px;cursor:pointer
+      position:absolute;top:10px;border:none;border-radius:6px;color:#fff;
+      font-size:11px;padding:4px 8px;cursor:pointer;
     }
     .gallery-delete-btn{right:10px;background:rgba(192,57,43,.75)}
-    .gallery-approve-btn{left:10px;background:rgba(76,175,125,.75)}
-    .gallery-upload-zone{
-      border:2px dashed rgba(168,216,234,.25);border-radius:14px;padding:34px;text-align:center;background:rgba(168,216,234,.03);margin-bottom:18px;cursor:pointer
-    }
-    .gallery-upload-zone:hover{border-color:rgba(168,216,234,.45);background:rgba(168,216,234,.07)}
-    .gallery-upload-zone.dragover{border-color:var(--ice);background:rgba(168,216,234,.08)}
-    .gallery-upload-icon{font-size:42px;color:rgba(168,216,234,.35);display:block;margin-bottom:10px}
-    .gallery-upload-text{color:var(--muted);line-height:1.6;font-size:13px}
+    .gallery-approve-btn{left:10px;background:rgba(76,175,125,.78)}
 
-    .admin-table-head{padding:16px;border-bottom:1px solid rgba(168,216,234,.08);background:rgba(168,216,234,.02)}
+    .gallery-upload-zone{
+      border:2px dashed rgba(168,216,234,.28);border-radius:14px;
+      padding:34px;text-align:center;background:rgba(168,216,234,.03);
+      margin-bottom:18px;cursor:pointer;
+    }
+    .gallery-upload-zone:hover{border-color:rgba(168,216,234,.45);background:rgba(168,216,234,.08)}
+    .gallery-upload-zone.dragover{border-color:var(--ice);background:rgba(168,216,234,.1)}
+    .gallery-upload-icon{font-size:42px;color:rgba(168,216,234,.4);display:block;margin-bottom:10px}
+    .gallery-upload-text{font-size:13px;color:var(--muted);line-height:1.65}
+
+    .discord-hero{
+      border-radius:16px;border:1px solid rgba(114,137,218,.16);
+      background:rgba(114,137,218,.07);text-align:center;padding:36px;
+    }
+
+    .settings-card{max-width:530px;padding:24px}
+
+    .admin-table-wrap{overflow:hidden}
+    .admin-table-head{
+      padding:16px;border-bottom:1px solid rgba(168,216,234,.1);
+      background:rgba(168,216,234,.03);
+    }
     table{width:100%;border-collapse:collapse}
-    thead th{padding:11px 14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:left}
-    tbody td{padding:12px 14px;font-size:13px;border-top:1px solid rgba(255,255,255,.03)}
-    tbody tr:hover{background:rgba(168,216,234,.03)}
+    thead th{
+      padding:11px 14px;text-align:left;
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+    }
+    tbody td{
+      padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);font-size:13px;
+    }
+    tbody tr:hover{background:rgba(168,216,234,.04)}
 
     .role-card{padding:18px;margin-bottom:18px}
     .role-pills{display:flex;gap:8px;flex-wrap:wrap}
-    .role-pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(168,216,234,.2);font-size:11px;background:rgba(168,216,234,.08)}
-
-    .discord-hero{
-      background:rgba(114,137,218,.07);border:1px solid rgba(114,137,218,.16);border-radius:16px;padding:36px;text-align:center
+    .role-pill{
+      border:1px solid rgba(168,216,234,.25);
+      border-radius:999px;padding:6px 10px;font-size:11px;
+      background:rgba(168,216,234,.08);
+      display:inline-flex;align-items:center;
     }
+    .role-del{margin-left:8px;color:#ff8b8b;cursor:pointer;font-size:11px}
+    .role-del:hover{color:#ff4f4f}
 
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(6px)}
+    .modal-overlay{
+      display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;
+      padding:18px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+    }
     .modal-overlay.open{display:flex}
     .modal-box{
-      width:100%;max-width:460px;background:rgba(8,11,20,.96);border:1px solid rgba(168,216,234,.14);border-radius:16px;padding:28px;position:relative
+      width:100%;max-width:460px;position:relative;
+      border-radius:16px;border:1px solid rgba(168,216,234,.15);
+      background:rgba(8,11,20,.96);
+      padding:28px;
+      box-shadow:0 20px 70px rgba(0,0,0,.6),0 0 40px rgba(114,137,218,.12);
     }
-    .modal-close{position:absolute;right:12px;top:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50%;width:30px;height:30px;color:var(--muted);cursor:pointer}
-    .modal-title{font-family:'Cinzel Decorative',serif;text-align:center;color:#fff;font-size:20px;margin-bottom:4px}
-    .modal-sub{text-align:center;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
+    .modal-close{
+      position:absolute;top:12px;right:12px; width:30px;height:30px;
+      border-radius:50%;border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.08);color:var(--muted);cursor:pointer;
+    }
+    .modal-title{
+      text-align:center;font-family:'Cinzel Decorative',serif;font-size:20px;color:#fff;margin-bottom:4px;
+    }
+    .modal-sub{
+      text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+    }
 
     .toast-msg{
-      position:fixed;top:20px;right:20px;z-index:3000;transform:translateX(130%);transition:.35s;
-      background:rgba(8,11,20,.9);border:1px solid rgba(168,216,234,.2);border-radius:12px;padding:12px 16px;display:flex;gap:8px;align-items:center
+      position:fixed;top:18px;right:18px;z-index:3000;
+      transform:translateX(130%); transition:.35s;
+      border-radius:12px; border:1px solid rgba(168,216,234,.2);
+      background:rgba(8,11,20,.9);padding:11px 14px;
+      display:flex;align-items:center;gap:8px;
+      box-shadow:0 10px 28px rgba(0,0,0,.45);
     }
     .toast-msg.show{transform:translateX(0)}
 
-    .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+    .lightbox-overlay{
+      display:none;position:fixed;inset:0;z-index:2000;
+      background:rgba(0,0,0,.92);backdrop-filter:blur(8px);
+      align-items:center;justify-content:center;
+    }
     .lightbox-overlay.open{display:flex}
-    .lightbox-img{max-width:90vw;max-height:86vh;border-radius:10px;border:1px solid rgba(168,216,234,.18)}
-    .lightbox-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:50%;width:40px;height:40px;color:#fff;cursor:pointer}
+    .lightbox-img{
+      max-width:90vw;max-height:86vh;border-radius:10px;border:1px solid rgba(168,216,234,.18);
+    }
+    .lightbox-close{
+      position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;
+    }
 
     .empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
-    .empty-state i{font-size:48px;opacity:.2;margin-bottom:10px}
+    .empty-state i{font-size:48px;opacity:.2;display:block;margin-bottom:10px}
 
-    .hamburger{
-      display:none;position:fixed;top:14px;left:14px;z-index:220;background:rgba(8,11,20,.9);border:1px solid rgba(168,216,234,.18);
-      color:var(--ice);border-radius:10px;padding:9px 12px;cursor:pointer
-    }
-    .sidenav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
+    .row{display:flex;flex-wrap:wrap;gap:12px}
+    .col-12{width:100%}
+    .col-md-4{width:calc(33.333% - 8px)}
+    .col-sm-6{width:calc(50% - 6px)}
 
-    @media (max-width: 900px){
+    @media (max-width:960px){
       .hamburger{display:block}
-      .sidenav{transform:translateX(-100%);transition:.28s}
+      .sidenav{transform:translateX(-100%);transition:.25s}
       .sidenav.open{transform:translateX(0)}
       .sidenav-overlay.open{display:block}
       .main-content{margin-left:0;padding-top:56px}
       .hero-section,.page-body{padding:24px}
       .quick-actions{padding:20px;grid-template-columns:repeat(2,1fr)}
       .chat-wrapper{grid-template-columns:1fr;height:auto;min-height:64vh}
-      .chat-sidebar-glass{display:none}
+      .chat-sidebar{display:none}
       .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+      .col-md-4,.col-sm-6{width:100%}
     }
+
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-thumb{background:rgba(168,216,234,.15);border-radius:5px}
+    ::-webkit-scrollbar-track{background:transparent}
   </style>
 </head>
 <body>
   <canvas id="bg-canvas"></canvas>
+  <div id="mouse-neon"></div>
 
-  <button class="hamburger" onclick="toggleSidebar()" id="hamburger-btn"><i class="fas fa-bars"></i></button>
+  <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   <div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
 
   <nav class="sidenav" id="sidenav">
     <div class="clan-brand">
-      <img class="clan-avatar" src="https://images.unsplash.com/photo-1604079628040-94301bb21b91?q=80&w=200&auto=format&fit=crop" alt="Sturgia">
+      <img
+        class="clan-avatar"
+        src="assets/sturgia.webp"
+        alt="Sturgia"
+        onerror="this.src='assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png'"
+      >
       <div class="clan-name">Sturgia</div>
-      <div class="clan-tagline">Elite Clan · Since the North</div>
+      <div class="clan-tagline">Elite Clan · Neon Command</div>
     </div>
 
     <div class="sidenav-menu">
       <div class="nav-section-label">Ana Menü</div>
-      <a href="#" onclick="show('home');closeSidebar()" class="nav-link active" id="nav-home"><i class="fas fa-compass"></i>Anasayfa</a>
-      <a href="#" onclick="show('warriors');closeSidebar()" class="nav-link" id="nav-warriors"><i class="fas fa-users"></i>Savaşçılar</a>
-      <a href="#" onclick="show('chat');closeSidebar()" class="nav-link" id="nav-chat"><i class="fas fa-comments"></i>Klan Sohbeti</a>
-      <a href="#" onclick="show('forum');closeSidebar()" class="nav-link" id="nav-forum"><i class="fas fa-scroll"></i>Forum</a>
-      <a href="#" onclick="show('gallery');closeSidebar()" class="nav-link" id="nav-gallery"><i class="fas fa-images"></i>Galeri</a>
+      <a href="#" class="nav-link active" id="nav-home" onclick="show('home');closeSidebar()"><i class="fas fa-compass"></i>Anasayfa</a>
+      <a href="#" class="nav-link" id="nav-warriors" onclick="show('warriors');closeSidebar()"><i class="fas fa-users"></i>Savaşçılar</a>
+      <a href="#" class="nav-link" id="nav-chat" onclick="show('chat');closeSidebar()"><i class="fas fa-comments"></i>Klan Sohbeti</a>
+      <a href="#" class="nav-link" id="nav-forum" onclick="show('forum');closeSidebar()"><i class="fas fa-scroll"></i>Forum</a>
+      <a href="#" class="nav-link" id="nav-gallery" onclick="show('gallery');closeSidebar()"><i class="fas fa-images"></i>Galeri</a>
 
       <div class="nav-section-label">Topluluk</div>
-      <a href="#" onclick="show('discord');closeSidebar()" class="nav-link" id="nav-discord"><i class="fab fa-discord"></i>Discord</a>
-      <a href="#" onclick="show('settings');closeSidebar()" class="nav-link" id="nav-settings"><i class="fas fa-shield-alt"></i>Güvenlik</a>
+      <a href="#" class="nav-link" id="nav-discord" onclick="show('discord');closeSidebar()"><i class="fab fa-discord"></i>Discord</a>
+      <a href="#" class="nav-link" id="nav-settings" onclick="show('settings');closeSidebar()"><i class="fas fa-shield-alt"></i>Güvenlik</a>
 
       <div id="admin-nav-item" class="d-none">
         <div class="nav-section-label">Yönetim</div>
-        <a href="#" onclick="show('admin');closeSidebar()" class="nav-link admin-link" id="nav-admin"><i class="fas fa-crown"></i>Admin Paneli</a>
+        <a href="#" class="nav-link admin-link" id="nav-admin" onclick="show('admin');closeSidebar()"><i class="fas fa-crown"></i>Admin Paneli</a>
       </div>
     </div>
 
     <div class="sidenav-footer">
       <div id="auth-section">
-        <button onclick="openModal()" class="btn-glass" style="width:100%"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+        <button class="btn-glass" style="width:100%" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
       </div>
       <div id="user-section" class="d-none">
         <span id="display-nick" class="user-nick"></span>
         <span id="display-rank" class="user-rank-badge"></span>
-        <button onclick="logout()" class="btn-glass btn-glass-red btn-glass-sm" style="width:100%"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
+        <button class="btn-glass btn-glass-red btn-glass-sm" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
       </div>
     </div>
   </nav>
@@ -285,48 +567,54 @@
   <main class="main-content">
     <section id="page-home">
       <div class="hero-section">
-        <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
-        <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Lüks, akıcı ve modern bir merkezle tüm topluluk tek yerde.</p>
+        <h1 class="hero-title">Kuzeyin<br><span>Neon Nefesi</span></h1>
+        <p class="hero-desc">
+          Lüks, akıcı ve canlı bir topluluk merkezi. Sohbet, forum, galeri ve yönetim tek panelde.
+          Koyu tema korunur, neon ruh kaybolmaz.
+        </p>
       </div>
+
       <div class="stats-row">
         <div class="stat-block"><div class="stat-label">Toplam Savaşçı</div><div class="stat-value" id="army-total">0</div></div>
         <div class="stat-block"><div class="stat-label">Aktif Rütbe</div><div class="stat-value" style="font-size:24px;padding-top:8px" id="hero-rank">—</div></div>
         <div class="stat-block"><div class="stat-label">Forum Konuları</div><div class="stat-value" id="forum-count">0</div></div>
-        <div class="stat-block"><div class="stat-label">Klan Durumu</div><div class="stat-value" style="font-size:20px;padding-top:10px;color:var(--green)">AKTİF</div></div>
+        <div class="stat-block"><div class="stat-label">Durum</div><div class="stat-value" style="font-size:20px;color:var(--green);padding-top:10px">AKTİF</div></div>
       </div>
+
       <div class="quick-actions">
-        <a href="#" onclick="show('chat')" class="qa-card"><span class="qa-icon"><i class="fas fa-comments"></i></span><div class="qa-label">Sohbet</div><div class="qa-sub">Klanla konuş</div></a>
-        <a href="#" onclick="show('forum')" class="qa-card"><span class="qa-icon"><i class="fas fa-scroll"></i></span><div class="qa-label">Forum</div><div class="qa-sub">Konu aç</div></a>
-        <a href="#" onclick="show('gallery')" class="qa-card"><span class="qa-icon"><i class="fas fa-images"></i></span><div class="qa-label">Galeri</div><div class="qa-sub">Anıları gör</div></a>
-        <a href="#" onclick="show('discord')" class="qa-card"><span class="qa-icon"><i class="fab fa-discord"></i></span><div class="qa-label">Discord</div><div class="qa-sub">Sunucuya katıl</div></a>
+        <a href="#" class="qa-card" onclick="show('chat')"><span class="qa-icon"><i class="fas fa-comments"></i></span><div class="qa-label">Sohbet</div><div class="qa-sub">Canlı konuş</div></a>
+        <a href="#" class="qa-card" onclick="show('forum')"><span class="qa-icon"><i class="fas fa-scroll"></i></span><div class="qa-label">Forum</div><div class="qa-sub">Konu aç</div></a>
+        <a href="#" class="qa-card" onclick="show('gallery')"><span class="qa-icon"><i class="fas fa-images"></i></span><div class="qa-label">Galeri</div><div class="qa-sub">Anılar</div></a>
+        <a href="#" class="qa-card" onclick="show('discord')"><span class="qa-icon"><i class="fab fa-discord"></i></span><div class="qa-label">Discord</div><div class="qa-sub">Sunucuya katıl</div></a>
       </div>
     </section>
 
     <section id="page-warriors" class="d-none">
       <div class="page-body">
         <div class="section-header"><div class="section-title">Klan Savaşçıları</div><div class="section-rule"></div></div>
-        <div id="warrior-grid" class="row g-3"></div>
+        <div id="warrior-grid" class="row"></div>
       </div>
     </section>
 
     <section id="page-chat" class="d-none">
       <div class="page-body">
         <div class="section-header"><div class="section-title">Klan Sohbeti</div><div class="section-rule"></div></div>
+
         <div id="chat-access-wall" class="d-none">
           <div class="access-wall">
             <div class="access-wall-icon"><i class="fas fa-lock"></i></div>
             <div class="access-wall-title">Erişim Kısıtlandı</div>
-            <div class="access-wall-sub" id="chat-wall-msg">Bu bölüme erişmek için giriş yapmalısın.</div>
-            <button onclick="openModal()" class="btn-glass"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+            <div class="access-wall-sub" id="chat-wall-msg">Sohbet için giriş yapmalısın.</div>
+            <button class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
           </div>
         </div>
 
         <div id="chat-approved-area" class="d-none">
           <div class="chat-wrapper">
             <div class="chat-main">
-              <div class="chat-header">
+              <div class="chat-head">
                 <span class="chat-status-dot"></span><span class="chat-title">Genel Kanal</span>
-                <span style="margin-left:auto;font-size:10px;color:var(--muted);letter-spacing:2px"># STURGIA</span>
+                <span style="float:right;font-size:10px;color:var(--muted);letter-spacing:2px"># STURGIA</span>
               </div>
 
               <div class="chat-messages" id="chat-messages">
@@ -335,16 +623,18 @@
 
               <div class="chat-input-area" id="chat-input-area">
                 <input id="chat-input" class="chat-input" placeholder="Bir şeyler yaz..." onkeydown="handleChatKeydown(event)">
-                <button onclick="sendMessage()" id="send-btn" class="btn-glass btn-glass-sm"><i class="fas fa-paper-plane"></i></button>
+                <button id="send-btn" class="btn-glass btn-glass-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
               </div>
 
-              <div id="muted-notice" class="d-none" style="padding:10px;border-top:1px solid rgba(168,216,234,.07)">
+              <div id="muted-notice" class="d-none" style="padding:10px;border-top:1px solid rgba(168,216,234,.08)">
                 <div class="muted-notice-bar"><i class="fas fa-volume-mute"></i> Susturuldunuz. Kalan: <span id="mute-countdown"></span></div>
               </div>
             </div>
 
-            <div class="chat-sidebar-glass">
-              <div class="chat-sidebar-header"><i class="fas fa-users"></i> Üyeler</div>
+            <div class="chat-sidebar">
+              <div class="chat-members-head" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">
+                <i class="fas fa-users"></i> Üyeler
+              </div>
               <div class="chat-members" id="chat-members-list"></div>
             </div>
           </div>
@@ -360,8 +650,8 @@
           <div class="access-wall">
             <div class="access-wall-icon"><i class="fas fa-shield-alt"></i></div>
             <div class="access-wall-title">Forum Kilitli</div>
-            <div class="access-wall-sub" id="forum-wall-msg">Bu bölüme erişmek için giriş yapmalısın.</div>
-            <button onclick="openModal()" class="btn-glass"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+            <div class="access-wall-sub" id="forum-wall-msg">Forum için giriş yapmalısın.</div>
+            <button class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
           </div>
         </div>
 
@@ -370,50 +660,61 @@
             <div id="forum-compose-area" class="d-none">
               <div class="forum-compose">
                 <div style="font-family:'Cinzel',serif;color:#fff;margin-bottom:16px"><i class="fas fa-pen" style="color:var(--gold)"></i> Yeni Konu Aç</div>
+
                 <div style="margin-bottom:12px">
                   <label class="form-label-custom">Başlık</label>
                   <input id="forum-title-input" class="form-input" placeholder="Konu başlığı...">
                 </div>
+
                 <div style="margin-bottom:12px">
                   <label class="form-label-custom">Kategori</label>
-                  <select id="forum-tag-input" class="form-select-dark">
-                    <option value="general">Genel</option><option value="strategy">Strateji</option><option value="event">Etkinlik</option><option value="suggestion">Öneri</option><option value="bug">Hata Bildirimi</option>
-                  </select>
+                  <div class="select-lux-wrap">
+                    <select id="forum-tag-input" class="form-select-dark lux">
+                      <option value="general">Genel</option>
+                      <option value="strategy">Strateji</option>
+                      <option value="event">Etkinlik</option>
+                      <option value="suggestion">Öneri</option>
+                      <option value="bug">Hata Bildiri</option>
+                    </select>
+                  </div>
                 </div>
+
                 <div style="margin-bottom:12px">
                   <label class="form-label-custom">İçerik</label>
                   <textarea id="forum-body-input" class="form-input" placeholder="Ne paylaşmak istiyorsun?"></textarea>
                 </div>
+
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button onclick="submitForumPost()" class="btn-glass btn-glass-gold"><i class="fas fa-paper-plane"></i>Gönder</button>
-                  <button onclick="document.getElementById('forum-compose-area').classList.add('d-none')" class="btn-glass">İptal</button>
+                  <button class="btn-glass btn-glass-gold" onclick="submitForumPost()"><i class="fas fa-paper-plane"></i>Gönder</button>
+                  <button class="btn-glass" onclick="document.getElementById('forum-compose-area').classList.add('d-none')">İptal</button>
                 </div>
               </div>
             </div>
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
               <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button onclick="filterForum('all')" class="btn-glass btn-glass-sm">Tümü</button>
-                <button onclick="filterForum('general')" class="btn-glass btn-glass-sm">Genel</button>
-                <button onclick="filterForum('strategy')" class="btn-glass btn-glass-sm btn-glass-gold">Strateji</button>
-                <button onclick="filterForum('event')" class="btn-glass btn-glass-sm">Etkinlik</button>
+                <button class="btn-glass btn-glass-sm" onclick="filterForum('all')">Tümü</button>
+                <button class="btn-glass btn-glass-sm" onclick="filterForum('general')">Genel</button>
+                <button class="btn-glass btn-glass-sm btn-glass-gold" onclick="filterForum('strategy')">Strateji</button>
+                <button class="btn-glass btn-glass-sm" onclick="filterForum('event')">Etkinlik</button>
               </div>
-              <button onclick="toggleCompose()" class="btn-glass btn-glass-gold"><i class="fas fa-plus"></i>Yeni Konu</button>
+              <button class="btn-glass btn-glass-gold" onclick="toggleCompose()"><i class="fas fa-plus"></i>Yeni Konu</button>
             </div>
 
             <div id="forum-posts" style="display:flex;flex-direction:column;gap:12px"></div>
           </div>
 
           <div id="forum-detail-view" class="d-none">
-            <button onclick="backToForum()" class="btn-glass btn-glass-sm" style="margin-bottom:14px"><i class="fas fa-arrow-left"></i>Geri</button>
+            <button class="btn-glass btn-glass-sm" style="margin-bottom:14px" onclick="backToForum()"><i class="fas fa-arrow-left"></i>Geri</button>
             <div id="forum-detail-content"></div>
 
             <div style="margin-top:18px">
               <div class="section-header" style="margin-bottom:12px"><div class="section-title" style="font-size:16px">Yanıtlar</div><div class="section-rule"></div></div>
               <div id="forum-replies"></div>
+
               <div id="reply-compose" class="d-none" style="margin-top:10px">
                 <textarea id="reply-input" class="form-input" placeholder="Yanıtını yaz..." style="min-height:82px;margin-bottom:10px"></textarea>
-                <button onclick="submitReply()" class="btn-glass"><i class="fas fa-reply"></i>Yanıtla</button>
+                <button class="btn-glass" onclick="submitReply()"><i class="fas fa-reply"></i>Yanıtla</button>
               </div>
             </div>
           </div>
@@ -426,9 +727,19 @@
         <div class="section-header"><div class="section-title">Klan Galerisi</div><div class="section-rule"></div></div>
 
         <div id="gallery-upload-area" class="d-none">
-          <div class="gallery-upload-zone" id="upload-zone" onclick="document.getElementById('gallery-file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <div
+            class="gallery-upload-zone"
+            id="upload-zone"
+            onclick="document.getElementById('gallery-file-input').click()"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+          >
             <span class="gallery-upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-            <div class="gallery-upload-text"><strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br><span style="font-size:12px">JPG, PNG, GIF, WEBP • Maks. 5MB</span></div>
+            <div class="gallery-upload-text">
+              <strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br>
+              <span style="font-size:12px">JPG, PNG, GIF, WEBP · Maks. 5MB</span>
+            </div>
           </div>
           <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
         </div>
@@ -444,8 +755,8 @@
         <div class="discord-hero">
           <div style="font-size:64px;color:#7289da;margin-bottom:10px"><i class="fab fa-discord"></i></div>
           <div style="font-family:'Cinzel Decorative',serif;font-size:28px;color:#fff">Sturgia Discord</div>
-          <div style="margin:10px auto 20px;max-width:500px;color:var(--steel)">Resmi sunucuya katıl, sesli sohbet ve etkinlikleri kaçırma.</div>
-          <a class="btn-glass btn-discord-glass" href="https://discord.gg/DAVET_LINKIN" target="_blank"><i class="fab fa-discord"></i>Sunucuya Katıl</a>
+          <div style="margin:10px auto 20px;max-width:500px;color:var(--steel)">Sesli sohbet, etkinlikler ve klan duyuruları burada.</div>
+          <a class="btn-glass btn-discord-glass" target="_blank" href="https://discord.gg/DAVET_LINKIN"><i class="fab fa-discord"></i>Sunucuya Katıl</a>
         </div>
       </div>
     </section>
@@ -453,16 +764,19 @@
     <section id="page-settings" class="d-none">
       <div class="page-body">
         <div class="section-header"><div class="section-title">Güvenlik Ayarları</div><div class="section-rule"></div></div>
-        <div class="settings-card" style="padding:24px;max-width:520px">
+        <div class="settings-card">
           <div style="font-family:'Cinzel',serif;color:#fff;font-size:18px;margin-bottom:4px">Şifre Değiştir</div>
           <div style="font-size:13px;color:var(--muted);margin-bottom:20px">En az 8 karakter + büyük harf + rakam + özel karakter önerilir.</div>
+
           <label class="form-label-custom">Mevcut Şifre</label>
-          <input type="password" id="current-password" class="form-input" style="margin-bottom:12px" placeholder="••••••••">
+          <input id="current-password" type="password" class="form-input" style="margin-bottom:12px" placeholder="••••••••">
+
           <label class="form-label-custom">Yeni Şifre</label>
-          <input type="password" id="new-password" class="form-input" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
-          <div class="password-strength-bar" id="strength-bar" style="height:3px;border-radius:2px;margin-top:8px;background:rgba(255,255,255,.05)"></div>
-          <div class="password-strength-text" id="strength-text" style="font-size:10px;letter-spacing:1px;margin-top:4px"></div>
-          <button onclick="updatePassword()" class="btn-glass" style="margin-top:16px;width:100%"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
+          <input id="new-password" type="password" class="form-input" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
+          <div id="strength-bar" style="height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:8px"></div>
+          <div id="strength-text" style="font-size:10px;letter-spacing:1px;margin-top:4px"></div>
+
+          <button class="btn-glass" style="margin-top:16px;width:100%" onclick="updatePassword()"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
         </div>
       </div>
     </section>
@@ -473,20 +787,42 @@
 
         <div id="pending-section" style="margin-bottom:24px">
           <div class="section-header" style="margin-bottom:10px"><div class="section-title" style="font-size:15px;color:var(--gold)"><i class="fas fa-clock"></i> Onay Bekleyen Üyeler</div><div class="section-rule"></div></div>
-          <div id="pending-list" class="row g-3"></div>
+          <div id="pending-list" class="row"></div>
         </div>
 
-        <div class="role-card" id="role-create-card">
-          <div style="font-family:'Cinzel',serif;color:#fff;font-size:15px;margin-bottom:12px"><i class="fas fa-layer-group" style="color:var(--gold)"></i> Yeni Rol Oluştur (Sadece Admin)</div>
-          <div class="row g-2">
-            <div class="col-md-3"><label class="form-label-custom">Rol Key</label><input id="new-role-key" class="form-input" placeholder="ornek: elite_guard"></div>
-            <div class="col-md-3"><label class="form-label-custom">Rol Adı</label><input id="new-role-name" class="form-input" placeholder="Elite Guard"></div>
-            <div class="col-md-2"><label class="form-label-custom">Renk</label><input id="new-role-color" type="color" class="form-input" value="#a8d8ea" style="padding:6px;height:42px"></div>
-            <div class="col-md-2" style="display:flex;align-items:flex-end"><label style="display:flex;gap:6px;align-items:center;font-size:12px"><input id="new-role-moderate" type="checkbox"> Moderasyon</label></div>
-            <div class="col-md-2" style="display:flex;align-items:flex-end"><button onclick="createRole()" class="btn-glass btn-glass-gold" style="width:100%">Rol Oluştur</button></div>
+        <div class="role-card">
+          <div style="font-family:'Cinzel',serif;color:#fff;font-size:15px;margin-bottom:12px">
+            <i class="fas fa-layer-group" style="color:var(--gold)"></i> Yeni Rol Oluştur (Sadece Admin)
           </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label-custom">Rol Key</label>
+              <input id="new-role-key" class="form-input" placeholder="ornek: elite_guard">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Rol Adı</label>
+              <input id="new-role-name" class="form-input" placeholder="Elite Guard">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Renk</label>
+              <input id="new-role-color" type="color" class="form-input" value="#a8d8ea" style="height:42px;padding:5px">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:8px;align-items:center">
+            <div class="col-md-4">
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)">
+                <input id="new-role-moderate" type="checkbox"> Moderasyon Yetkisi
+              </label>
+            </div>
+            <div class="col-md-4">
+              <button class="btn-glass btn-glass-gold" style="width:100%" onclick="createRole()">Rol Oluştur</button>
+            </div>
+          </div>
+
           <div style="margin-top:12px">
-            <div class="form-label-custom" style="margin-bottom:8px">Mevcut Roller</div>
+            <div class="form-label-custom" style="margin-bottom:8px">Mevcut Roller (özel roller silinebilir)</div>
             <div id="roles-preview" class="role-pills"></div>
           </div>
         </div>
@@ -510,16 +846,20 @@
       <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
       <div class="modal-title">Klan Girişi</div>
       <div class="modal-sub">Kimliğini doğrula</div>
+
       <div style="margin-bottom:12px">
         <label class="form-label-custom">Savaşçı Adı</label>
-        <input type="text" id="login-nick" class="form-input" placeholder="Adını gir" autocomplete="username">
+        <input id="login-nick" class="form-input" placeholder="Adını gir" autocomplete="username">
       </div>
+
       <div>
         <label class="form-label-custom">Şifre</label>
-        <input type="password" id="login-pass" class="form-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')processAuth()">
+        <input id="login-pass" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')processAuth()">
       </div>
-      <div id="modal-error" style="font-size:12px;color:#ff7070;margin-top:8px;display:none;padding:8px 10px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);border-radius:8px"></div>
-      <button onclick="processAuth()" id="login-btn" class="btn-glass" style="width:100%;margin-top:14px"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
+
+      <div id="modal-error" style="display:none;font-size:12px;color:#ff8080;margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(192,57,43,.2);background:rgba(192,57,43,.1)"></div>
+
+      <button id="login-btn" class="btn-glass" style="width:100%;margin-top:14px" onclick="processAuth()"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
       <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">Hesap yoksa otomatik oluşturulur ve admin onayı bekler.</div>
     </div>
   </div>
@@ -529,862 +869,1141 @@
       <button class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
       <div class="modal-title" style="font-size:18px">Kullanıcıyı Sustur</div>
       <div class="modal-sub" id="mute-target-name">Savaşçı</div>
-      <input type="hidden" id="mute-target-id">
+      <input id="mute-target-id" type="hidden">
+
       <div style="margin-bottom:12px">
         <label class="form-label-custom">Süre</label>
         <select id="mute-duration" class="form-select-dark">
-          <option value="5">5 dakika</option><option value="15">15 dakika</option><option value="30">30 dakika</option>
-          <option value="60">1 saat</option><option value="120">2 saat</option><option value="1440">24 saat</option>
-          <option value="10080">7 gün</option><option value="99999">Kalıcı</option>
+          <option value="5">5 dakika</option>
+          <option value="15">15 dakika</option>
+          <option value="30">30 dakika</option>
+          <option value="60">1 saat</option>
+          <option value="120">2 saat</option>
+          <option value="1440">24 saat</option>
+          <option value="10080">7 gün</option>
+          <option value="99999">Kalıcı</option>
         </select>
       </div>
-      <button onclick="applyMute()" class="btn-glass btn-glass-red" style="width:100%"><i class="fas fa-volume-mute"></i>Sustur</button>
+
+      <button class="btn-glass btn-glass-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
     </div>
   </div>
 
   <div class="lightbox-overlay" id="lightbox" onclick="if(event.target===this)closeLightbox()">
     <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
-    <img src="" id="lightbox-img" class="lightbox-img" alt="">
+    <img id="lightbox-img" class="lightbox-img" src="" alt="">
   </div>
 
-  <div class="toast-msg" id="toast"><i class="fas fa-check-circle"></i><span id="toast-text">İşlem başarılı</span></div>
+  <div class="toast-msg" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-text">İşlem başarılı</span>
+  </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getFirestore, collection, onSnapshot, query, where, getDocs, addDoc, updateDoc, deleteDoc,
-  doc, orderBy, serverTimestamp, getDoc, setDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, onSnapshot, query, where,
+      getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp, getDoc, setDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey:"AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
-  authDomain:"sturgia-clan.firebaseapp.com",
-  projectId:"sturgia-clan",
-  storageBucket:"sturgia-clan.firebasestorage.app",
-  messagingSenderId:"257587521790",
-  appId:"1:257587521790:web:59b1a1b38029d1564dddaf"
-};
+    const firebaseConfig = {
+      apiKey:"AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
+      authDomain:"sturgia-clan.firebaseapp.com",
+      projectId:"sturgia-clan",
+      storageBucket:"sturgia-clan.firebasestorage.app",
+      messagingSenderId:"257587521790",
+      appId:"1:257587521790:web:59b1a1b38029d1564dddaf"
+    };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-let user = null;
-let currentForumPostId = null;
-let currentFilter = "all";
-let forumPosts = [];
-let allUsers = {};
-let countdownInterval = null;
-let isSendingMessage = false;
+    let user = null;
+    let currentForumPostId = null;
+    let currentFilter = "all";
+    let forumPosts = [];
+    let allUsers = {};
+    let countdownInterval = null;
+    let isSendingMessage = false;
+    let editingMessageId = null;
 
-let rolesMap = {
-  admin: { name: "Yönetici", color: "#ff7070", className: "rank-admin", canCreateRole: true, canModerate: true },
-  westra: { name: "Westra / Abak 🌊", color: "#a8d8ea", className: "rank-westra", canModerate: false },
-  sturgiyali: { name: "Sturgiyalı", color: "#7a96b4", className: "rank-sturgiyali", canModerate: false }
-};
+    const protectedRoles = ["admin","westra","sturgiyali"];
 
-const tagLabels = { general:"Genel", strategy:"Strateji", event:"Etkinlik", suggestion:"Öneri", bug:"Hata" };
+    let rolesMap = {
+      admin:      { name:"Yönetici", color:"#ff7070", className:"rank-admin", canCreateRole:true, canModerate:true },
+      westra:     { name:"Westra / Abak 🌊", color:"#a8d8ea", className:"rank-westra", canModerate:false },
+      sturgiyali: { name:"Sturgiyalı", color:"#7a96b4", className:"rank-sturgiyali", canModerate:false }
+    };
 
-async function hashPassword(password, salt = null) {
-  if (!salt) {
-    const arr = new Uint8Array(16); crypto.getRandomValues(arr);
-    salt = Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
-  const data = new TextEncoder().encode(salt + password + "sturgia_secret_2024");
-  const hashBuf = await crypto.subtle.digest("SHA-256", data);
-  const hash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  return { hash, salt };
-}
-async function verifyPassword(password, storedHash, salt) {
-  const { hash } = await hashPassword(password, salt); return hash === storedHash;
-}
+    const tagLabels = {
+      general:"Genel", strategy:"Strateji", event:"Etkinlik", suggestion:"Öneri", bug:"Hata"
+    };
 
-const rawSession = localStorage.getItem("st_session");
-if (rawSession) {
-  try {
-    user = JSON.parse(rawSession);
-    const ud = await getDoc(doc(db, "users", user.id));
-    if (!ud.exists()) { localStorage.removeItem("st_session"); user = null; }
-    else {
-      const d = ud.data();
-      user.role = d.role; user.approved = d.approved; user.nick = d.nick;
-      localStorage.setItem("st_session", JSON.stringify(user));
+    function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+    function escAttr(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+    function isMutedNow(data){ if(!data?.muteUntil) return false; if(data.muteUntil==="permanent") return true; return new Date(data.muteUntil) > new Date(); }
+
+    function roleDisplay(roleKey){ return rolesMap[roleKey] || rolesMap["sturgiyali"]; }
+    function roleBadge(roleKey){
+      const r = roleDisplay(roleKey);
+      return `<span class="badge-rank ${r.className || ''}" style="border-color:${r.color}66;color:${r.color};background:${r.color}1a">${escHtml(r.name || roleKey)}</span>`;
     }
-  } catch { localStorage.removeItem("st_session"); user = null; }
-}
 
-function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function escAttr(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
-function isMutedNow(data){ if(!data?.muteUntil) return false; if(data.muteUntil==="permanent") return true; return new Date(data.muteUntil) > new Date(); }
-function roleDisplay(roleKey){ return rolesMap[roleKey] || rolesMap["sturgiyali"]; }
-function roleBadge(roleKey){
-  const r = roleDisplay(roleKey);
-  const cls = r.className || "";
-  return `<span class="badge-rank ${cls}" style="border-color:${r.color}55;color:${r.color};background:${r.color}1a">${escHtml(r.name)}</span>`;
-}
+    window.showToast = (msg, isError = false) => {
+      const t = document.getElementById("toast");
+      document.getElementById("toast-text").innerText = msg;
+      t.style.borderColor = isError ? "rgba(192,57,43,.35)" : "rgba(168,216,234,.2)";
+      t.style.color = isError ? "#ff8080" : "var(--ice)";
+      t.querySelector("i").className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3500);
+    };
 
-window.showToast = (msg, isError = false) => {
-  const t = document.getElementById("toast");
-  document.getElementById("toast-text").innerText = msg;
-  t.style.borderColor = isError ? "rgba(192,57,43,.35)" : "rgba(168,216,234,.2)";
-  t.style.color = isError ? "#ff7070" : "var(--ice)";
-  t.querySelector("i").className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
-  t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 3500);
-};
-
-window.checkPasswordStrength = (pw) => {
-  const bar = document.getElementById("strength-bar"), txt = document.getElementById("strength-text");
-  if (!pw) { bar.style.width = "0"; txt.textContent = ""; return; }
-  let score = 0; if (pw.length >= 8) score++; if (pw.length >= 12) score++; if (/[A-Z]/.test(pw)) score++; if (/[0-9]/.test(pw)) score++; if (/[^A-Za-z0-9]/.test(pw)) score++;
-  const levels = [{w:"20%",c:"#e57373",t:"Çok Zayıf"},{w:"40%",c:"#ff9800",t:"Zayıf"},{w:"60%",c:"#ffc107",t:"Orta"},{w:"80%",c:"#8bc34a",t:"İyi"},{w:"100%",c:"#4caf7d",t:"Güçlü"}];
-  const lvl = levels[Math.min(score-1,4)] || levels[0];
-  bar.style.width = lvl.w; bar.style.background = lvl.c; txt.style.color = lvl.c; txt.textContent = lvl.t;
-};
-
-onSnapshot(collection(db, "roles"), (snap) => {
-  if (snap.empty) return;
-  const next = {};
-  snap.forEach(d => { next[d.id] = { ...d.data() }; });
-  rolesMap = { ...rolesMap, ...next };
-
-  const rolesPreview = document.getElementById("roles-preview");
-  if (rolesPreview) {
-    rolesPreview.innerHTML = Object.entries(rolesMap).map(([k, r]) =>
-      `<span class="role-pill" style="border-color:${r.color||"#a8d8ea"}66;color:${r.color||"#a8d8ea"}">${escHtml(r.name||k)} <small style="opacity:.7">(${k})</small></span>`
-    ).join("");
-  }
-});
-
-onSnapshot(collection(db, "users"), (snap) => {
-  const grid = document.getElementById("warrior-grid");
-  const table = document.getElementById("admin-table-body");
-  const membersList = document.getElementById("chat-members-list");
-  const count = document.getElementById("army-total");
-  const pendingList = document.getElementById("pending-list");
-
-  allUsers = {};
-  let approvedCount = 0;
-  snap.forEach(s => { allUsers[s.id] = { id:s.id, ...s.data() }; if (s.data().approved !== false) approvedCount++; });
-  count.innerText = approvedCount;
-
-  if (grid) grid.innerHTML = "";
-  if (membersList) membersList.innerHTML = "";
-
-  const approvedUsers = snap.docs.filter(d => d.data().approved !== false);
-  const pendingUsers = snap.docs.filter(d => d.data().approved === false);
-
-  if (grid) {
-    if (!approvedUsers.length) grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok.</p></div></div>`;
-    approvedUsers.forEach(s => {
-      const d = s.data(); const muted = isMutedNow(d);
-      grid.innerHTML += `
-        <div class="col-md-4 col-sm-6">
-          <div class="warrior-card">
-            <div>
-              <span class="warrior-name">${escHtml(d.nick)}</span>
-              ${muted ? `<div style="font-size:10px;color:#ff7070;margin-top:4px">🔇 Susturuldu</div>` : ""}
-            </div>
-            ${roleBadge(d.role)}
-          </div>
-        </div>`;
-    });
-  }
-
-  if (membersList) {
-    approvedUsers.forEach(s => {
-      const d = s.data(); const muted = isMutedNow(d);
-      membersList.innerHTML += `
-        <div class="chat-member-item">
-          <span class="chat-member-name" style="${muted ? "color:var(--muted)" : ""}">${escHtml(d.nick)}</span>
-          <div style="display:flex;align-items:center;gap:6px">
-            ${muted ? `<span class="muted-tag">mute</span>` : ""}
-            ${(user?.role === "admin" && s.id !== user.id) ? `<button onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')" class="btn-glass btn-glass-sm btn-glass-red" style="padding:4px 8px">${muted ? "🔊" : "🔇"}</button>` : ""}
-          </div>
-        </div>`;
-    });
-  }
-
-  if (table && user?.role === "admin") {
-    table.innerHTML = "";
-    snap.forEach(s => {
-      const d = s.data(); if (d.approved === false) return;
-      const muted = isMutedNow(d);
-      const opts = Object.entries(rolesMap).map(([k, r]) =>
-        `<option value="${k}" ${d.role===k?"selected":""}>${escHtml(r.name || k)}</option>`
-      ).join("");
-      table.innerHTML += `
-        <tr>
-          <td><span class="warrior-name">${escHtml(d.nick)}</span></td>
-          <td>${roleBadge(d.role)}</td>
-          <td>${muted ? `<span class="muted-tag">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
-          <td style="text-align:right">
-            <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-              <select class="form-select-dark" onchange="updRole('${s.id}',this.value)" style="width:auto;padding:7px 10px;font-size:12px">${opts}</select>
-              ${s.id!==user.id ? `
-                <button onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')" class="btn-glass btn-glass-red btn-glass-sm">${muted ? "🔊 Unmute" : "🔇 Mute"}</button>
-                <button onclick="deleteUser('${s.id}')" class="btn-glass btn-glass-red btn-glass-sm"><i class="fas fa-trash"></i></button>
-              ` : ""}
-            </div>
-          </td>
-        </tr>`;
-    });
-  }
-
-  if (pendingList && user?.role === "admin") {
-    pendingList.innerHTML = "";
-    if (!pendingUsers.length) pendingList.innerHTML = `<div class="col-12"><div style="font-size:13px;color:var(--muted);padding:10px 0">Onay bekleyen üye yok.</div></div>`;
-    pendingUsers.forEach(s => {
-      const d = s.data();
-      pendingList.innerHTML += `
-        <div class="col-md-4 col-sm-6">
-          <div class="warrior-card" style="border-color:rgba(201,168,76,.2)">
-            <div><span class="warrior-name">${escHtml(d.nick)}</span><div style="font-size:10px;color:var(--gold);margin-top:4px">⏳ Onay Bekliyor</div></div>
-            <div style="display:flex;gap:8px">
-              <button onclick="approveUser('${s.id}')" class="btn-glass btn-glass-sm" style="color:var(--green);border-color:rgba(76,175,125,.25)"><i class="fas fa-check"></i></button>
-              <button onclick="deleteUser('${s.id}')" class="btn-glass btn-glass-sm btn-glass-red"><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-        </div>`;
-    });
-  }
-
-  if (user) {
-    const me = snap.docs.find(d => d.id === user.id);
-    if (me) {
-      const d = me.data(); const muted = isMutedNow(d);
-      const inputArea = document.getElementById("chat-input-area");
-      const mutedNotice = document.getElementById("muted-notice");
-      if (inputArea) inputArea.style.display = muted ? "none" : "flex";
-      if (mutedNotice) mutedNotice.classList.toggle("d-none", !muted);
-      if (muted && d.muteUntil) startMuteCountdown(d.muteUntil);
+    async function hashPassword(password, salt = null) {
+      if (!salt) {
+        const arr = new Uint8Array(16);
+        crypto.getRandomValues(arr);
+        salt = Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+      const data = new TextEncoder().encode(salt + password + "sturgia_secret_2024");
+      const hashBuf = await crypto.subtle.digest("SHA-256", data);
+      const hash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+      return { hash, salt };
     }
-  }
-});
 
-function startMuteCountdown(until){
-  if (countdownInterval) clearInterval(countdownInterval);
-  const el = document.getElementById("mute-countdown"); if (!el) return;
-  if (until === "permanent") { el.innerText = "Kalıcı"; return; }
-  const end = new Date(until);
-  countdownInterval = setInterval(() => {
-    const diff = end - new Date();
-    if (diff <= 0) { clearInterval(countdownInterval); location.reload(); return; }
-    const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000);
-    el.innerText = `${m}dk ${s}s`;
-  }, 1000);
-}
+    async function verifyPassword(password, storedHash, salt) {
+      const { hash } = await hashPassword(password, salt);
+      return hash === storedHash;
+    }
 
-window.approveUser = async (id) => { await updateDoc(doc(db,"users",id), { approved:true }); showToast("Kullanıcı onaylandı."); };
-window.deleteUser = async (id) => { if (!confirm("Bu kullanıcıyı silmek istediğine emin misin?")) return; await deleteDoc(doc(db,"users",id)); showToast("Kullanıcı silindi."); };
+    const rawSession = localStorage.getItem("st_session");
+    if (rawSession) {
+      try {
+        user = JSON.parse(rawSession);
+        const userDoc = await getDoc(doc(db, "users", user.id));
+        if (!userDoc.exists()) {
+          localStorage.removeItem("st_session");
+          user = null;
+        } else {
+          const d = userDoc.data();
+          user.role = d.role; user.approved = d.approved; user.nick = d.nick;
+          localStorage.setItem("st_session", JSON.stringify(user));
+        }
+      } catch {
+        localStorage.removeItem("st_session");
+        user = null;
+      }
+    }
 
-onSnapshot(query(collection(db,"messages"), orderBy("ts")), (snap) => {
-  const box = document.getElementById("chat-messages");
-  if (!box) return;
-  if (snap.empty) { box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`; return; }
+    window.checkPasswordStrength = (pw) => {
+      const bar = document.getElementById("strength-bar");
+      const txt = document.getElementById("strength-text");
+      if (!pw) { bar.style.width = "0"; txt.textContent = ""; return; }
 
-  box.innerHTML = "";
-  let lastAuthor = "";
-  snap.forEach(s => {
-    const d = s.data();
-    const isOwn = d.uid === user?.id;
-    const showHeader = lastAuthor !== d.uid; lastAuthor = d.uid;
-    const roleClass = d.role || "sturgiyali";
-    const time = d.ts ? new Date(d.ts.toDate()).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) : "";
-    const edited = d.editedAt ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">(düzenlendi)</span>` : "";
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (pw.length >= 12) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
 
-    const safeText = escHtml(d.text || "");
-    box.innerHTML += `
-      <div class="msg-group">
-        ${showHeader ? `<div class="msg-author-line"><span class="msg-author ${roleClass}">${escHtml(d.nick || "Bilinmeyen")}</span><span class="msg-time">${time}</span></div>` : ""}
-        <div class="msg-bubble ${isOwn ? "own" : ""}">
-          ${safeText} ${edited}
-          ${(isOwn || user?.role==="admin") ? `
-            <div class="msg-actions">
-              ${isOwn || user?.role==="admin" ? `<button onclick="editMsg('${s.id}')" class="msg-act-btn"><i class="fas fa-pen"></i></button>` : ""}
-              <button onclick="deleteMsg('${s.id}')" class="msg-act-btn danger"><i class="fas fa-trash"></i></button>
+      const levels = [
+        {w:"20%", c:"#e57373", t:"Çok Zayıf"},
+        {w:"40%", c:"#ff9800", t:"Zayıf"},
+        {w:"60%", c:"#ffc107", t:"Orta"},
+        {w:"80%", c:"#8bc34a", t:"İyi"},
+        {w:"100%", c:"#4caf7d", t:"Güçlü"}
+      ];
+      const lvl = levels[Math.min(score-1,4)] || levels[0];
+      bar.style.width = lvl.w;
+      bar.style.background = lvl.c;
+      txt.style.color = lvl.c;
+      txt.textContent = lvl.t;
+    };
+
+    function renderRolesPreview() {
+      const box = document.getElementById("roles-preview");
+      if (!box) return;
+      box.innerHTML = Object.entries(rolesMap).map(([k, r]) => {
+        const deletable = user?.role === "admin" && !protectedRoles.includes(k);
+        return `
+          <span class="role-pill" style="border-color:${r.color || "#a8d8ea"}66;color:${r.color || "#a8d8ea"}">
+            ${escHtml(r.name || k)} <small style="opacity:.7;margin-left:4px">(${k})</small>
+            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole('${k}')" title="Rolü sil"></i>` : ""}
+          </span>
+        `;
+      }).join("");
+    }
+
+    onSnapshot(collection(db, "roles"), (snap) => {
+      if (!snap.empty) {
+        const next = {};
+        snap.forEach(d => next[d.id] = { ...d.data() });
+        rolesMap = { ...rolesMap, ...next };
+      }
+      renderRolesPreview();
+    });
+
+    onSnapshot(collection(db, "users"), (snap) => {
+      const grid = document.getElementById("warrior-grid");
+      const table = document.getElementById("admin-table-body");
+      const membersList = document.getElementById("chat-members-list");
+      const count = document.getElementById("army-total");
+      const pendingList = document.getElementById("pending-list");
+
+      allUsers = {};
+      let approvedCount = 0;
+
+      snap.forEach(s => {
+        allUsers[s.id] = { id:s.id, ...s.data() };
+        if (s.data().approved !== false) approvedCount++;
+      });
+
+      count.innerText = approvedCount;
+      if (grid) grid.innerHTML = "";
+      if (membersList) membersList.innerHTML = "";
+
+      const approvedUsers = snap.docs.filter(d => d.data().approved !== false);
+      const pendingUsers = snap.docs.filter(d => d.data().approved === false);
+
+      if (grid) {
+        if (!approvedUsers.length) {
+          grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok.</p></div></div>`;
+        } else {
+          approvedUsers.forEach(s => {
+            const d = s.data();
+            const muted = isMutedNow(d);
+            grid.innerHTML += `
+              <div class="col-md-4 col-sm-6">
+                <div class="warrior-card">
+                  <div>
+                    <span class="warrior-name">${escHtml(d.nick)}</span>
+                    ${muted ? `<div style="font-size:10px;color:#ff8080;margin-top:4px">🔇 Susturuldu</div>` : ""}
+                  </div>
+                  ${roleBadge(d.role)}
+                </div>
+              </div>
+            `;
+          });
+        }
+      }
+
+      if (membersList) {
+        approvedUsers.forEach(s => {
+          const d = s.data();
+          const muted = isMutedNow(d);
+          membersList.innerHTML += `
+            <div class="chat-member-item">
+              <span class="chat-member-name" style="${muted ? "color:var(--muted)" : ""}">${escHtml(d.nick)}</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                ${muted ? `<span class="muted-tag">mute</span>` : ""}
+                ${(user?.role === "admin" && s.id !== user.id) ? `<button class="btn-glass btn-glass-sm btn-glass-red" style="padding:4px 8px" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊" : "🔇"}</button>` : ""}
+              </div>
             </div>
-          ` : ""}
-        </div>
-      </div>`;
-  });
-  box.scrollTop = box.scrollHeight;
-});
+          `;
+        });
+      }
 
-window.handleChatKeydown = (event) => {
-  if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); }
-};
+      if (table && user?.role === "admin") {
+        table.innerHTML = "";
+        snap.forEach(s => {
+          const d = s.data();
+          if (d.approved === false) return;
 
-window.sendMessage = async () => {
-  if (!user) { showToast("Önce giriş yapmalısın", true); openModal(); return; }
-  if (isSendingMessage) return;
-  const input = document.getElementById("chat-input");
-  const btn = document.getElementById("send-btn");
-  const text = input.value.trim();
-  if (!text) return;
+          const muted = isMutedNow(d);
+          const opts = Object.entries(rolesMap).map(([k,r]) => `<option value="${k}" ${d.role===k?"selected":""}>${escHtml(r.name || k)}</option>`).join("");
 
-  isSendingMessage = true;
-  btn.disabled = true;
+          table.innerHTML += `
+            <tr>
+              <td><span class="warrior-name">${escHtml(d.nick)}</span></td>
+              <td>${roleBadge(d.role)}</td>
+              <td>${muted ? `<span class="muted-tag">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
+              <td style="text-align:right">
+                <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+                  <select class="form-select-dark" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">
+                    ${opts}
+                  </select>
+                  ${s.id!==user.id ? `
+                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊 Unmute" : "🔇 Mute"}</button>
+                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>
+                  ` : ""}
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      }
 
-  try {
-    const ud = await getDoc(doc(db, "users", user.id));
-    if (!ud.exists()) { showToast("Oturum geçersiz.", true); return; }
-    const me = ud.data();
-    if (isMutedNow(me)) { showToast("Susturuldunuz.", true); return; }
+      if (pendingList && user?.role === "admin") {
+        pendingList.innerHTML = "";
+        if (!pendingUsers.length) {
+          pendingList.innerHTML = `<div class="col-12"><div style="font-size:13px;color:var(--muted);padding:10px 0">Onay bekleyen üye yok.</div></div>`;
+        } else {
+          pendingUsers.forEach(s => {
+            const d = s.data();
+            pendingList.innerHTML += `
+              <div class="col-md-4 col-sm-6">
+                <div class="warrior-card" style="border-color:rgba(201,168,76,.22)">
+                  <div>
+                    <span class="warrior-name">${escHtml(d.nick)}</span>
+                    <div style="font-size:10px;color:var(--gold);margin-top:4px">⏳ Onay Bekliyor</div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button class="btn-glass btn-glass-sm" style="color:var(--green);border-color:rgba(76,175,125,.24)" onclick="approveUser('${s.id}')"><i class="fas fa-check"></i></button>
+                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-times"></i></button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+        }
+      }
 
-    await addDoc(collection(db, "messages"), {
-      uid:user.id, nick:user.nick, role:user.role, text, editedAt:null, ts:serverTimestamp()
+      if (user) {
+        const me = snap.docs.find(d => d.id === user.id);
+        if (me) {
+          const md = me.data();
+          const muted = isMutedNow(md);
+          const inputArea = document.getElementById("chat-input-area");
+          const mutedNotice = document.getElementById("muted-notice");
+          if (inputArea) inputArea.style.display = muted ? "none" : "flex";
+          if (mutedNotice) mutedNotice.classList.toggle("d-none", !muted);
+          if (muted && md.muteUntil) startMuteCountdown(md.muteUntil);
+        }
+      }
     });
-    input.value = "";
-  } catch (e) {
-    showToast("Mesaj gönderilemedi: " + e.message, true);
-  } finally {
-    setTimeout(() => { isSendingMessage = false; btn.disabled = false; }, 250);
-  }
-};
 
-window.editMsg = async (id) => {
-  if (!user) return;
-  const ref = doc(db,"messages",id); const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu mesajı düzenleyemezsin", true);
+    function startMuteCountdown(until){
+      if (countdownInterval) clearInterval(countdownInterval);
+      const el = document.getElementById("mute-countdown");
+      if (!el) return;
+      if (until === "permanent") { el.innerText = "Kalıcı"; return; }
 
-  const next = prompt("Mesajı düzenle:", d.text || "");
-  if (next === null) return;
-  const text = next.trim(); if (!text) return showToast("Mesaj boş olamaz", true);
+      const end = new Date(until);
+      countdownInterval = setInterval(() => {
+        const diff = end - new Date();
+        if (diff <= 0) { clearInterval(countdownInterval); location.reload(); return; }
+        const m = Math.floor(diff/60000);
+        const s = Math.floor((diff%60000)/1000);
+        el.innerText = `${m}dk ${s}s`;
+      }, 1000);
+    }
 
-  await updateDoc(ref, { text, editedAt: new Date().toISOString() });
-  showToast("Mesaj güncellendi.");
-};
+    window.approveUser = async (id) => {
+      await updateDoc(doc(db,"users",id), { approved:true });
+      showToast("Kullanıcı onaylandı.");
+    };
 
-window.deleteMsg = async (id) => {
-  if (!user) return;
-  const ref = doc(db,"messages",id); const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu mesajı silemezsin", true);
-  await deleteDoc(ref); showToast("Mesaj silindi.");
-};
+    window.deleteUser = async (id) => {
+      if (!confirm("Bu kullanıcıyı silmek istediğine emin misin?")) return;
+      await deleteDoc(doc(db,"users",id));
+      showToast("Kullanıcı silindi.");
+    };
 
-window.openMuteModal = (id, nick) => {
-  const data = allUsers[id];
-  if (data && isMutedNow(data)) { unmute(id); return; }
-  document.getElementById("mute-target-id").value = id;
-  document.getElementById("mute-target-name").innerText = `${nick} adlı savaşçı`;
-  document.getElementById("muteModal").classList.add("open");
-};
-window.closeMuteModal = () => document.getElementById("muteModal").classList.remove("open");
-window.applyMute = async () => {
-  const id = document.getElementById("mute-target-id").value;
-  const mins = parseInt(document.getElementById("mute-duration").value,10);
-  let until = null;
-  if (mins === 99999) until = "permanent";
-  else { const d = new Date(); d.setMinutes(d.getMinutes()+mins); until = d.toISOString(); }
-  await updateDoc(doc(db,"users",id), { muteUntil: until });
-  showToast("Kullanıcı susturuldu."); closeMuteModal();
-};
-window.unmute = async (id) => { await updateDoc(doc(db,"users",id), { muteUntil:null }); showToast("Mute kaldırıldı."); };
+    // CHAT
+    onSnapshot(query(collection(db,"messages"), orderBy("ts")), (snap) => {
+      const box = document.getElementById("chat-messages");
+      if (!box) return;
+      if (snap.empty) {
+        box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`;
+        return;
+      }
 
-onSnapshot(query(collection(db,"forum_posts"), orderBy("ts","desc")), (snap) => {
-  forumPosts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-  document.getElementById("forum-count").innerText = snap.size;
-  renderForum();
-});
-
-function renderForum(){
-  const container = document.getElementById("forum-posts");
-  if (!container) return;
-  const filtered = currentFilter === "all" ? forumPosts : forumPosts.filter(p => p.tag === currentFilter);
-  if (!filtered.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok.</p></div>`; return; }
-
-  container.innerHTML = filtered.map(p => {
-    const time = p.ts ? new Date(p.ts.toDate()).toLocaleDateString("tr-TR") : "";
-    return `
-      <div class="forum-post-card" onclick="openForumPost('${p.id}')">
-        <span class="forum-tag tag-${p.tag||"general"}">${tagLabels[p.tag] || "Genel"}</span>
-        <div class="forum-post-title">${escHtml(p.title)}</div>
-        <div class="forum-post-preview">${escHtml((p.body||"").slice(0,150))}${(p.body||"").length>150?"...":""}</div>
-        <div class="forum-post-meta">
-          <span><i class="fas fa-user"></i> ${escHtml(p.nick || "")}</span>
-          <span><i class="fas fa-calendar"></i> ${time}</span>
-          <span><i class="fas fa-comment"></i> ${p.replyCount || 0} yanıt</span>
-        </div>
-      </div>`;
-  }).join("");
-}
-window.filterForum = (tag) => { currentFilter = tag; renderForum(); };
-window.toggleCompose = () => { if (!user) { showToast("Konu açmak için giriş yap.", true); openModal(); return; } document.getElementById("forum-compose-area").classList.toggle("d-none"); };
-
-window.submitForumPost = async () => {
-  if (!user) return showToast("Giriş yapmalısın.", true);
-  const title = document.getElementById("forum-title-input").value.trim();
-  const body = document.getElementById("forum-body-input").value.trim();
-  const tag = document.getElementById("forum-tag-input").value;
-  if (!title || !body) return showToast("Başlık ve içerik zorunlu.", true);
-
-  await addDoc(collection(db,"forum_posts"), {
-    title, body, tag, nick:user.nick, uid:user.id, role:user.role, replyCount:0, editedAt:null, ts:serverTimestamp()
-  });
-  document.getElementById("forum-title-input").value = "";
-  document.getElementById("forum-body-input").value = "";
-  document.getElementById("forum-compose-area").classList.add("d-none");
-  showToast("Konu açıldı.");
-};
-
-window.openForumPost = async (id) => {
-  currentForumPostId = id;
-  const post = forumPosts.find(p => p.id === id); if (!post) return;
-
-  document.getElementById("forum-list-view").classList.add("d-none");
-  document.getElementById("forum-detail-view").classList.remove("d-none");
-
-  const time = post.ts ? new Date(post.ts.toDate()).toLocaleDateString("tr-TR") : "";
-  const canManage = user && (user.role === "admin" || user.id === post.uid);
-  const edited = post.editedAt ? `<span style="font-size:11px;color:var(--muted);margin-left:8px">(düzenlendi)</span>` : "";
-
-  document.getElementById("forum-detail-content").innerHTML = `
-    <div class="forum-compose">
-      <span class="forum-tag tag-${post.tag||"general"}">${tagLabels[post.tag] || "Genel"}</span>
-      <div class="forum-post-title" style="font-size:22px">${escHtml(post.title)} ${edited}</div>
-      <div style="font-size:14px;line-height:1.8;margin-bottom:14px">${escHtml(post.body).replace(/\n/g,"<br>")}</div>
-      <div class="forum-post-meta">
-        <span><i class="fas fa-user"></i> ${escHtml(post.nick||"")}</span>
-        <span><i class="fas fa-calendar"></i> ${time}</span>
-      </div>
-      ${canManage ? `
-        <div style="display:flex;gap:8px;margin-top:14px">
-          <button onclick="editPost('${id}')" class="btn-glass btn-glass-sm"><i class="fas fa-pen"></i>Düzenle</button>
-          <button onclick="deletePost('${id}')" class="btn-glass btn-glass-red btn-glass-sm"><i class="fas fa-trash"></i>Sil</button>
-        </div>
-      ` : ""}
-    </div>
-  `;
-  await loadReplies(id);
-  document.getElementById("reply-compose").classList.toggle("d-none", !user);
-};
-
-window.backToForum = () => {
-  currentForumPostId = null;
-  document.getElementById("forum-list-view").classList.remove("d-none");
-  document.getElementById("forum-detail-view").classList.add("d-none");
-};
-
-window.editPost = async (id) => {
-  if (!user) return;
-  const ref = doc(db,"forum_posts",id);
-  const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu konuyu düzenleyemezsin.", true);
-
-  const title = prompt("Yeni başlık:", d.title || ""); if (title === null) return;
-  const body = prompt("Yeni içerik:", d.body || ""); if (body === null) return;
-  if (!title.trim() || !body.trim()) return showToast("Başlık/içerik boş olamaz.", true);
-
-  await updateDoc(ref, { title:title.trim(), body:body.trim(), editedAt:new Date().toISOString() });
-  showToast("Konu güncellendi.");
-};
-
-window.deletePost = async (id) => {
-  if (!user) return;
-  const ref = doc(db,"forum_posts",id);
-  const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu konuyu silemezsin.", true);
-
-  if (!confirm("Bu konuyu silmek istediğine emin misin?")) return;
-  await deleteDoc(ref); backToForum(); showToast("Konu silindi.");
-};
-
-async function loadReplies(postId){
-  const container = document.getElementById("forum-replies");
-  const snap = await getDocs(query(collection(db,"forum_posts",postId,"replies"), orderBy("ts")));
-  if (snap.empty) { container.innerHTML = `<div style="font-size:13px;color:var(--muted);padding:10px 0">Henüz yanıt yok.</div>`; return; }
-
-  container.innerHTML = snap.docs.map(rdoc => {
-    const r = rdoc.data();
-    const time = r.ts ? new Date(r.ts.toDate()).toLocaleString("tr-TR") : "";
-    const canManage = user && (user.role === "admin" || user.id === r.uid);
-    return `
-      <div class="reply-card">
-        <div class="reply-header">
-          <span class="reply-author ${r.role||"sturgiyali"}">${escHtml(r.nick||"")}</span>
-          ${roleBadge(r.role)}
-          <span class="reply-time">${time}</span>
-          ${r.editedAt ? `<span class="reply-time">(düzenlendi)</span>` : ""}
-        </div>
-        <div class="reply-text">${escHtml(r.text||"").replace(/\n/g,"<br>")}</div>
-        ${canManage ? `
-          <div class="reply-actions">
-            <button onclick="editReply('${postId}','${rdoc.id}')" class="btn-glass btn-glass-sm"><i class="fas fa-pen"></i>Düzenle</button>
-            <button onclick="deleteReply('${postId}','${rdoc.id}')" class="btn-glass btn-glass-red btn-glass-sm"><i class="fas fa-trash"></i>Sil</button>
-          </div>
-        ` : ""}
-      </div>`;
-  }).join("");
-}
-
-window.submitReply = async () => {
-  if (!user || !currentForumPostId) return;
-  const text = document.getElementById("reply-input").value.trim();
-  if (!text) return showToast("Yanıt boş olamaz.", true);
-
-  await addDoc(collection(db,"forum_posts",currentForumPostId,"replies"), {
-    nick:user.nick, uid:user.id, role:user.role, text, editedAt:null, ts:serverTimestamp()
-  });
-  const post = forumPosts.find(p => p.id === currentForumPostId);
-  await updateDoc(doc(db,"forum_posts",currentForumPostId), { replyCount: (post?.replyCount || 0) + 1 });
-
-  document.getElementById("reply-input").value = "";
-  await loadReplies(currentForumPostId);
-  showToast("Yanıt gönderildi.");
-};
-
-window.editReply = async (postId, replyId) => {
-  if (!user) return;
-  const ref = doc(db,"forum_posts",postId,"replies",replyId);
-  const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu yanıtı düzenleyemezsin.", true);
-
-  const next = prompt("Yanıtı düzenle:", d.text || "");
-  if (next === null) return;
-  const text = next.trim(); if (!text) return showToast("Yanıt boş olamaz.", true);
-
-  await updateDoc(ref, { text, editedAt:new Date().toISOString() });
-  await loadReplies(postId);
-  showToast("Yanıt güncellendi.");
-};
-
-window.deleteReply = async (postId, replyId) => {
-  if (!user) return;
-  const ref = doc(db,"forum_posts",postId,"replies",replyId);
-  const snap = await getDoc(ref); if (!snap.exists()) return;
-  const d = snap.data();
-  if (d.uid !== user.id && user.role !== "admin") return showToast("Bu yanıtı silemezsin.", true);
-
-  await deleteDoc(ref);
-  const post = forumPosts.find(p => p.id === postId);
-  const newCount = Math.max(0, (post?.replyCount || 0) - 1);
-  await updateDoc(doc(db,"forum_posts",postId), { replyCount: newCount });
-  await loadReplies(postId);
-  showToast("Yanıt silindi.");
-};
-
-function subscribeGallery(){
-  const qRef = (user?.role === "admin")
-    ? query(collection(db,"gallery"), orderBy("ts","desc"))
-    : query(collection(db,"gallery"), where("approved","==",true), orderBy("ts","desc"));
-
-  onSnapshot(qRef, (snap) => {
-    const grid = document.getElementById("gallery-grid");
-    const empty = document.getElementById("gallery-empty");
-    if (!grid) return;
-    grid.innerHTML = "";
-
-    if (snap.empty) { empty.classList.remove("d-none"); return; }
-    empty.classList.add("d-none");
-
-    snap.forEach(s => {
-      const d = s.data();
-      const isAdmin = user?.role === "admin";
-      const isOwner = user?.id === d.uid;
-      const showDelete = isAdmin || isOwner;
-      const showApprove = isAdmin && d.approved === false;
-
-      grid.innerHTML += `
-        <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
-          <img src="${escAttr(d.url)}" alt="${escAttr(d.caption||"")}">
-          <div class="gallery-item-overlay">
-            <span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}${d.approved===false ? " · (onay bekliyor)" : ""}</span>
-          </div>
-          ${showApprove ? `<button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i></button>` : ""}
-          ${showDelete ? `<button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
-        </div>`;
-    });
-  });
-
-  if (user?.role === "admin") {
-    onSnapshot(query(collection(db,"gallery"), where("approved","==",false), orderBy("ts","desc")), (snap) => {
-      const pendingGrid = document.getElementById("gallery-pending-grid");
-      if (!pendingGrid) return;
-      pendingGrid.innerHTML = "";
-      if (snap.empty) { pendingGrid.innerHTML = `<div class="empty-state" style="width:100%"><p>Onay bekleyen fotoğraf yok.</p></div>`; return; }
+      box.innerHTML = "";
+      let lastAuthor = "";
 
       snap.forEach(s => {
         const d = s.data();
-        pendingGrid.innerHTML += `
-          <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
-            <img src="${escAttr(d.url)}" alt="${escAttr(d.caption||"")}">
-            <div class="gallery-item-overlay"><span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}</span></div>
-            <button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i> Onay</button>
-            <button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>
-          </div>`;
+        const isOwn = d.uid === user?.id;
+        const roleClass = d.role || "sturgiyali";
+        const showHeader = lastAuthor !== d.uid;
+        lastAuthor = d.uid;
+        const time = d.ts ? new Date(d.ts.toDate()).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) : "";
+        const edited = d.editedAt ? `<span style="font-size:10px;color:var(--muted);margin-left:8px">(düzenlendi)</span>` : "";
+
+        const canEdit = !!user && (isOwn || user.role === "admin");
+        const canDelete = !!user && (isOwn || user.role === "admin");
+
+        box.innerHTML += `
+          <div class="msg-group">
+            ${showHeader ? `<div class="msg-author-line"><span class="msg-author ${roleClass}">${escHtml(d.nick || "Bilinmeyen")}</span><span class="msg-time">${time}</span></div>` : ""}
+            <div class="msg-bubble ${isOwn ? "own" : ""}">
+              ${escHtml(d.text || "")} ${edited}
+              ${(canEdit || canDelete) ? `
+                <div class="msg-actions">
+                  ${canEdit ? `<button class="msg-act-btn" onclick="startInlineEdit('${s.id}')"><i class="fas fa-pen"></i></button>` : ""}
+                  ${canDelete ? `<button class="msg-act-btn danger" onclick="deleteMsg('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
+                </div>
+              ` : ""}
+
+              ${editingMessageId === s.id ? `
+                <div class="msg-edit-wrap">
+                  <input id="edit-input-${s.id}" class="msg-edit-input" value="${escAttr(d.text || "")}">
+                  <button class="btn-glass btn-glass-sm" onclick="saveInlineEdit('${s.id}')"><i class="fas fa-check"></i></button>
+                  <button class="btn-glass btn-glass-sm btn-glass-red" onclick="cancelInlineEdit()"><i class="fas fa-times"></i></button>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        `;
       });
+
+      box.scrollTop = box.scrollHeight;
     });
-  }
-}
-subscribeGallery();
 
-window.approveGalleryItem = async (id) => {
-  if (user?.role !== "admin") return showToast("Sadece admin onaylayabilir.", true);
-  await updateDoc(doc(db,"gallery",id), { approved:true });
-  showToast("Fotoğraf onaylandı.");
-};
-
-window.handleDragOver = (e) => { e.preventDefault(); document.getElementById("upload-zone").classList.add("dragover"); };
-window.handleDragLeave = () => document.getElementById("upload-zone").classList.remove("dragover");
-window.handleDrop = (e) => { e.preventDefault(); document.getElementById("upload-zone").classList.remove("dragover"); uploadGalleryFiles(Array.from(e.dataTransfer.files)); };
-window.handleFileInput = (e) => uploadGalleryFiles(Array.from(e.target.files));
-
-async function uploadGalleryFiles(files){
-  if (!user) { showToast("Yüklemek için giriş yap.", true); openModal(); return; }
-  if (user.approved === false) return showToast("Hesabın onay bekliyor.", true);
-
-  const valid = ["image/jpeg","image/png","image/gif","image/webp"];
-  for (const file of files) {
-    if (!valid.includes(file.type)) { showToast(`Geçersiz dosya türü: ${file.name}`, true); continue; }
-    if (file.size > 5*1024*1024) { showToast(`Dosya çok büyük: ${file.name}`, true); continue; }
-
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      await addDoc(collection(db,"gallery"), {
-        url: ev.target.result, nick:user.nick, uid:user.id,
-        caption:file.name.replace(/\.[^/.]+$/, ""), approved:false, ts:serverTimestamp()
-      });
-      showToast("Fotoğraf yüklendi, admin onayı bekliyor.");
+    window.handleChatKeydown = (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
     };
-    reader.readAsDataURL(file);
-  }
-}
-window.deleteGalleryItem = async (id) => { await deleteDoc(doc(db,"gallery",id)); showToast("Fotoğraf silindi."); };
-window.openLightbox = (url) => { document.getElementById("lightbox-img").src = url; document.getElementById("lightbox").classList.add("open"); };
-window.closeLightbox = () => document.getElementById("lightbox").classList.remove("open");
 
-window.processAuth = async () => {
-  const n = document.getElementById("login-nick").value.trim();
-  const p = document.getElementById("login-pass").value;
-  const errEl = document.getElementById("modal-error");
-  const btn = document.getElementById("login-btn");
-  errEl.style.display = "none";
+    window.sendMessage = async () => {
+      if (!user) { showToast("Önce giriş yapmalısın.", true); openModal(); return; }
+      if (isSendingMessage) return;
 
-  if (!n || !p) { errEl.textContent = "Tüm alanları doldur."; errEl.style.display = "block"; return; }
-  if (n.length < 2) { errEl.textContent = "Kullanıcı adı en az 2 karakter olmalı."; errEl.style.display = "block"; return; }
-  if (p.length < 4) { errEl.textContent = "Şifre en az 4 karakter olmalı."; errEl.style.display = "block"; return; }
+      const input = document.getElementById("chat-input");
+      const btn = document.getElementById("send-btn");
+      const text = input.value.trim();
+      if (!text) return;
 
-  btn.disabled = true; btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Kontrol ediliyor...`;
-  try {
-    const qUsers = query(collection(db,"users"), where("nick","==",n));
-    const snap = await getDocs(qUsers);
-    let d;
+      isSendingMessage = true;
+      btn.disabled = true;
 
-    if (snap.empty) {
-      const { hash, salt } = await hashPassword(p);
-      const res = await addDoc(collection(db,"users"), {
-        nick:n, passHash:hash, passSalt:salt, role:"sturgiyali", approved:false, muteUntil:null
+      try {
+        const me = await getDoc(doc(db,"users",user.id));
+        if (!me.exists()) { showToast("Oturum geçersiz.", true); return; }
+        const md = me.data();
+        if (isMutedNow(md)) { showToast("Susturuldunuz.", true); return; }
+
+        await addDoc(collection(db,"messages"), {
+          uid:user.id, nick:user.nick, role:user.role,
+          text, editedAt:null, ts:serverTimestamp()
+        });
+
+        input.value = "";
+      } catch (e) {
+        showToast("Mesaj gönderilemedi: " + e.message, true);
+      } finally {
+        setTimeout(() => { isSendingMessage = false; btn.disabled = false; }, 250);
+      }
+    };
+
+    window.startInlineEdit = async (id) => {
+      editingMessageId = id;
+      show("chat");
+      setTimeout(() => {
+        const el = document.getElementById(`edit-input-${id}`);
+        if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+      }, 30);
+    };
+
+    window.cancelInlineEdit = () => {
+      editingMessageId = null;
+      show("chat");
+    };
+
+    window.saveInlineEdit = async (id) => {
+      const ref = doc(db,"messages",id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+
+      if (d.uid !== user?.id && user?.role !== "admin") {
+        return showToast("Bu mesajı düzenleyemezsin.", true);
+      }
+
+      const input = document.getElementById(`edit-input-${id}`);
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return showToast("Mesaj boş olamaz.", true);
+
+      await updateDoc(ref, { text, editedAt:new Date().toISOString() });
+      editingMessageId = null;
+      showToast("Mesaj güncellendi.");
+    };
+
+    window.deleteMsg = async (id) => {
+      const ref = doc(db,"messages",id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu mesajı silemezsin.", true);
+
+      await deleteDoc(ref);
+      showToast("Mesaj silindi.");
+    };
+
+    // MUTE
+    window.openMuteModal = (id, nick) => {
+      const d = allUsers[id];
+      if (d && isMutedNow(d)) { unmute(id); return; }
+      document.getElementById("mute-target-id").value = id;
+      document.getElementById("mute-target-name").innerText = nick + " adlı savaşçı";
+      document.getElementById("muteModal").classList.add("open");
+    };
+
+    window.closeMuteModal = () => document.getElementById("muteModal").classList.remove("open");
+
+    window.applyMute = async () => {
+      const id = document.getElementById("mute-target-id").value;
+      const mins = parseInt(document.getElementById("mute-duration").value, 10);
+      let until;
+      if (mins === 99999) until = "permanent";
+      else {
+        const d = new Date();
+        d.setMinutes(d.getMinutes() + mins);
+        until = d.toISOString();
+      }
+      await updateDoc(doc(db,"users",id), { muteUntil:until });
+      showToast("Kullanıcı susturuldu.");
+      closeMuteModal();
+    };
+
+    window.unmute = async (id) => {
+      await updateDoc(doc(db,"users",id), { muteUntil:null });
+      showToast("Mute kaldırıldı.");
+    };
+
+    // FORUM
+    onSnapshot(query(collection(db,"forum_posts"), orderBy("ts","desc")), (snap) => {
+      forumPosts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      document.getElementById("forum-count").innerText = snap.size;
+      renderForum();
+    });
+
+    function renderForum() {
+      const box = document.getElementById("forum-posts");
+      if (!box) return;
+
+      const list = currentFilter === "all" ? forumPosts : forumPosts.filter(p => p.tag === currentFilter);
+
+      if (!list.length) {
+        box.innerHTML = `<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok.</p></div>`;
+        return;
+      }
+
+      box.innerHTML = list.map(p => {
+        const time = p.ts ? new Date(p.ts.toDate()).toLocaleDateString("tr-TR") : "";
+        return `
+          <div class="forum-post-card" onclick="openForumPost('${p.id}')">
+            <span class="forum-tag tag-${p.tag || "general"}">${tagLabels[p.tag] || "Genel"}</span>
+            <div class="forum-post-title">${escHtml(p.title || "")}</div>
+            <div class="forum-post-preview">${escHtml((p.body || "").slice(0,150))}${(p.body || "").length > 150 ? "..." : ""}</div>
+            <div class="forum-post-meta">
+              <span><i class="fas fa-user"></i> ${escHtml(p.nick || "")}</span>
+              <span><i class="fas fa-calendar"></i> ${time}</span>
+              <span><i class="fas fa-comment"></i> ${p.replyCount || 0} yanıt</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.filterForum = (tag) => {
+      currentFilter = tag;
+      renderForum();
+    };
+
+    window.toggleCompose = () => {
+      if (!user) { showToast("Konu açmak için giriş yap.", true); openModal(); return; }
+      document.getElementById("forum-compose-area").classList.toggle("d-none");
+    };
+
+    window.submitForumPost = async () => {
+      if (!user) return showToast("Giriş yapmalısın.", true);
+
+      const title = document.getElementById("forum-title-input").value.trim();
+      const body = document.getElementById("forum-body-input").value.trim();
+      const tag = document.getElementById("forum-tag-input").value;
+
+      if (!title || !body) return showToast("Başlık ve içerik zorunlu.", true);
+
+      await addDoc(collection(db,"forum_posts"), {
+        title, body, tag,
+        nick:user.nick, uid:user.id, role:user.role,
+        replyCount:0, editedAt:null, ts:serverTimestamp()
       });
-      d = { id:res.id, nick:n, role:"sturgiyali", approved:false };
-      showToast("Hesap oluşturuldu! Admin onayı bekleniyor.");
-    } else {
-      const data = snap.docs[0].data();
-      let ok = false;
-      if (data.passHash && data.passSalt) ok = await verifyPassword(p, data.passHash, data.passSalt);
-      else if (data.pass) {
-        ok = data.pass === p;
-        if (ok) {
+
+      document.getElementById("forum-title-input").value = "";
+      document.getElementById("forum-body-input").value = "";
+      document.getElementById("forum-compose-area").classList.add("d-none");
+      showToast("Konu açıldı.");
+    };
+
+    window.openForumPost = async (id) => {
+      currentForumPostId = id;
+      const post = forumPosts.find(p => p.id === id);
+      if (!post) return;
+
+      document.getElementById("forum-list-view").classList.add("d-none");
+      document.getElementById("forum-detail-view").classList.remove("d-none");
+
+      const time = post.ts ? new Date(post.ts.toDate()).toLocaleDateString("tr-TR") : "";
+      const edited = post.editedAt ? `<span style="font-size:11px;color:var(--muted);margin-left:8px">(düzenlendi)</span>` : "";
+      const canManage = user && (user.role === "admin" || user.id === post.uid);
+
+      document.getElementById("forum-detail-content").innerHTML = `
+        <div class="forum-compose">
+          <span class="forum-tag tag-${post.tag || "general"}">${tagLabels[post.tag] || "Genel"}</span>
+          <div class="forum-post-title" style="font-size:22px">${escHtml(post.title || "")} ${edited}</div>
+          <div style="font-size:14px;line-height:1.8;margin-bottom:14px">${escHtml(post.body || "").replace(/\n/g,"<br>")}</div>
+          <div class="forum-post-meta">
+            <span><i class="fas fa-user"></i> ${escHtml(post.nick || "")}</span>
+            <span><i class="fas fa-calendar"></i> ${time}</span>
+          </div>
+
+          ${canManage ? `
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <button class="btn-glass btn-glass-sm" onclick="editPost('${id}')"><i class="fas fa-pen"></i>Düzenle</button>
+              <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deletePost('${id}')"><i class="fas fa-trash"></i>Sil</button>
+            </div>
+          ` : ""}
+        </div>
+      `;
+
+      await loadReplies(id);
+      document.getElementById("reply-compose").classList.toggle("d-none", !user);
+    };
+
+    window.backToForum = () => {
+      currentForumPostId = null;
+      document.getElementById("forum-list-view").classList.remove("d-none");
+      document.getElementById("forum-detail-view").classList.add("d-none");
+    };
+
+    window.editPost = async (id) => {
+      const ref = doc(db,"forum_posts",id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+
+      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu konuyu düzenleyemezsin.", true);
+
+      const title = prompt("Yeni başlık:", d.title || "");
+      if (title === null) return;
+      const body = prompt("Yeni içerik:", d.body || "");
+      if (body === null) return;
+
+      if (!title.trim() || !body.trim()) return showToast("Başlık/içerik boş olamaz.", true);
+
+      await updateDoc(ref, { title:title.trim(), body:body.trim(), editedAt:new Date().toISOString() });
+      showToast("Konu güncellendi.");
+    };
+
+    window.deletePost = async (id) => {
+      const ref = doc(db,"forum_posts",id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu konuyu silemezsin.", true);
+
+      if (!confirm("Bu konuyu silmek istediğine emin misin?")) return;
+      await deleteDoc(ref);
+      backToForum();
+      showToast("Konu silindi.");
+    };
+
+    async function loadReplies(postId) {
+      const box = document.getElementById("forum-replies");
+      const snap = await getDocs(query(collection(db,"forum_posts",postId,"replies"), orderBy("ts")));
+
+      if (snap.empty) {
+        box.innerHTML = `<div style="font-size:13px;color:var(--muted);padding:10px 0">Henüz yanıt yok.</div>`;
+        return;
+      }
+
+      box.innerHTML = snap.docs.map(d => {
+        const r = d.data();
+        const time = r.ts ? new Date(r.ts.toDate()).toLocaleString("tr-TR") : "";
+        const canManage = user && (user.role === "admin" || user.id === r.uid);
+        return `
+          <div class="reply-card">
+            <div class="reply-header">
+              <span class="reply-author ${r.role || "sturgiyali"}">${escHtml(r.nick || "")}</span>
+              ${roleBadge(r.role)}
+              <span class="reply-time">${time}</span>
+              ${r.editedAt ? `<span class="reply-time">(düzenlendi)</span>` : ""}
+            </div>
+            <div class="reply-text">${escHtml(r.text || "").replace(/\n/g,"<br>")}</div>
+            ${canManage ? `
+              <div class="reply-actions">
+                <button class="btn-glass btn-glass-sm" onclick="editReply('${postId}','${d.id}')"><i class="fas fa-pen"></i>Düzenle</button>
+                <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteReply('${postId}','${d.id}')"><i class="fas fa-trash"></i>Sil</button>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.submitReply = async () => {
+      if (!user || !currentForumPostId) return;
+      const text = document.getElementById("reply-input").value.trim();
+      if (!text) return showToast("Yanıt boş olamaz.", true);
+
+      await addDoc(collection(db,"forum_posts",currentForumPostId,"replies"), {
+        nick:user.nick, uid:user.id, role:user.role, text, editedAt:null, ts:serverTimestamp()
+      });
+
+      const post = forumPosts.find(p => p.id === currentForumPostId);
+      await updateDoc(doc(db,"forum_posts",currentForumPostId), { replyCount:(post?.replyCount || 0) + 1 });
+
+      document.getElementById("reply-input").value = "";
+      await loadReplies(currentForumPostId);
+      showToast("Yanıt gönderildi.");
+    };
+
+    window.editReply = async (postId, replyId) => {
+      const ref = doc(db,"forum_posts",postId,"replies",replyId);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+
+      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu yanıtı düzenleyemezsin.", true);
+
+      const next = prompt("Yanıtı düzenle:", d.text || "");
+      if (next === null) return;
+      if (!next.trim()) return showToast("Yanıt boş olamaz.", true);
+
+      await updateDoc(ref, { text:next.trim(), editedAt:new Date().toISOString() });
+      await loadReplies(postId);
+      showToast("Yanıt güncellendi.");
+    };
+
+    window.deleteReply = async (postId, replyId) => {
+      const ref = doc(db,"forum_posts",postId,"replies",replyId);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const d = snap.data();
+
+      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu yanıtı silemezsin.", true);
+
+      await deleteDoc(ref);
+      const post = forumPosts.find(p => p.id === postId);
+      await updateDoc(doc(db,"forum_posts",postId), { replyCount:Math.max(0,(post?.replyCount || 0) - 1) });
+      await loadReplies(postId);
+      showToast("Yanıt silindi.");
+    };
+
+    // GALLERY
+    function subscribeGallery() {
+      const qRef = (user?.role === "admin")
+        ? query(collection(db,"gallery"), orderBy("ts","desc"))
+        : query(collection(db,"gallery"), where("approved","==",true), orderBy("ts","desc"));
+
+      onSnapshot(qRef, (snap) => {
+        const grid = document.getElementById("gallery-grid");
+        const empty = document.getElementById("gallery-empty");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        if (snap.empty) {
+          empty.classList.remove("d-none");
+          return;
+        }
+        empty.classList.add("d-none");
+
+        snap.forEach(s => {
+          const d = s.data();
+          const isAdmin = user?.role === "admin";
+          const isOwner = user?.id === d.uid;
+          const showDelete = isAdmin || isOwner;
+          const showApprove = isAdmin && d.approved === false;
+
+          grid.innerHTML += `
+            <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
+              <img src="${escAttr(d.url)}" alt="${escAttr(d.caption || "")}" loading="lazy">
+              <div class="gallery-item-overlay">
+                <span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}${d.approved===false ? " · (onay bekliyor)" : ""}</span>
+              </div>
+              ${showApprove ? `<button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i></button>` : ""}
+              ${showDelete ? `<button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
+            </div>
+          `;
+        });
+      });
+
+      if (user?.role === "admin") {
+        onSnapshot(query(collection(db,"gallery"), where("approved","==",false), orderBy("ts","desc")), (snap) => {
+          const g = document.getElementById("gallery-pending-grid");
+          if (!g) return;
+          g.innerHTML = "";
+          if (snap.empty) {
+            g.innerHTML = `<div class="empty-state" style="width:100%"><p>Onay bekleyen fotoğraf yok.</p></div>`;
+            return;
+          }
+
+          snap.forEach(s => {
+            const d = s.data();
+            g.innerHTML += `
+              <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
+                <img src="${escAttr(d.url)}" alt="${escAttr(d.caption || "")}">
+                <div class="gallery-item-overlay"><span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}</span></div>
+                <button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i> Onay</button>
+                <button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>
+              </div>
+            `;
+          });
+        });
+      }
+    }
+    subscribeGallery();
+
+    window.approveGalleryItem = async (id) => {
+      if (user?.role !== "admin") return showToast("Sadece admin onaylayabilir.", true);
+      await updateDoc(doc(db,"gallery",id), { approved:true });
+      showToast("Fotoğraf onaylandı.");
+    };
+
+    window.handleDragOver = (e) => { e.preventDefault(); document.getElementById("upload-zone").classList.add("dragover"); };
+    window.handleDragLeave = () => document.getElementById("upload-zone").classList.remove("dragover");
+    window.handleDrop = (e) => {
+      e.preventDefault();
+      document.getElementById("upload-zone").classList.remove("dragover");
+      uploadGalleryFiles(Array.from(e.dataTransfer.files));
+    };
+    window.handleFileInput = (e) => uploadGalleryFiles(Array.from(e.target.files));
+
+    async function uploadGalleryFiles(files) {
+      if (!user) { showToast("Yüklemek için giriş yap.", true); openModal(); return; }
+      if (user.approved === false) return showToast("Hesabın onay bekliyor.", true);
+
+      const valid = ["image/jpeg","image/png","image/gif","image/webp"];
+
+      for (const file of files) {
+        if (!valid.includes(file.type)) { showToast(`Geçersiz tür: ${file.name}`, true); continue; }
+        if (file.size > 5 * 1024 * 1024) { showToast(`Çok büyük: ${file.name}`, true); continue; }
+
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          await addDoc(collection(db,"gallery"), {
+            url: ev.target.result,
+            nick: user.nick,
+            uid: user.id,
+            caption: file.name.replace(/\.[^/.]+$/, ""),
+            approved: false,
+            ts: serverTimestamp()
+          });
+          showToast("Fotoğraf yüklendi, admin onayı bekliyor.");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    window.deleteGalleryItem = async (id) => {
+      await deleteDoc(doc(db,"gallery",id));
+      showToast("Fotoğraf silindi.");
+    };
+
+    window.openLightbox = (url) => {
+      document.getElementById("lightbox-img").src = url;
+      document.getElementById("lightbox").classList.add("open");
+    };
+
+    window.closeLightbox = () => document.getElementById("lightbox").classList.remove("open");
+
+    // AUTH
+    window.processAuth = async () => {
+      const n = document.getElementById("login-nick").value.trim();
+      const p = document.getElementById("login-pass").value;
+      const errEl = document.getElementById("modal-error");
+      const btn = document.getElementById("login-btn");
+      errEl.style.display = "none";
+
+      if (!n || !p) { errEl.textContent = "Tüm alanları doldur."; errEl.style.display = "block"; return; }
+      if (n.length < 2) { errEl.textContent = "Kullanıcı adı en az 2 karakter olmalı."; errEl.style.display = "block"; return; }
+      if (p.length < 4) { errEl.textContent = "Şifre en az 4 karakter olmalı."; errEl.style.display = "block"; return; }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Kontrol ediliyor...`;
+
+      try {
+        const qUsers = query(collection(db,"users"), where("nick","==",n));
+        const snap = await getDocs(qUsers);
+        let d;
+
+        if (snap.empty) {
           const { hash, salt } = await hashPassword(p);
-          await updateDoc(doc(db,"users",snap.docs[0].id), { passHash:hash, passSalt:salt, pass:null });
+          const res = await addDoc(collection(db,"users"), {
+            nick:n, passHash:hash, passSalt:salt,
+            role:"sturgiyali", approved:false, muteUntil:null
+          });
+          d = { id:res.id, nick:n, role:"sturgiyali", approved:false };
+          showToast("Hesap oluşturuldu, admin onayı bekliyor.");
+        } else {
+          const docData = snap.docs[0].data();
+          let ok = false;
+
+          if (docData.passHash && docData.passSalt) {
+            ok = await verifyPassword(p, docData.passHash, docData.passSalt);
+          } else if (docData.pass) {
+            ok = (docData.pass === p);
+            if (ok) {
+              const { hash, salt } = await hashPassword(p);
+              await updateDoc(doc(db,"users",snap.docs[0].id), { passHash:hash, passSalt:salt, pass:null });
+            }
+          }
+
+          if (!ok) { errEl.textContent = "Yanlış şifre."; errEl.style.display = "block"; return; }
+
+          if (docData.approved === undefined) {
+            await updateDoc(doc(db,"users",snap.docs[0].id), { approved:true });
+            docData.approved = true;
+          }
+
+          d = { id:snap.docs[0].id, ...docData };
+          showToast("Hoş geldin, " + d.nick + "!");
+        }
+
+        localStorage.setItem("st_session", JSON.stringify(d));
+        setTimeout(() => location.reload(), 1000);
+      } catch (e) {
+        errEl.textContent = "Hata: " + e.message;
+        errEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-sign-in-alt"></i>Devam Et`;
+      }
+    };
+
+    window.updatePassword = async () => {
+      if (!user) return showToast("Önce giriş yap.", true);
+      const current = document.getElementById("current-password").value;
+      const np = document.getElementById("new-password").value;
+      if (!current) return showToast("Mevcut şifreni gir.", true);
+      if (!np || np.length < 6) return showToast("Yeni şifre en az 6 karakter olmalı.", true);
+
+      const me = await getDoc(doc(db,"users",user.id));
+      const d = me.data();
+      let ok = false;
+      if (d.passHash && d.passSalt) ok = await verifyPassword(current, d.passHash, d.passSalt);
+      else if (d.pass) ok = (d.pass === current);
+      if (!ok) return showToast("Mevcut şifre yanlış.", true);
+
+      const { hash, salt } = await hashPassword(np);
+      await updateDoc(doc(db,"users",user.id), { passHash:hash, passSalt:salt, pass:null });
+
+      showToast("Şifre güncellendi.");
+      document.getElementById("current-password").value = "";
+      document.getElementById("new-password").value = "";
+      document.getElementById("strength-bar").style.width = "0";
+      document.getElementById("strength-text").textContent = "";
+    };
+
+    window.updRole = async (id, roleKey) => {
+      if (user?.role !== "admin") return showToast("Sadece admin değiştirebilir.", true);
+      if (!rolesMap[roleKey]) return showToast("Geçersiz rol.", true);
+      await updateDoc(doc(db,"users",id), { role:roleKey });
+      showToast("Rol güncellendi.");
+    };
+
+    window.createRole = async () => {
+      if (user?.role !== "admin") return showToast("Sadece admin rol oluşturabilir.", true);
+
+      const key = document.getElementById("new-role-key").value.trim().toLowerCase();
+      const name = document.getElementById("new-role-name").value.trim();
+      const color = document.getElementById("new-role-color").value || "#a8d8ea";
+      const canModerate = document.getElementById("new-role-moderate").checked;
+
+      if (!key || !name) return showToast("Rol key ve adı zorunlu.", true);
+      if (!/^[a-z0-9_-]+$/.test(key)) return showToast("Rol key sadece a-z 0-9 _ - içerebilir.", true);
+      if (key === "admin") return showToast("admin rolü oluşturulamaz/silinemez.", true);
+
+      await setDoc(doc(db,"roles",key), {
+        name, color, className:"", canModerate, canCreateRole:false
+      }, { merge:true });
+
+      document.getElementById("new-role-key").value = "";
+      document.getElementById("new-role-name").value = "";
+      document.getElementById("new-role-color").value = "#a8d8ea";
+      document.getElementById("new-role-moderate").checked = false;
+
+      showToast("Yeni rol oluşturuldu.");
+    };
+
+    window.deleteRole = async (roleKey) => {
+      if (user?.role !== "admin") return showToast("Sadece admin rol silebilir.", true);
+      if (protectedRoles.includes(roleKey)) return showToast("Temel roller silinemez.", true);
+
+      const usedBy = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
+      if (!usedBy.empty) return showToast("Bu rolü kullanan kullanıcılar var. Önce kullanıcı rollerini değiştir.", true);
+
+      if (!confirm(`"${roleKey}" rolünü silmek istediğine emin misin?`)) return;
+      await deleteDoc(doc(db,"roles",roleKey));
+      delete rolesMap[roleKey];
+      renderRolesPreview();
+      showToast("Rol silindi.");
+    };
+
+    if (user) {
+      document.getElementById("auth-section").classList.add("d-none");
+      document.getElementById("user-section").classList.remove("d-none");
+      document.getElementById("display-nick").innerText = user.nick;
+      document.getElementById("display-rank").innerText = roleDisplay(user.role).name;
+      document.getElementById("hero-rank").innerText = roleDisplay(user.role).name;
+
+      if (user.role === "admin") document.getElementById("admin-nav-item").classList.remove("d-none");
+
+      const uploadArea = document.getElementById("gallery-upload-area");
+      if (uploadArea && user.approved !== false) uploadArea.classList.remove("d-none");
+    }
+    renderRolesPreview();
+
+    window.logout = () => {
+      localStorage.removeItem("st_session");
+      location.reload();
+    };
+
+    window.show = (p) => {
+      document.querySelectorAll("main section").forEach(s => s.classList.add("d-none"));
+      document.getElementById("page-" + p).classList.remove("d-none");
+
+      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+      const nav = document.getElementById("nav-" + p);
+      if (nav) nav.classList.add("active");
+
+      if (p === "chat") {
+        const wall = document.getElementById("chat-access-wall");
+        const area = document.getElementById("chat-approved-area");
+
+        if (!user) {
+          wall.classList.remove("d-none");
+          area.classList.add("d-none");
+          document.getElementById("chat-wall-msg").innerHTML = "Sohbet için giriş yapmalısın.";
+        } else if (user.approved === false) {
+          wall.classList.remove("d-none");
+          area.classList.add("d-none");
+          document.getElementById("chat-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra sohbet açılır.`;
+        } else {
+          wall.classList.add("d-none");
+          area.classList.remove("d-none");
+          setTimeout(() => {
+            const b = document.getElementById("chat-messages");
+            if (b) b.scrollTop = b.scrollHeight;
+          }, 80);
         }
       }
-      if (!ok) { errEl.textContent = "Yanlış şifre."; errEl.style.display = "block"; return; }
 
-      if (data.approved === undefined) {
-        await updateDoc(doc(db,"users",snap.docs[0].id), { approved:true });
-        data.approved = true;
+      if (p === "forum") {
+        const wall = document.getElementById("forum-access-wall");
+        const area = document.getElementById("forum-approved-area");
+
+        if (!user) {
+          wall.classList.remove("d-none");
+          area.classList.add("d-none");
+          document.getElementById("forum-wall-msg").innerHTML = "Forum için giriş yapmalısın.";
+        } else if (user.approved === false) {
+          wall.classList.remove("d-none");
+          area.classList.add("d-none");
+          document.getElementById("forum-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra forum açılır.`;
+        } else {
+          wall.classList.add("d-none");
+          area.classList.remove("d-none");
+        }
       }
-      d = { id:snap.docs[0].id, ...data };
-      showToast("Hoş geldin, " + d.nick + "!");
-    }
 
-    localStorage.setItem("st_session", JSON.stringify(d));
-    setTimeout(() => location.reload(), 1000);
-  } catch (e) {
-    errEl.textContent = "Hata: " + e.message;
-    errEl.style.display = "block";
-  } finally {
-    btn.disabled = false; btn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Devam Et`;
-  }
-};
+      if (p === "admin" && user?.role !== "admin") {
+        showToast("Admin paneline erişimin yok.", true);
+        show("home");
+      }
+    };
 
-window.updatePassword = async () => {
-  if (!user) return showToast("Önce giriş yap.", true);
-  const current = document.getElementById("current-password").value;
-  const np = document.getElementById("new-password").value;
-  if (!current) return showToast("Mevcut şifreni gir.", true);
-  if (!np || np.length < 6) return showToast("Yeni şifre en az 6 karakter olmalı.", true);
+    window.openModal = () => {
+      document.getElementById("loginModal").classList.add("open");
+      setTimeout(() => document.getElementById("login-nick")?.focus(), 80);
+    };
+    window.closeModal = () => document.getElementById("loginModal").classList.remove("open");
+  </script>
 
-  const s = await getDoc(doc(db,"users",user.id)); const d = s.data();
-  let ok = false;
-  if (d.passHash && d.passSalt) ok = await verifyPassword(current, d.passHash, d.passSalt);
-  else if (d.pass) ok = (d.pass === current);
-  if (!ok) return showToast("Mevcut şifre yanlış.", true);
+  <script>
+    // THREE.JS Neon Balls Background + Mouse Glow
+    (function() {
+      const canvas = document.getElementById("bg-canvas");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
 
-  const { hash, salt } = await hashPassword(np);
-  await updateDoc(doc(db,"users",user.id), { passHash:hash, passSalt:salt, pass:null });
-  showToast("Şifre güncellendi.");
-  document.getElementById("current-password").value = "";
-  document.getElementById("new-password").value = "";
-  document.getElementById("strength-bar").style.width = "0";
-  document.getElementById("strength-text").textContent = "";
-};
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+      camera.position.z = 5;
 
-window.updRole = async (id, roleKey) => {
-  if (user?.role !== "admin") return showToast("Sadece admin değiştirebilir.", true);
-  if (!rolesMap[roleKey]) return showToast("Geçersiz rol.", true);
-  await updateDoc(doc(db,"users",id), { role: roleKey });
-  showToast("Rol güncellendi.");
-};
+      const particleCount = 1400;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
 
-window.createRole = async () => {
-  if (user?.role !== "admin") return showToast("Sadece admin rol oluşturabilir.", true);
-  const key = document.getElementById("new-role-key").value.trim().toLowerCase();
-  const name = document.getElementById("new-role-name").value.trim();
-  const color = document.getElementById("new-role-color").value || "#a8d8ea";
-  const canModerate = document.getElementById("new-role-moderate").checked;
+      const palette = [
+        new THREE.Color(0x8fe9ff),
+        new THREE.Color(0x7aa8ff),
+        new THREE.Color(0x6d5bff),
+        new THREE.Color(0x79ffd4),
+        new THREE.Color(0xf0d070)
+      ];
 
-  if (!key || !name) return showToast("Rol key ve adı zorunlu.", true);
-  if (!/^[a-z0-9_-]+$/.test(key)) return showToast("Rol key: a-z 0-9 _ - olmalı.", true);
-  if (key === "admin") return showToast("admin rolü değiştirilemez.", true);
+      for (let i=0; i<particleCount; i++) {
+        positions[i*3] = (Math.random()-0.5) * 30;
+        positions[i*3+1] = (Math.random()-0.5) * 20;
+        positions[i*3+2] = (Math.random()-0.5) * 12;
+        const c = palette[Math.floor(Math.random()*palette.length)];
+        colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+      }
 
-  await setDoc(doc(db,"roles",key), { name, color, className:"", canModerate, canCreateRole:false }, { merge:true });
-  document.getElementById("new-role-key").value = "";
-  document.getElementById("new-role-name").value = "";
-  document.getElementById("new-role-color").value = "#a8d8ea";
-  document.getElementById("new-role-moderate").checked = false;
-  showToast("Yeni rol oluşturuldu.");
-};
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
-if (user) {
-  document.getElementById("auth-section").classList.add("d-none");
-  document.getElementById("user-section").classList.remove("d-none");
-  document.getElementById("display-nick").innerText = user.nick;
-  document.getElementById("display-rank").innerText = roleDisplay(user.role).name;
-  document.getElementById("hero-rank").innerText = roleDisplay(user.role).name;
-  if (user.role === "admin") document.getElementById("admin-nav-item").classList.remove("d-none");
+      const mat = new THREE.PointsMaterial({
+        size:0.055,
+        transparent:true,
+        opacity:0.62,
+        vertexColors:true,
+        blending:THREE.AdditiveBlending
+      });
 
-  const up = document.getElementById("gallery-upload-area");
-  if (up && user.approved !== false) up.classList.remove("d-none");
-}
+      const particles = new THREE.Points(geom, mat);
+      scene.add(particles);
 
-window.logout = () => { localStorage.removeItem("st_session"); location.reload(); };
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener("mousemove", (e) => {
+        mouseX = (e.clientX/window.innerWidth - 0.5) * 0.7;
+        mouseY = (e.clientY/window.innerHeight - 0.5) * 0.45;
+        document.body.style.setProperty("--mx", `${(e.clientX/window.innerWidth)*100}%`);
+        document.body.style.setProperty("--my", `${(e.clientY/window.innerHeight)*100}%`);
+      });
 
-window.show = (p) => {
-  document.querySelectorAll("main section").forEach(s => s.classList.add("d-none"));
-  document.getElementById("page-"+p).classList.remove("d-none");
-  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-  const nav = document.getElementById("nav-"+p); if (nav) nav.classList.add("active");
+      let t = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        t += 0.005;
 
-  if (p === "chat") {
-    const wall = document.getElementById("chat-access-wall"), area = document.getElementById("chat-approved-area");
-    if (!user) {
-      wall.classList.remove("d-none"); area.classList.add("d-none");
-      document.getElementById("chat-wall-msg").innerHTML = "Sohbet için giriş yapman gerekiyor.";
-    } else if (user.approved === false) {
-      wall.classList.remove("d-none"); area.classList.add("d-none");
-      document.getElementById("chat-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra sohbet açılır.`;
-    } else {
-      wall.classList.add("d-none"); area.classList.remove("d-none");
-      setTimeout(() => { const b = document.getElementById("chat-messages"); if (b) b.scrollTop = b.scrollHeight; }, 100);
-    }
-  }
+        particles.rotation.y = t * 0.06;
+        particles.rotation.x = t * 0.02;
+        particles.material.opacity = 0.56 + Math.sin(t * 1.8) * 0.10;
 
-  if (p === "forum") {
-    const wall = document.getElementById("forum-access-wall"), area = document.getElementById("forum-approved-area");
-    if (!user) {
-      wall.classList.remove("d-none"); area.classList.add("d-none");
-      document.getElementById("forum-wall-msg").innerHTML = "Forum için giriş yapman gerekiyor.";
-    } else if (user.approved === false) {
-      wall.classList.remove("d-none"); area.classList.add("d-none");
-      document.getElementById("forum-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra forum açılır.`;
-    } else {
-      wall.classList.add("d-none"); area.classList.remove("d-none");
-    }
-  }
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
 
-  if (p === "admin" && user?.role !== "admin") {
-    showToast("Admin paneline erişimin yok.", true);
-    show("home");
-  }
-};
+        renderer.render(scene, camera);
+      }
+      animate();
 
-window.openModal = () => { document.getElementById("loginModal").classList.add("open"); setTimeout(() => document.getElementById("login-nick")?.focus(), 100); };
-window.closeModal = () => document.getElementById("loginModal").classList.remove("open");
-</script>
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    })();
 
-<script>
-(function() {
-  const canvas = document.getElementById("bg-canvas");
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0x000000, 0);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.z = 5;
-
-  const count = 1200;
-  const positions = new Float32Array(count*3);
-  const colors = new Float32Array(count*3);
-  const palette = [new THREE.Color(0xa8d8ea),new THREE.Color(0xc9a84c),new THREE.Color(0x4caf7d),new THREE.Color(0x7289da),new THREE.Color(0xd4eef8)];
-  for (let i=0;i<count;i++){
-    positions[i*3]=(Math.random()-.5)*30;
-    positions[i*3+1]=(Math.random()-.5)*20;
-    positions[i*3+2]=(Math.random()-.5)*15;
-    const c = palette[Math.floor(Math.random()*palette.length)];
-    colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
-  }
-
-  const geom = new THREE.BufferGeometry();
-  geom.setAttribute("position", new THREE.BufferAttribute(positions,3));
-  geom.setAttribute("color", new THREE.BufferAttribute(colors,3));
-
-  const mat = new THREE.PointsMaterial({ size:.04, vertexColors:true, transparent:true, opacity:.5, sizeAttenuation:true });
-  const particles = new THREE.Points(geom, mat);
-  scene.add(particles);
-
-  let mouseX=0, mouseY=0;
-  document.addEventListener("mousemove",(e)=>{
-    mouseX = (e.clientX/window.innerWidth-.5)*.5;
-    mouseY = (e.clientY/window.innerHeight-.5)*.3;
-  });
-
-  let t=0;
-  function animate(){
-    requestAnimationFrame(animate);
-    t += .005;
-    particles.rotation.y = t * .05;
-    particles.rotation.x = t * .02;
-    particles.material.opacity = 0.42 + Math.sin(t * 1.5) * 0.08;
-    camera.position.x += (mouseX - camera.position.x) * .04;
-    camera.position.y += (-mouseY - camera.position.y) * .04;
-    camera.lookAt(scene.position);
-    renderer.render(scene,camera);
-  }
-  animate();
-
-  window.addEventListener("resize",()=>{
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth,window.innerHeight);
-  });
-})();
-
-window.toggleSidebar = () => {
-  document.getElementById("sidenav").classList.toggle("open");
-  document.getElementById("sidenav-overlay").classList.toggle("open");
-};
-window.closeSidebar = () => {
-  document.getElementById("sidenav").classList.remove("open");
-  document.getElementById("sidenav-overlay").classList.remove("open");
-};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    window.toggleSidebar = () => {
+      document.getElementById("sidenav").classList.toggle("open");
+      document.getElementById("sidenav-overlay").classList.toggle("open");
+    };
+    window.closeSidebar = () => {
+      document.getElementById("sidenav").classList.remove("open");
+      document.getElementById("sidenav-overlay").classList.remove("open");
+    };
+  </script>
 </body>
 </html>
