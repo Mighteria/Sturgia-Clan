@@ -37,6 +37,19 @@
       transition:background .06s linear;
     }
 
+    .aurora{
+      position:fixed;inset:-20% -10%;z-index:1;pointer-events:none;filter:blur(80px);opacity:.35;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(0,180,255,.28), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(130,90,255,.24), transparent 42%),
+        radial-gradient(circle at 55% 80%, rgba(0,255,180,.22), transparent 40%);
+      animation:auroraMove 18s ease-in-out infinite alternate;
+    }
+    @keyframes auroraMove{
+      from{transform:translate3d(-2%,1%,0) scale(1)}
+      to{transform:translate3d(2%,-1%,0) scale(1.05)}
+    }
+
     .d-none{display:none!important}
 
     .btn-glass{
@@ -88,9 +101,19 @@
       background:radial-gradient(circle, rgba(168,216,234,.12), transparent 65%);
       pointer-events:none;
     }
+    .logo-ring{
+      width:96px;height:96px;border-radius:50%;margin:0 auto 10px;padding:6px;
+      background:conic-gradient(from 10deg, rgba(168,216,234,.65), rgba(201,168,76,.65), rgba(114,137,218,.65), rgba(168,216,234,.65));
+      box-shadow:0 0 24px rgba(114,137,218,.28);
+      animation:spinSlow 9s linear infinite;
+    }
+    @keyframes spinSlow{to{transform:rotate(360deg)}}
+    .logo-inner{
+      width:100%;height:100%;border-radius:50%;background:rgba(6,9,18,.9);display:flex;align-items:center;justify-content:center;
+    }
     .clan-avatar{
-      width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px;
-      border:1px solid rgba(168,216,234,.35); box-shadow:0 0 24px rgba(114,137,218,.25);
+      width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;
+      border:1px solid rgba(168,216,234,.35);
       background:#111;
     }
     .clan-name{
@@ -219,14 +242,12 @@
       cursor:pointer;font-size:10px;padding:2px 7px;
     }
     .msg-act-btn.danger{border-color:rgba(192,57,43,.35);color:#ff8080}
-
     .msg-edit-wrap{margin-top:8px;display:flex;gap:6px;align-items:center}
     .msg-edit-input{
       flex:1;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.25);
       border-radius:8px;color:var(--text);padding:7px 9px;font-size:13px;outline:none;
     }
     .msg-edit-input:focus{border-color:rgba(168,216,234,.46);box-shadow:0 0 0 2px rgba(168,216,234,.1)}
-
     .chat-input-area{border-top:1px solid rgba(168,216,234,.08);padding:12px;display:flex;gap:8px}
     .chat-input{
       flex:1;border-radius:10px;outline:none;padding:10px 12px;
@@ -274,36 +295,48 @@
     .reply-actions{display:flex;gap:6px;margin-top:10px}
 
     .form-label-custom{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .form-input,.form-select-dark{
+    .form-input{
       width:100%;border-radius:10px;outline:none;border:1px solid rgba(168,216,234,.14);
       background:rgba(168,216,234,.04);color:var(--text);padding:11px 12px;
     }
-    .form-input:focus,.form-select-dark:focus{border-color:rgba(168,216,234,.38);box-shadow:0 0 0 3px rgba(168,216,234,.08)}
+    .form-input:focus{border-color:rgba(168,216,234,.38);box-shadow:0 0 0 3px rgba(168,216,234,.08)}
     textarea.form-input{resize:vertical;min-height:100px}
-    .form-select-dark option{background:#0d1120}
 
-    .select-lux-wrap{position:relative}
-    .select-lux-wrap::before{
-      content:"\f0b0";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
-      position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9fd7ff;font-size:12px;pointer-events:none;
-      text-shadow:0 0 10px rgba(159,215,255,.6);
-    }
-    .select-lux-wrap::after{
-      content:"\f078";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#f0d070;font-size:11px;pointer-events:none;
-    }
-    .form-select-dark.lux{
-      appearance:none;-webkit-appearance:none;padding-left:36px;padding-right:36px;border-radius:12px;
-      border:1px solid rgba(168,216,234,.35);
+    /* LUX CUSTOM CATEGORY SELECT */
+    .lux-select{position:relative}
+    .lux-select-btn{
+      width:100%;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      border-radius:12px; border:1px solid rgba(168,216,234,.35);
       background:linear-gradient(135deg, rgba(168,216,234,.12), rgba(114,137,218,.10)), rgba(8,12,24,.92);
+      color:var(--frost); padding:11px 12px;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 0 1px rgba(168,216,234,.08),0 8px 24px rgba(0,0,0,.28);
-      color:var(--frost);
+      cursor:pointer;
     }
-    .form-select-dark.lux:hover{border-color:rgba(168,216,234,.5)}
-    .form-select-dark.lux:focus{
-      border-color:rgba(168,216,234,.65);
-      box-shadow:0 0 0 3px rgba(168,216,234,.12),0 0 24px rgba(114,137,218,.25);
+    .lux-select-btn:hover{border-color:rgba(168,216,234,.5)}
+    .lux-select-btn:focus{outline:none;border-color:rgba(168,216,234,.65);box-shadow:0 0 0 3px rgba(168,216,234,.12),0 0 24px rgba(114,137,218,.25)}
+    .lux-select-left{display:flex;align-items:center;gap:8px}
+    .lux-select-icon{color:#9fd7ff;text-shadow:0 0 10px rgba(159,215,255,.6);font-size:12px}
+    .lux-select-caret{color:#f0d070;font-size:11px;transition:.2s}
+    .lux-select.open .lux-select-caret{transform:rotate(180deg)}
+    .lux-select-menu{
+      position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:50;
+      border-radius:12px;border:1px solid rgba(168,216,234,.32);
+      background:rgba(8,12,24,.98);
+      box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 18px rgba(114,137,218,.2);
+      padding:8px; display:none;
     }
+    .lux-select.open .lux-select-menu{display:block}
+    .lux-option{
+      width:100%;text-align:left;border:none;cursor:pointer;
+      border-radius:8px;padding:10px 10px;
+      background:transparent;color:var(--text);
+      display:flex;align-items:center;gap:8px;
+      transition:.18s;
+    }
+    .lux-option:hover{background:rgba(168,216,234,.08)}
+    .lux-option.active{background:rgba(114,137,218,.22);color:#fff}
+    .lux-dot{width:8px;height:8px;border-radius:50%}
 
     .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
     .gallery-item{
@@ -415,18 +448,24 @@
 <body>
   <canvas id="bg-canvas"></canvas>
   <div id="mouse-neon"></div>
+  <div class="aurora"></div>
 
   <button type="button" class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   <div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
 
   <nav class="sidenav" id="sidenav">
     <div class="clan-brand">
-      <img
-        class="clan-avatar"
-        src="assets/sturgia.webp"
-        alt="Sturgia"
-        onerror="this.src='assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png'"
-      >
+      <div class="logo-ring">
+        <div class="logo-inner">
+          <img
+            id="clan-logo"
+            class="clan-avatar"
+            src="assets/sturgia.webp"
+            alt="Sturgia"
+            onerror="nextLogo(this)"
+          >
+        </div>
+      </div>
       <div class="clan-name">Sturgia</div>
       <div class="clan-tagline">Elite Clan · Since the North</div>
     </div>
@@ -562,14 +601,19 @@
 
                 <div style="margin-bottom:12px">
                   <label class="form-label-custom">Kategori</label>
-                  <div class="select-lux-wrap">
-                    <select id="forum-tag-input" class="form-select-dark lux">
-                      <option value="general">Genel</option>
-                      <option value="strategy">Strateji</option>
-                      <option value="event">Etkinlik</option>
-                      <option value="suggestion">Öneri</option>
-                      <option value="bug">Hata Bildiri</option>
-                    </select>
+                  <div class="lux-select" id="forum-tag-select">
+                    <button type="button" class="lux-select-btn" id="forum-tag-btn">
+                      <span class="lux-select-left"><i class="fas fa-filter lux-select-icon"></i><span id="forum-tag-label">Genel</span></span>
+                      <i class="fas fa-chevron-down lux-select-caret"></i>
+                    </button>
+                    <div class="lux-select-menu" id="forum-tag-menu">
+                      <button type="button" class="lux-option active" data-value="general" data-label="Genel"><span class="lux-dot" style="background:#7a96b4"></span>Genel</button>
+                      <button type="button" class="lux-option" data-value="strategy" data-label="Strateji"><span class="lux-dot" style="background:#c9a84c"></span>Strateji</button>
+                      <button type="button" class="lux-option" data-value="event" data-label="Etkinlik"><span class="lux-dot" style="background:#4caf7d"></span>Etkinlik</button>
+                      <button type="button" class="lux-option" data-value="suggestion" data-label="Öneri"><span class="lux-dot" style="background:#a8d8ea"></span>Öneri</button>
+                      <button type="button" class="lux-option" data-value="bug" data-label="Hata Bildiri"><span class="lux-dot" style="background:#ff8080"></span>Hata Bildiri</button>
+                    </div>
+                    <input type="hidden" id="forum-tag-input" value="general">
                   </div>
                 </div>
 
@@ -758,7 +802,7 @@
 
       <div style="margin-bottom:12px">
         <label class="form-label-custom">Süre</label>
-        <select id="mute-duration" class="form-select-dark">
+        <select id="mute-duration" class="form-input">
           <option value="5">5 dakika</option>
           <option value="15">15 dakika</option>
           <option value="30">30 dakika</option>
@@ -783,6 +827,21 @@
     <i class="fas fa-check-circle"></i>
     <span id="toast-text">İşlem başarılı</span>
   </div>
+
+  <script>
+    // Logo fallback chain
+    const LOGO_PATHS = [
+      "assets/sturgia.webp",
+      "assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png"
+    ];
+    let logoTryIndex = 0;
+    window.nextLogo = (img) => {
+      logoTryIndex += 1;
+      if (logoTryIndex < LOGO_PATHS.length) {
+        img.src = LOGO_PATHS[logoTryIndex];
+      }
+    };
+  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -812,6 +871,8 @@
     let countdownInterval = null;
     let isSendingMessage = false;
     let editingMessageId = null;
+    let galleryMainUnsub = null;
+    let galleryPendingUnsub = null;
 
     let rolesMap = {
       admin:      { name:"Yönetici", color:"#ff7070", className:"rank-admin", canCreateRole:true, canModerate:true },
@@ -840,7 +901,7 @@
         return `
           <span class="role-pill" style="border-color:${r.color || "#a8d8ea"}66;color:${r.color || "#a8d8ea"}">
             ${escHtml(r.name || k)} <small style="opacity:.7;margin-left:4px">(${k})</small>
-            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole('${k}')" title="Rolü sil"></i>` : ""}
+            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole(event,'${k}')" title="Rolü sil"></i>` : ""}
           </span>
         `;
       }).join("");
@@ -874,11 +935,12 @@
       return hash === storedHash;
     }
 
-    // Prevent accidental '#' navigations
+    // Prevent accidental navigation/submits
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a[href='#']");
       if (a) e.preventDefault();
     });
+    document.addEventListener("submit", (e) => e.preventDefault());
 
     // Session restore
     const rawSession = localStorage.getItem("st_session");
@@ -927,6 +989,41 @@
       txt.style.color = lvl.c;
       txt.textContent = lvl.t;
     };
+
+    // Custom forum select
+    function initForumTagSelect() {
+      const wrap = document.getElementById("forum-tag-select");
+      const btn = document.getElementById("forum-tag-btn");
+      const menu = document.getElementById("forum-tag-menu");
+      const label = document.getElementById("forum-tag-label");
+      const hidden = document.getElementById("forum-tag-input");
+      if (!wrap || !btn || !menu || !label || !hidden) return;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        wrap.classList.toggle("open");
+      });
+
+      menu.querySelectorAll(".lux-option").forEach(opt => {
+        opt.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const v = opt.dataset.value;
+          const l = opt.dataset.label;
+          hidden.value = v;
+          label.textContent = l;
+          menu.querySelectorAll(".lux-option").forEach(o => o.classList.remove("active"));
+          opt.classList.add("active");
+          wrap.classList.remove("open");
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!wrap.contains(e.target)) wrap.classList.remove("open");
+      });
+    }
+    initForumTagSelect();
 
     // Roles listener
     onSnapshot(collection(db, "roles"), (snap) => {
@@ -1015,7 +1112,7 @@
               <td>${muted ? `<span class="muted-tag">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
               <td style="text-align:right">
                 <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-                  <select class="form-select-dark" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">
+                  <select class="form-input" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">
                     ${opts}
                   </select>
                   ${s.id!==user.id ? `
@@ -1084,7 +1181,6 @@
       }, 1000);
     }
 
-    // User admin actions
     window.approveUser = async (id) => {
       await updateDoc(doc(db,"users",id), { approved:true });
       showToast("Kullanıcı onaylandı.");
@@ -1503,11 +1599,14 @@
 
     // Gallery
     function subscribeGallery() {
+      if (galleryMainUnsub) galleryMainUnsub();
+      if (galleryPendingUnsub) galleryPendingUnsub();
+
       const qRef = (user?.role === "admin")
         ? query(collection(db,"gallery"), orderBy("ts","desc"))
         : query(collection(db,"gallery"), where("approved","==",true), orderBy("ts","desc"));
 
-      onSnapshot(qRef, (snap) => {
+      galleryMainUnsub = onSnapshot(qRef, (snap) => {
         const grid = document.getElementById("gallery-grid");
         const empty = document.getElementById("gallery-empty");
         if (!grid) return;
@@ -1540,7 +1639,7 @@
       });
 
       if (user?.role === "admin") {
-        onSnapshot(query(collection(db,"gallery"), where("approved","==",false), orderBy("ts","desc")), (snap) => {
+        galleryPendingUnsub = onSnapshot(query(collection(db,"gallery"), where("approved","==",false), orderBy("ts","desc")), (snap) => {
           const g = document.getElementById("gallery-pending-grid");
           if (!g) return;
           g.innerHTML = "";
@@ -1563,6 +1662,7 @@
         });
       }
     }
+
     subscribeGallery();
 
     window.approveGalleryItem = async (id) => {
@@ -1615,7 +1715,6 @@
       document.getElementById("lightbox-img").src = url;
       document.getElementById("lightbox").classList.add("open");
     };
-
     window.closeLightbox = () => document.getElementById("lightbox").classList.remove("open");
 
     // Auth
@@ -1738,7 +1837,6 @@
     };
 
     async function ensureFallbackRole() {
-      // Prefer sturgiyali if exists, else first non-admin, else create "uyeler"
       if (rolesMap["sturgiyali"]) return "sturgiyali";
       const keys = Object.keys(rolesMap).filter(k => k !== "admin");
       if (keys.length) return keys[0];
@@ -1755,7 +1853,10 @@
       return key;
     }
 
-    window.deleteRole = async (roleKey) => {
+    window.deleteRole = async (event, roleKey) => {
+      event?.preventDefault();
+      event?.stopPropagation();
+
       if (user?.role !== "admin") return showToast("Sadece admin rol silebilir.", true);
       if (roleKey === "admin") return showToast("admin rolü silinemez.", true);
 
@@ -1764,9 +1865,7 @@
       const fallbackRole = await ensureFallbackRole();
 
       const usersWithRole = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
-      for (const u of usersWithRole.docs) {
-        await updateDoc(doc(db,"users",u.id), { role:fallbackRole });
-      }
+      await Promise.all(usersWithRole.docs.map(u => updateDoc(doc(db,"users",u.id), { role:fallbackRole })));
 
       await deleteDoc(doc(db,"roles",roleKey));
       delete rolesMap[roleKey];
