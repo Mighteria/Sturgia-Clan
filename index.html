@@ -11,7 +11,7 @@
 
   <style>
     :root{
-      --black:#03040a; --deep:#070a14; --panel:#0a0d1a; --card:#0d1120;
+      --black:#03040a; --panel:#0a0d1a; --card:#0d1120;
       --ice:#a8d8ea; --frost:#d4eef8; --steel:#7a96b4;
       --gold:#c9a84c; --gold-light:#f0d070;
       --red:#c0392b; --green:#4caf7d;
@@ -33,29 +33,16 @@
     #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
     #mouse-neon{
       position:fixed;inset:0;z-index:2;pointer-events:none;
-      background:radial-gradient(220px circle at var(--mx) var(--my), rgba(168,216,234,.12), rgba(114,137,218,.06) 34%, transparent 66%);
-      transition:background .06s linear;
-    }
-
-    .aurora{
-      position:fixed;inset:-20% -10%;z-index:1;pointer-events:none;filter:blur(80px);opacity:.35;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(0,180,255,.28), transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(130,90,255,.24), transparent 42%),
-        radial-gradient(circle at 55% 80%, rgba(0,255,180,.22), transparent 40%);
-      animation:auroraMove 18s ease-in-out infinite alternate;
-    }
-    @keyframes auroraMove{
-      from{transform:translate3d(-2%,1%,0) scale(1)}
-      to{transform:translate3d(2%,-1%,0) scale(1.05)}
+      background:radial-gradient(240px circle at var(--mx) var(--my), rgba(168,216,234,.12), rgba(114,137,218,.06) 35%, transparent 70%);
+      transition:background .05s linear;
     }
 
     .d-none{display:none!important}
 
     .btn-glass{
       position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:12px 22px;
-      border-radius:12px; border:1px solid rgba(168,216,234,.25);
+      padding:12px 22px; border-radius:12px;
+      border:1px solid rgba(168,216,234,.25);
       border-top-color:rgba(255,255,255,.25); border-left-color:rgba(255,255,255,.16);
       background:rgba(168,216,234,.09);
       backdrop-filter:blur(20px) saturate(200%);
@@ -92,7 +79,7 @@
     }
 
     .clan-brand{
-      padding:28px 20px 20px; text-align:center; border-bottom:1px solid rgba(168,216,234,.08);
+      padding:24px 20px 20px; text-align:center; border-bottom:1px solid rgba(168,216,234,.08);
       position:relative;
     }
     .clan-brand::before{
@@ -101,19 +88,12 @@
       background:radial-gradient(circle, rgba(168,216,234,.12), transparent 65%);
       pointer-events:none;
     }
-    .logo-ring{
-      width:96px;height:96px;border-radius:50%;margin:0 auto 10px;padding:6px;
-      background:conic-gradient(from 10deg, rgba(168,216,234,.65), rgba(201,168,76,.65), rgba(114,137,218,.65), rgba(168,216,234,.65));
-      box-shadow:0 0 24px rgba(114,137,218,.28);
-      animation:spinSlow 9s linear infinite;
-    }
-    @keyframes spinSlow{to{transform:rotate(360deg)}}
-    .logo-inner{
-      width:100%;height:100%;border-radius:50%;background:rgba(6,9,18,.9);display:flex;align-items:center;justify-content:center;
-    }
     .clan-avatar{
-      width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;
+      width:96px;height:96px;display:block;margin:0 auto 12px;
+      object-fit:cover;
+      border-radius:16px;
       border:1px solid rgba(168,216,234,.35);
+      box-shadow:0 0 26px rgba(114,137,218,.26);
       background:#111;
     }
     .clan-name{
@@ -300,9 +280,8 @@
       background:rgba(168,216,234,.04);color:var(--text);padding:11px 12px;
     }
     .form-input:focus{border-color:rgba(168,216,234,.38);box-shadow:0 0 0 3px rgba(168,216,234,.08)}
-    textarea.form-input{resize:vertical;min-height:100px}
+    textarea.form-input{resize:vertical;min-height:90px}
 
-    /* LUX CUSTOM CATEGORY SELECT */
     .lux-select{position:relative}
     .lux-select-btn{
       width:100%;
@@ -448,24 +427,19 @@
 <body>
   <canvas id="bg-canvas"></canvas>
   <div id="mouse-neon"></div>
-  <div class="aurora"></div>
 
   <button type="button" class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   <div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
 
   <nav class="sidenav" id="sidenav">
     <div class="clan-brand">
-      <div class="logo-ring">
-        <div class="logo-inner">
-          <img
-            id="clan-logo"
-            class="clan-avatar"
-            src="assets/sturgia.webp"
-            alt="Sturgia"
-            onerror="nextLogo(this)"
-          >
-        </div>
-      </div>
+      <img
+        id="clan-logo"
+        class="clan-avatar"
+        src="assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-868d5ccc-315b-4e13-a44e-b2caeb79a57d.png"
+        alt="Sturgia"
+        onerror="this.src='assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png'"
+      >
       <div class="clan-name">Sturgia</div>
       <div class="clan-tagline">Elite Clan · Since the North</div>
     </div>
@@ -560,7 +534,10 @@
               </div>
 
               <div id="muted-notice" class="d-none" style="padding:10px;border-top:1px solid rgba(168,216,234,.08)">
-                <div class="muted-notice-bar"><i class="fas fa-volume-mute"></i> Susturuldunuz. Kalan: <span id="mute-countdown"></span></div>
+                <div class="muted-notice-bar">
+                  <div><i class="fas fa-volume-mute"></i> Susturuldunuz. Kalan: <span id="mute-countdown"></span></div>
+                  <div id="mute-reason-view" style="margin-top:5px;font-size:11px;opacity:.9"></div>
+                </div>
               </div>
             </div>
 
@@ -794,7 +771,7 @@
   </div>
 
   <div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
-    <div class="modal-box" style="max-width:390px">
+    <div class="modal-box" style="max-width:420px">
       <button type="button" class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
       <div class="modal-title" style="font-size:18px">Kullanıcıyı Sustur</div>
       <div class="modal-sub" id="mute-target-name">Savaşçı</div>
@@ -814,6 +791,11 @@
         </select>
       </div>
 
+      <div style="margin-bottom:12px">
+        <label class="form-label-custom">Sebep (Opsiyonel)</label>
+        <textarea id="mute-reason" class="form-input" placeholder="Örn: Spam / Küfür / Flood..." style="min-height:78px"></textarea>
+      </div>
+
       <button type="button" class="btn-glass btn-glass-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
     </div>
   </div>
@@ -827,21 +809,6 @@
     <i class="fas fa-check-circle"></i>
     <span id="toast-text">İşlem başarılı</span>
   </div>
-
-  <script>
-    // Logo fallback chain
-    const LOGO_PATHS = [
-      "assets/sturgia.webp",
-      "assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png"
-    ];
-    let logoTryIndex = 0;
-    window.nextLogo = (img) => {
-      logoTryIndex += 1;
-      if (logoTryIndex < LOGO_PATHS.length) {
-        img.src = LOGO_PATHS[logoTryIndex];
-      }
-    };
-  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1109,7 +1076,7 @@
             <tr>
               <td><span class="warrior-name">${escHtml(d.nick)}</span></td>
               <td>${roleBadge(d.role)}</td>
-              <td>${muted ? `<span class="muted-tag">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
+              <td>${muted ? `<span class="muted-tag" title="${escAttr(d.muteReason || '')}">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
               <td style="text-align:right">
                 <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
                   <select class="form-input" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">
@@ -1158,8 +1125,10 @@
           const muted = isMutedNow(md);
           const inputArea = document.getElementById("chat-input-area");
           const mutedNotice = document.getElementById("muted-notice");
+          const reasonView = document.getElementById("mute-reason-view");
           if (inputArea) inputArea.style.display = muted ? "none" : "flex";
           if (mutedNotice) mutedNotice.classList.toggle("d-none", !muted);
+          if (reasonView) reasonView.textContent = muted && md.muteReason ? `Sebep: ${md.muteReason}` : "";
           if (muted && md.muteUntil) startMuteCountdown(md.muteUntil);
         }
       }
@@ -1351,6 +1320,7 @@
       if (d && isMutedNow(d)) { unmute(id); return; }
       document.getElementById("mute-target-id").value = id;
       document.getElementById("mute-target-name").innerText = nick + " adlı savaşçı";
+      document.getElementById("mute-reason").value = "";
       document.getElementById("muteModal").classList.add("open");
     };
 
@@ -1359,6 +1329,8 @@
     window.applyMute = async () => {
       const id = document.getElementById("mute-target-id").value;
       const mins = parseInt(document.getElementById("mute-duration").value, 10);
+      const reason = document.getElementById("mute-reason").value.trim();
+
       let until;
       if (mins === 99999) until = "permanent";
       else {
@@ -1366,13 +1338,17 @@
         d.setMinutes(d.getMinutes() + mins);
         until = d.toISOString();
       }
-      await updateDoc(doc(db,"users",id), { muteUntil:until });
+
+      await updateDoc(doc(db,"users",id), {
+        muteUntil:until,
+        muteReason:reason || null
+      });
       showToast("Kullanıcı susturuldu.");
       closeMuteModal();
     };
 
     window.unmute = async (id) => {
-      await updateDoc(doc(db,"users",id), { muteUntil:null });
+      await updateDoc(doc(db,"users",id), { muteUntil:null, muteReason:null });
       showToast("Mute kaldırıldı.");
     };
 
@@ -1741,7 +1717,7 @@
           const { hash, salt } = await hashPassword(p);
           const res = await addDoc(collection(db,"users"), {
             nick:n, passHash:hash, passSalt:salt,
-            role:"sturgiyali", approved:false, muteUntil:null
+            role:"sturgiyali", approved:false, muteUntil:null, muteReason:null
           });
           d = { id:res.id, nick:n, role:"sturgiyali", approved:false };
           showToast("Hesap oluşturuldu, admin onayı bekliyor.");
@@ -1862,15 +1838,25 @@
 
       if (!confirm(`"${roleKey}" rolünü silmek istediğine emin misin?`)) return;
 
-      const fallbackRole = await ensureFallbackRole();
+      try {
+        const fallbackRole = await ensureFallbackRole();
 
-      const usersWithRole = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
-      await Promise.all(usersWithRole.docs.map(u => updateDoc(doc(db,"users",u.id), { role:fallbackRole })));
+        const usersWithRole = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
+        await Promise.all(usersWithRole.docs.map(u => updateDoc(doc(db,"users",u.id), { role:fallbackRole })));
 
-      await deleteDoc(doc(db,"roles",roleKey));
-      delete rolesMap[roleKey];
-      renderRolesPreview();
-      showToast(`"${roleKey}" rolü silindi.`);
+        await deleteDoc(doc(db,"roles",roleKey));
+        delete rolesMap[roleKey];
+        renderRolesPreview();
+
+        if (user?.role === roleKey) {
+          user.role = fallbackRole;
+          localStorage.setItem("st_session", JSON.stringify(user));
+        }
+
+        showToast(`"${roleKey}" rolü silindi.`);
+      } catch (err) {
+        showToast(`Rol silinemedi: ${err.message}`, true);
+      }
     };
 
     // Session UI
@@ -1968,7 +1954,7 @@
       const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
       camera.position.z = 5;
 
-      const particleCount = 1450;
+      const particleCount = 1650;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
 
@@ -1981,9 +1967,9 @@
       ];
 
       for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 30;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 12;
+        positions[i * 3] = (Math.random() - 0.5) * 32;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 22;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 14;
 
         const c = palette[Math.floor(Math.random() * palette.length)];
         colors[i * 3] = c.r;
