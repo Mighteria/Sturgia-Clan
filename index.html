@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Sturgia Clan | Luxury Neon Hub</title>
+  <title>Sturgia Clan | Elite Dashboard</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Exo+2:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -11,136 +11,105 @@
 
   <style>
     :root{
-      --black:#03040a; --panel:#0a0d1a; --card:#0d1120;
+      --black:#03040a; --deep:#070a14; --panel:#0a0d1a; --card:#0d1120;
       --ice:#a8d8ea; --frost:#d4eef8; --steel:#7a96b4;
       --gold:#c9a84c; --gold-light:#f0d070;
       --red:#c0392b; --green:#4caf7d;
-      --text:#c8d8e8; --muted:#4f6279;
+      --text:#c8d8e8; --muted:#4a6078;
       --sidebar-w:286px;
       --mx:50%; --my:50%;
     }
 
     *{margin:0;padding:0;box-sizing:border-box}
     body{
+      min-height:100vh; overflow-x:hidden; color:var(--text); font-family:'Exo 2',sans-serif;
       background:
-        radial-gradient(circle at 12% 18%, rgba(0,180,255,.08), transparent 35%),
-        radial-gradient(circle at 88% 12%, rgba(140,80,255,.10), transparent 40%),
-        radial-gradient(circle at 50% 85%, rgba(0,255,180,.05), transparent 38%),
+        radial-gradient(circle at 12% 20%, rgba(0,180,255,.08), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(117,83,255,.10), transparent 38%),
+        radial-gradient(circle at 45% 85%, rgba(0,255,180,.05), transparent 38%),
         #03040a;
-      color:var(--text);
-      font-family:'Exo 2',sans-serif;
-      min-height:100vh;
-      overflow-x:hidden;
     }
 
     #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
     #mouse-neon{
-      position:fixed; inset:0; z-index:2; pointer-events:none;
-      background:radial-gradient(240px circle at var(--mx) var(--my),
-        rgba(168,216,234,.13),
-        rgba(114,137,218,.07) 35%,
-        transparent 68%);
-      transition: background .05s linear;
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background:radial-gradient(220px circle at var(--mx) var(--my), rgba(168,216,234,.12), rgba(114,137,218,.06) 34%, transparent 66%);
+      transition:background .06s linear;
     }
 
     .d-none{display:none!important}
 
-    .glass{
-      background:rgba(168,216,234,.05);
-      backdrop-filter:blur(20px) saturate(180%);
-      -webkit-backdrop-filter:blur(20px) saturate(180%);
-      border:1px solid rgba(168,216,234,.14);
-      border-top-color:rgba(168,216,234,.3);
-    }
-
     .btn-glass{
-      position:relative;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px;
       padding:12px 22px;
-      border-radius:12px;
-      border:1px solid rgba(168,216,234,.25);
-      border-top-color:rgba(255,255,255,.25);
-      border-left-color:rgba(255,255,255,.16);
+      border-radius:12px; border:1px solid rgba(168,216,234,.25);
+      border-top-color:rgba(255,255,255,.25); border-left-color:rgba(255,255,255,.16);
       background:rgba(168,216,234,.09);
       backdrop-filter:blur(20px) saturate(200%);
       -webkit-backdrop-filter:blur(20px) saturate(200%);
       color:var(--frost);
-      font-family:'Cinzel',serif;
-      font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-      cursor:pointer;text-decoration:none;
-      transition:all .28s ease;
+      font-family:'Cinzel',serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      cursor:pointer; text-decoration:none; transition:.25s;
     }
     .btn-glass:hover{
       transform:translateY(-2px);
       border-color:rgba(168,216,234,.4);
       color:#fff;
-      box-shadow:
-        0 0 20px rgba(168,216,234,.28),
-        0 0 40px rgba(114,137,218,.18),
-        0 10px 28px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.22);
+      box-shadow:0 0 20px rgba(168,216,234,.28),0 0 40px rgba(114,137,218,.2),0 10px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.22);
     }
-    .btn-glass-sm{padding:7px 12px;font-size:10px;letter-spacing:1.4px}
-    .btn-glass-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.34);color:var(--gold-light)}
+    .btn-glass-sm{padding:7px 12px;font-size:10px;letter-spacing:1.3px}
+    .btn-glass-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.33);color:var(--gold-light)}
     .btn-glass-red{background:rgba(192,57,43,.12);border-color:rgba(192,57,43,.35);color:#ff8080}
-    .btn-discord-glass{background:rgba(114,137,218,.12);border-color:rgba(114,137,218,.35);color:#bccbff}
+    .btn-discord-glass{background:rgba(114,137,218,.12);border-color:rgba(114,137,218,.35);color:#bdcaff}
 
     .hamburger{
       display:none; position:fixed; top:14px; left:14px; z-index:300;
-      background:rgba(8,11,20,.9); border:1px solid rgba(168,216,234,.2);
-      color:var(--ice); border-radius:10px; padding:10px 12px; cursor:pointer;
+      background:rgba(8,11,20,.9); border:1px solid rgba(168,216,234,.2); color:var(--ice);
+      border-radius:10px; padding:10px 12px; cursor:pointer;
     }
-    .sidenav-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:90}
+    .sidenav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90}
 
     .sidenav{
       position:fixed;left:0;top:0;z-index:100;
-      width:var(--sidebar-w);height:100vh;
+      width:var(--sidebar-w);height:100vh;overflow-y:auto;
       background:rgba(5,7,15,.84);
-      backdrop-filter:blur(32px) saturate(140%);
+      backdrop-filter:blur(30px) saturate(140%);
       border-right:1px solid rgba(168,216,234,.08);
-      display:flex;flex-direction:column;overflow-y:auto;
+      display:flex;flex-direction:column;
     }
+
     .clan-brand{
-      padding:28px 20px 22px;
-      border-bottom:1px solid rgba(168,216,234,.08);
-      text-align:center;
+      padding:28px 20px 20px; text-align:center; border-bottom:1px solid rgba(168,216,234,.08);
       position:relative;
     }
     .clan-brand::before{
       content:''; position:absolute; left:50%; top:-55px; transform:translateX(-50%);
-      width:220px;height:220px; border-radius:50%;
+      width:220px;height:220px;border-radius:50%;
       background:radial-gradient(circle, rgba(168,216,234,.12), transparent 65%);
       pointer-events:none;
     }
     .clan-avatar{
-      width:84px;height:84px; border-radius:50%;
-      object-fit:cover; display:block; margin:0 auto 12px;
-      border:1px solid rgba(168,216,234,.35);
-      box-shadow:0 0 24px rgba(114,137,218,.25);
+      width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px;
+      border:1px solid rgba(168,216,234,.35); box-shadow:0 0 24px rgba(114,137,218,.25);
+      background:#111;
     }
     .clan-name{
-      font-family:'Cinzel Decorative',serif;
-      font-size:16px; font-weight:900; letter-spacing:5px;
-      color:var(--gold-light); text-transform:uppercase;
-      text-shadow:0 0 20px rgba(201,168,76,.34),0 0 36px rgba(114,137,218,.2);
+      font-family:'Cinzel Decorative',serif; font-size:16px; font-weight:900; letter-spacing:5px;
+      text-transform:uppercase; color:var(--gold-light);
     }
-    .clan-tagline{font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:4px;text-transform:uppercase}
+    .clan-tagline{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:4px}
 
     .sidenav-menu{flex:1;padding:12px}
-    .nav-section-label{
-      font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted);
-      padding:12px 10px 6px;
-    }
+    .nav-section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:12px 10px 6px}
     .nav-link{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;
-      color:var(--steel)!important; text-decoration:none;
+      display:flex; align-items:center; gap:10px; padding:10px 12px;
       border-radius:10px; border:1px solid transparent;
-      transition:.2s; cursor:pointer;
-      font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      color:var(--steel)!important; text-decoration:none;
+      font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+      cursor:pointer; transition:.2s;
     }
-    .nav-link:hover{background:rgba(168,216,234,.06);color:var(--frost)!important;border-color:rgba(168,216,234,.16)}
-    .nav-link.active{background:rgba(168,216,234,.09);color:var(--ice)!important;border-color:rgba(168,216,234,.26)}
+    .nav-link:hover{background:rgba(168,216,234,.06);border-color:rgba(168,216,234,.16);color:var(--frost)!important}
+    .nav-link.active{background:rgba(168,216,234,.09);border-color:rgba(168,216,234,.26);color:var(--ice)!important}
     .nav-link.admin-link{color:var(--gold)!important}
     .sidenav-footer{padding:12px;border-top:1px solid rgba(168,216,234,.08)}
     .user-nick{display:block;text-align:center;font-family:'Cinzel',serif;font-size:13px;color:var(--ice);margin-bottom:2px}
@@ -151,20 +120,17 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
     .hero-section{
-      position:relative;
-      padding:72px 50px 58px;
-      border-bottom:1px solid rgba(168,216,234,.07);
+      position:relative; padding:72px 50px 58px; border-bottom:1px solid rgba(168,216,234,.07);
       overflow:hidden;
     }
     .hero-section::before{
-      content:'';position:absolute;inset:0;
+      content:''; position:absolute; inset:0;
       background:radial-gradient(circle at 80% 10%, rgba(114,137,218,.14), transparent 42%);
       pointer-events:none;
     }
     .hero-title{
-      font-family:'Cinzel Decorative',serif;
-      font-size:clamp(28px,3.8vw,56px);line-height:1.08;color:#fff;
-      text-shadow:0 0 30px rgba(168,216,234,.20),0 0 60px rgba(114,137,218,.16);
+      font-family:'Cinzel Decorative',serif; font-size:clamp(28px,3.8vw,56px); line-height:1.08; color:#fff;
+      text-shadow:0 0 16px rgba(255,255,255,.08);
     }
     .hero-title span{
       color:transparent;
@@ -173,17 +139,14 @@
     }
     .hero-desc{margin-top:18px;max-width:530px;line-height:1.8;color:var(--steel)}
 
-    .stats-row{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:1px;background:rgba(168,216,234,.05);
-    }
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(168,216,234,.05)}
     .stat-block{background:rgba(5,7,15,.83);padding:24px 30px}
     .stat-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
     .stat-value{font-family:'Cinzel',serif;font-size:38px;color:#fff;margin-top:8px}
 
     .quick-actions{
       padding:28px 50px; border-bottom:1px solid rgba(168,216,234,.06);
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px;
     }
     .qa-card{
       text-decoration:none;color:var(--text);
@@ -201,16 +164,18 @@
     .section-title{font-family:'Cinzel',serif;font-size:20px;color:#fff;letter-spacing:2px}
     .section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(168,216,234,.2),transparent)}
 
+    .row{display:flex;flex-wrap:wrap;gap:12px}
+    .col-12{width:100%}
+    .col-md-4{width:calc(33.333% - 8px)}
+    .col-sm-6{width:calc(50% - 6px)}
+
     .warrior-card{
       border-radius:12px;border:1px solid rgba(168,216,234,.1);
-      background:rgba(10,13,26,.68);
-      padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:rgba(10,13,26,.68);padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
     }
     .warrior-name{font-family:'Cinzel',serif;color:var(--frost);font-size:14px}
-    .badge-rank{
-      font-size:10px;letter-spacing:1px;text-transform:uppercase;
-      padding:5px 10px;border-radius:6px;border:1px solid transparent;font-weight:700;
-    }
+    .badge-rank{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid transparent;font-weight:700}
 
     .access-wall{min-height:56vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
     .access-wall-icon{font-size:62px;color:rgba(192,57,43,.45);margin-bottom:12px}
@@ -222,15 +187,10 @@
       padding:10px 14px;border-radius:10px;color:var(--gold);
     }
 
-    .chat-wrapper{
-      display:grid; grid-template-columns:1fr 290px; gap:16px;
-      height:calc(100vh - 200px);
-    }
+    .chat-wrapper{display:grid;grid-template-columns:1fr 290px;gap:16px;height:calc(100vh - 200px)}
     .chat-main,.chat-sidebar{
       border-radius:14px;border:1px solid rgba(168,216,234,.1);
-      background:rgba(7,10,20,.74);
-      backdrop-filter:blur(20px);
-      -webkit-backdrop-filter:blur(20px);
+      background:rgba(7,10,20,.74);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
       overflow:hidden;
     }
     .chat-main{display:flex;flex-direction:column}
@@ -238,10 +198,7 @@
       padding:14px 16px;border-bottom:1px solid rgba(168,216,234,.08);
       background:rgba(168,216,234,.03);
     }
-    .chat-status-dot{
-      display:inline-block; width:8px;height:8px;border-radius:50%;
-      background:var(--green); box-shadow:0 0 10px var(--green); margin-right:8px;
-    }
+    .chat-status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin-right:8px}
     .chat-title{font-family:'Cinzel',serif;font-size:14px;color:#fff}
     .chat-messages{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
     .msg-author-line{display:flex;gap:8px;align-items:center;margin-bottom:4px}
@@ -249,23 +206,17 @@
     .msg-author.admin{color:#ff7070}.msg-author.westra{color:var(--ice)}.msg-author.sturgiyali{color:var(--steel)}
     .msg-time{font-size:10px;color:var(--muted)}
     .msg-bubble{
-      position:relative; border-radius:6px 12px 12px 12px;
-      background:rgba(168,216,234,.04); border:1px solid rgba(168,216,234,.1);
-      padding:10px 12px; line-height:1.55; font-size:14px;
+      position:relative;border-radius:6px 12px 12px 12px;background:rgba(168,216,234,.04);
+      border:1px solid rgba(168,216,234,.1);padding:10px 12px;line-height:1.55;font-size:14px;
     }
     .msg-bubble.own{
-      border-radius:12px 6px 12px 12px;
-      background:rgba(168,216,234,.08); border-color:rgba(168,216,234,.2);
+      border-radius:12px 6px 12px 12px;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.2);
     }
-    .msg-actions{
-      position:absolute; right:8px; top:8px; display:flex; gap:5px;
-      opacity:0; transition:.18s;
-    }
+    .msg-actions{position:absolute;right:8px;top:8px;display:flex;gap:5px;opacity:0;transition:.18s}
     .msg-bubble:hover .msg-actions{opacity:1}
     .msg-act-btn{
-      border-radius:5px; border:1px solid rgba(168,216,234,.35);
-      background:rgba(5,7,15,.9); color:var(--ice); cursor:pointer;
-      font-size:10px; padding:2px 7px;
+      border-radius:5px;border:1px solid rgba(168,216,234,.35);background:rgba(5,7,15,.9);color:var(--ice);
+      cursor:pointer;font-size:10px;padding:2px 7px;
     }
     .msg-act-btn.danger{border-color:rgba(192,57,43,.35);color:#ff8080}
 
@@ -274,18 +225,12 @@
       flex:1;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.25);
       border-radius:8px;color:var(--text);padding:7px 9px;font-size:13px;outline:none;
     }
-    .msg-edit-input:focus{
-      border-color:rgba(168,216,234,.46);box-shadow:0 0 0 2px rgba(168,216,234,.1);
-    }
+    .msg-edit-input:focus{border-color:rgba(168,216,234,.46);box-shadow:0 0 0 2px rgba(168,216,234,.1)}
 
-    .chat-input-area{
-      border-top:1px solid rgba(168,216,234,.08);
-      padding:12px; display:flex; gap:8px;
-    }
+    .chat-input-area{border-top:1px solid rgba(168,216,234,.08);padding:12px;display:flex;gap:8px}
     .chat-input{
-      flex:1; border-radius:10px; outline:none; padding:10px 12px;
-      border:1px solid rgba(168,216,234,.15);
-      background:rgba(168,216,234,.04); color:var(--text);
+      flex:1;border-radius:10px;outline:none;padding:10px 12px;
+      border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.04);color:var(--text);
     }
     .chat-input:focus{border-color:rgba(168,216,234,.35)}
     .chat-members{padding:10px;overflow:auto}
@@ -293,14 +238,12 @@
     .chat-member-item:hover{background:rgba(168,216,234,.05)}
     .chat-member-name{font-family:'Cinzel',serif;font-size:12px}
     .muted-tag{
-      font-size:9px;text-transform:uppercase;
-      border:1px solid rgba(192,57,43,.25);
-      background:rgba(192,57,43,.14); color:#ff8080;
-      padding:2px 6px; border-radius:4px;
+      font-size:9px;text-transform:uppercase;border:1px solid rgba(192,57,43,.25);
+      background:rgba(192,57,43,.14);color:#ff8080;padding:2px 6px;border-radius:4px;
     }
     .muted-notice-bar{
-      background:rgba(192,57,43,.11); border:1px solid rgba(192,57,43,.2);
-      color:#ff8080; border-radius:8px; padding:10px 12px; text-align:center; font-size:12px;
+      background:rgba(192,57,43,.11);border:1px solid rgba(192,57,43,.2);
+      color:#ff8080;border-radius:8px;padding:10px 12px;text-align:center;font-size:12px;
     }
 
     .forum-compose,.forum-post-card,.reply-card,.settings-card,.admin-table-wrap,.role-card{
@@ -308,14 +251,10 @@
     }
     .forum-compose{padding:20px;margin-bottom:18px}
     .forum-post-card{padding:18px;cursor:pointer;transition:.2s}
-    .forum-post-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(201,168,76,.28);
-      box-shadow:0 0 24px rgba(201,168,76,.12);
-    }
+    .forum-post-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.28);box-shadow:0 0 24px rgba(201,168,76,.12)}
     .forum-tag{
-      display:inline-block;padding:3px 9px;border-radius:5px;
-      font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:700;
+      display:inline-block;padding:3px 9px;border-radius:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      margin-bottom:10px;font-weight:700;
     }
     .tag-general{background:rgba(128,150,176,.14);border:1px solid rgba(128,150,176,.2);color:var(--steel)}
     .tag-strategy{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.2);color:var(--gold)}
@@ -334,73 +273,59 @@
     .reply-text{font-size:14px;line-height:1.6}
     .reply-actions{display:flex;gap:6px;margin-top:10px}
 
-    .form-label-custom{
-      display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;
-      color:var(--muted);margin-bottom:6px;
-    }
+    .form-label-custom{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
     .form-input,.form-select-dark{
-      width:100%; border-radius:10px; outline:none;
-      border:1px solid rgba(168,216,234,.14);
-      background:rgba(168,216,234,.04);
-      color:var(--text); padding:11px 12px;
+      width:100%;border-radius:10px;outline:none;border:1px solid rgba(168,216,234,.14);
+      background:rgba(168,216,234,.04);color:var(--text);padding:11px 12px;
     }
-    .form-input:focus,.form-select-dark:focus{
-      border-color:rgba(168,216,234,.38);
-      box-shadow:0 0 0 3px rgba(168,216,234,.08);
-    }
+    .form-input:focus,.form-select-dark:focus{border-color:rgba(168,216,234,.38);box-shadow:0 0 0 3px rgba(168,216,234,.08)}
     textarea.form-input{resize:vertical;min-height:100px}
     .form-select-dark option{background:#0d1120}
 
     .select-lux-wrap{position:relative}
     .select-lux-wrap::before{
       content:"\f0b0";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
-      position:absolute;left:12px;top:50%;transform:translateY(-50%);
-      color:var(--ice);font-size:12px;pointer-events:none;
+      position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9fd7ff;font-size:12px;pointer-events:none;
+      text-shadow:0 0 10px rgba(159,215,255,.6);
     }
     .select-lux-wrap::after{
       content:"\f078";font-family:"Font Awesome 6 Free","Font Awesome 5 Free";font-weight:900;
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      color:var(--gold-light);font-size:11px;pointer-events:none;
+      position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#f0d070;font-size:11px;pointer-events:none;
     }
     .form-select-dark.lux{
-      appearance:none;-webkit-appearance:none;
-      padding-left:34px;padding-right:34px;border-radius:12px;
-      border:1px solid rgba(168,216,234,.25);
-      background:linear-gradient(135deg, rgba(168,216,234,.09), rgba(114,137,218,.07)), rgba(10,13,26,.85);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(168,216,234,.06);
+      appearance:none;-webkit-appearance:none;padding-left:36px;padding-right:36px;border-radius:12px;
+      border:1px solid rgba(168,216,234,.35);
+      background:linear-gradient(135deg, rgba(168,216,234,.12), rgba(114,137,218,.10)), rgba(8,12,24,.92);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 0 1px rgba(168,216,234,.08),0 8px 24px rgba(0,0,0,.28);
+      color:var(--frost);
     }
+    .form-select-dark.lux:hover{border-color:rgba(168,216,234,.5)}
     .form-select-dark.lux:focus{
-      border-color:rgba(168,216,234,.45);
-      box-shadow:0 0 0 3px rgba(168,216,234,.1),0 0 18px rgba(114,137,218,.18);
+      border-color:rgba(168,216,234,.65);
+      box-shadow:0 0 0 3px rgba(168,216,234,.12),0 0 24px rgba(114,137,218,.25);
     }
 
     .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
     .gallery-item{
-      position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;
-      border:1px solid rgba(168,216,234,.12);background:rgba(10,13,26,.7);cursor:pointer;
+      position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;cursor:pointer;
+      border:1px solid rgba(168,216,234,.12);background:rgba(10,13,26,.7);
     }
-    .gallery-item img{
-      width:100%;height:100%;object-fit:cover;filter:brightness(.9);
-      transition:.25s;
-    }
+    .gallery-item img{width:100%;height:100%;object-fit:cover;filter:brightness(.9);transition:.25s}
     .gallery-item:hover img{filter:brightness(1);transform:scale(1.03)}
     .gallery-item-overlay{
-      position:absolute;inset:0;
-      background:linear-gradient(to top, rgba(5,7,15,.86), transparent 55%);
+      position:absolute;inset:0;background:linear-gradient(to top, rgba(5,7,15,.86), transparent 55%);
       display:flex;align-items:flex-end;padding:10px;
     }
     .gallery-item-caption{font-family:'Cinzel',serif;font-size:12px;color:var(--frost)}
     .gallery-delete-btn,.gallery-approve-btn{
-      position:absolute;top:10px;border:none;border-radius:6px;color:#fff;
-      font-size:11px;padding:4px 8px;cursor:pointer;
+      position:absolute;top:10px;border:none;border-radius:6px;color:#fff;font-size:11px;padding:4px 8px;cursor:pointer;
     }
     .gallery-delete-btn{right:10px;background:rgba(192,57,43,.75)}
     .gallery-approve-btn{left:10px;background:rgba(76,175,125,.78)}
 
     .gallery-upload-zone{
-      border:2px dashed rgba(168,216,234,.28);border-radius:14px;
-      padding:34px;text-align:center;background:rgba(168,216,234,.03);
-      margin-bottom:18px;cursor:pointer;
+      border:2px dashed rgba(168,216,234,.28);border-radius:14px;padding:34px;text-align:center;
+      background:rgba(168,216,234,.03);margin-bottom:18px;cursor:pointer;
     }
     .gallery-upload-zone:hover{border-color:rgba(168,216,234,.45);background:rgba(168,216,234,.08)}
     .gallery-upload-zone.dragover{border-color:var(--ice);background:rgba(168,216,234,.1)}
@@ -415,26 +340,16 @@
     .settings-card{max-width:530px;padding:24px}
 
     .admin-table-wrap{overflow:hidden}
-    .admin-table-head{
-      padding:16px;border-bottom:1px solid rgba(168,216,234,.1);
-      background:rgba(168,216,234,.03);
-    }
+    .admin-table-head{padding:16px;border-bottom:1px solid rgba(168,216,234,.1);background:rgba(168,216,234,.03)}
     table{width:100%;border-collapse:collapse}
-    thead th{
-      padding:11px 14px;text-align:left;
-      font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
-    }
-    tbody td{
-      padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);font-size:13px;
-    }
+    thead th{padding:11px 14px;text-align:left;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+    tbody td{padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
     tbody tr:hover{background:rgba(168,216,234,.04)}
 
     .role-card{padding:18px;margin-bottom:18px}
     .role-pills{display:flex;gap:8px;flex-wrap:wrap}
     .role-pill{
-      border:1px solid rgba(168,216,234,.25);
-      border-radius:999px;padding:6px 10px;font-size:11px;
-      background:rgba(168,216,234,.08);
+      border:1px solid rgba(168,216,234,.25);border-radius:999px;padding:6px 10px;font-size:11px;background:rgba(168,216,234,.08);
       display:inline-flex;align-items:center;
     }
     .role-del{margin-left:8px;color:#ff8b8b;cursor:pointer;font-size:11px}
@@ -446,43 +361,30 @@
     }
     .modal-overlay.open{display:flex}
     .modal-box{
-      width:100%;max-width:460px;position:relative;
-      border-radius:16px;border:1px solid rgba(168,216,234,.15);
-      background:rgba(8,11,20,.96);
-      padding:28px;
+      width:100%;max-width:460px;position:relative;border-radius:16px;border:1px solid rgba(168,216,234,.15);
+      background:rgba(8,11,20,.96);padding:28px;
       box-shadow:0 20px 70px rgba(0,0,0,.6),0 0 40px rgba(114,137,218,.12);
     }
     .modal-close{
-      position:absolute;top:12px;right:12px; width:30px;height:30px;
-      border-radius:50%;border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.08);color:var(--muted);cursor:pointer;
+      position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:var(--muted);cursor:pointer;
     }
-    .modal-title{
-      text-align:center;font-family:'Cinzel Decorative',serif;font-size:20px;color:#fff;margin-bottom:4px;
-    }
-    .modal-sub{
-      text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;
-    }
+    .modal-title{text-align:center;font-family:'Cinzel Decorative',serif;font-size:20px;color:#fff;margin-bottom:4px}
+    .modal-sub{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
 
     .toast-msg{
-      position:fixed;top:18px;right:18px;z-index:3000;
-      transform:translateX(130%); transition:.35s;
-      border-radius:12px; border:1px solid rgba(168,216,234,.2);
-      background:rgba(8,11,20,.9);padding:11px 14px;
-      display:flex;align-items:center;gap:8px;
-      box-shadow:0 10px 28px rgba(0,0,0,.45);
+      position:fixed;top:18px;right:18px;z-index:3000;transform:translateX(130%);transition:.35s;
+      border-radius:12px;border:1px solid rgba(168,216,234,.2);background:rgba(8,11,20,.9);
+      padding:11px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 10px 28px rgba(0,0,0,.45);
     }
     .toast-msg.show{transform:translateX(0)}
 
     .lightbox-overlay{
-      display:none;position:fixed;inset:0;z-index:2000;
-      background:rgba(0,0,0,.92);backdrop-filter:blur(8px);
-      align-items:center;justify-content:center;
+      display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.92);
+      backdrop-filter:blur(8px);align-items:center;justify-content:center;
     }
     .lightbox-overlay.open{display:flex}
-    .lightbox-img{
-      max-width:90vw;max-height:86vh;border-radius:10px;border:1px solid rgba(168,216,234,.18);
-    }
+    .lightbox-img{max-width:90vw;max-height:86vh;border-radius:10px;border:1px solid rgba(168,216,234,.18)}
     .lightbox-close{
       position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:50%;
       border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;
@@ -490,11 +392,6 @@
 
     .empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
     .empty-state i{font-size:48px;opacity:.2;display:block;margin-bottom:10px}
-
-    .row{display:flex;flex-wrap:wrap;gap:12px}
-    .col-12{width:100%}
-    .col-md-4{width:calc(33.333% - 8px)}
-    .col-sm-6{width:calc(50% - 6px)}
 
     @media (max-width:960px){
       .hamburger{display:block}
@@ -519,7 +416,7 @@
   <canvas id="bg-canvas"></canvas>
   <div id="mouse-neon"></div>
 
-  <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button type="button" class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
   <div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
 
   <nav class="sidenav" id="sidenav">
@@ -531,7 +428,7 @@
         onerror="this.src='assets/c__Users_murad_AppData_Roaming_Cursor_User_workspaceStorage_3207f2027692b663c0b0fda2bdc6363c_images_Sturgia-842cff90-5a67-485d-bfbd-c541f63964b2.png'"
       >
       <div class="clan-name">Sturgia</div>
-      <div class="clan-tagline">Elite Clan · Neon Command</div>
+      <div class="clan-tagline">Elite Clan · Since the North</div>
     </div>
 
     <div class="sidenav-menu">
@@ -554,12 +451,12 @@
 
     <div class="sidenav-footer">
       <div id="auth-section">
-        <button class="btn-glass" style="width:100%" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+        <button type="button" class="btn-glass" style="width:100%" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
       </div>
       <div id="user-section" class="d-none">
         <span id="display-nick" class="user-nick"></span>
         <span id="display-rank" class="user-rank-badge"></span>
-        <button class="btn-glass btn-glass-red btn-glass-sm" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
+        <button type="button" class="btn-glass btn-glass-red btn-glass-sm" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
       </div>
     </div>
   </nav>
@@ -567,11 +464,8 @@
   <main class="main-content">
     <section id="page-home">
       <div class="hero-section">
-        <h1 class="hero-title">Kuzeyin<br><span>Neon Nefesi</span></h1>
-        <p class="hero-desc">
-          Lüks, akıcı ve canlı bir topluluk merkezi. Sohbet, forum, galeri ve yönetim tek panelde.
-          Koyu tema korunur, neon ruh kaybolmaz.
-        </p>
+        <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
+        <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Sohbet, forum, galeri ve yönetim tek merkezde.</p>
       </div>
 
       <div class="stats-row">
@@ -605,7 +499,7 @@
             <div class="access-wall-icon"><i class="fas fa-lock"></i></div>
             <div class="access-wall-title">Erişim Kısıtlandı</div>
             <div class="access-wall-sub" id="chat-wall-msg">Sohbet için giriş yapmalısın.</div>
-            <button class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+            <button type="button" class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
           </div>
         </div>
 
@@ -623,7 +517,7 @@
 
               <div class="chat-input-area" id="chat-input-area">
                 <input id="chat-input" class="chat-input" placeholder="Bir şeyler yaz..." onkeydown="handleChatKeydown(event)">
-                <button id="send-btn" class="btn-glass btn-glass-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                <button type="button" id="send-btn" class="btn-glass btn-glass-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
               </div>
 
               <div id="muted-notice" class="d-none" style="padding:10px;border-top:1px solid rgba(168,216,234,.08)">
@@ -651,7 +545,7 @@
             <div class="access-wall-icon"><i class="fas fa-shield-alt"></i></div>
             <div class="access-wall-title">Forum Kilitli</div>
             <div class="access-wall-sub" id="forum-wall-msg">Forum için giriş yapmalısın.</div>
-            <button class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+            <button type="button" class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
           </div>
         </div>
 
@@ -685,27 +579,27 @@
                 </div>
 
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button class="btn-glass btn-glass-gold" onclick="submitForumPost()"><i class="fas fa-paper-plane"></i>Gönder</button>
-                  <button class="btn-glass" onclick="document.getElementById('forum-compose-area').classList.add('d-none')">İptal</button>
+                  <button type="button" class="btn-glass btn-glass-gold" onclick="submitForumPost()"><i class="fas fa-paper-plane"></i>Gönder</button>
+                  <button type="button" class="btn-glass" onclick="document.getElementById('forum-compose-area').classList.add('d-none')">İptal</button>
                 </div>
               </div>
             </div>
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
               <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn-glass btn-glass-sm" onclick="filterForum('all')">Tümü</button>
-                <button class="btn-glass btn-glass-sm" onclick="filterForum('general')">Genel</button>
-                <button class="btn-glass btn-glass-sm btn-glass-gold" onclick="filterForum('strategy')">Strateji</button>
-                <button class="btn-glass btn-glass-sm" onclick="filterForum('event')">Etkinlik</button>
+                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('all')">Tümü</button>
+                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('general')">Genel</button>
+                <button type="button" class="btn-glass btn-glass-sm btn-glass-gold" onclick="filterForum('strategy')">Strateji</button>
+                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('event')">Etkinlik</button>
               </div>
-              <button class="btn-glass btn-glass-gold" onclick="toggleCompose()"><i class="fas fa-plus"></i>Yeni Konu</button>
+              <button type="button" class="btn-glass btn-glass-gold" onclick="toggleCompose()"><i class="fas fa-plus"></i>Yeni Konu</button>
             </div>
 
             <div id="forum-posts" style="display:flex;flex-direction:column;gap:12px"></div>
           </div>
 
           <div id="forum-detail-view" class="d-none">
-            <button class="btn-glass btn-glass-sm" style="margin-bottom:14px" onclick="backToForum()"><i class="fas fa-arrow-left"></i>Geri</button>
+            <button type="button" class="btn-glass btn-glass-sm" style="margin-bottom:14px" onclick="backToForum()"><i class="fas fa-arrow-left"></i>Geri</button>
             <div id="forum-detail-content"></div>
 
             <div style="margin-top:18px">
@@ -714,7 +608,7 @@
 
               <div id="reply-compose" class="d-none" style="margin-top:10px">
                 <textarea id="reply-input" class="form-input" placeholder="Yanıtını yaz..." style="min-height:82px;margin-bottom:10px"></textarea>
-                <button class="btn-glass" onclick="submitReply()"><i class="fas fa-reply"></i>Yanıtla</button>
+                <button type="button" class="btn-glass" onclick="submitReply()"><i class="fas fa-reply"></i>Yanıtla</button>
               </div>
             </div>
           </div>
@@ -727,14 +621,7 @@
         <div class="section-header"><div class="section-title">Klan Galerisi</div><div class="section-rule"></div></div>
 
         <div id="gallery-upload-area" class="d-none">
-          <div
-            class="gallery-upload-zone"
-            id="upload-zone"
-            onclick="document.getElementById('gallery-file-input').click()"
-            ondragover="handleDragOver(event)"
-            ondragleave="handleDragLeave(event)"
-            ondrop="handleDrop(event)"
-          >
+          <div class="gallery-upload-zone" id="upload-zone" onclick="document.getElementById('gallery-file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
             <span class="gallery-upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
             <div class="gallery-upload-text">
               <strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br>
@@ -776,7 +663,7 @@
           <div id="strength-bar" style="height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:8px"></div>
           <div id="strength-text" style="font-size:10px;letter-spacing:1px;margin-top:4px"></div>
 
-          <button class="btn-glass" style="margin-top:16px;width:100%" onclick="updatePassword()"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
+          <button type="button" class="btn-glass" style="margin-top:16px;width:100%" onclick="updatePassword()"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
         </div>
       </div>
     </section>
@@ -791,9 +678,7 @@
         </div>
 
         <div class="role-card">
-          <div style="font-family:'Cinzel',serif;color:#fff;font-size:15px;margin-bottom:12px">
-            <i class="fas fa-layer-group" style="color:var(--gold)"></i> Yeni Rol Oluştur (Sadece Admin)
-          </div>
+          <div style="font-family:'Cinzel',serif;color:#fff;font-size:15px;margin-bottom:12px"><i class="fas fa-layer-group" style="color:var(--gold)"></i> Yeni Rol Oluştur (Sadece Admin)</div>
 
           <div class="row">
             <div class="col-md-4">
@@ -817,12 +702,12 @@
               </label>
             </div>
             <div class="col-md-4">
-              <button class="btn-glass btn-glass-gold" style="width:100%" onclick="createRole()">Rol Oluştur</button>
+              <button type="button" class="btn-glass btn-glass-gold" style="width:100%" onclick="createRole()">Rol Oluştur</button>
             </div>
           </div>
 
           <div style="margin-top:12px">
-            <div class="form-label-custom" style="margin-bottom:8px">Mevcut Roller (özel roller silinebilir)</div>
+            <div class="form-label-custom" style="margin-bottom:8px">Mevcut Roller (admin dışı roller silinebilir)</div>
             <div id="roles-preview" class="role-pills"></div>
           </div>
         </div>
@@ -843,7 +728,7 @@
 
   <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal()">
     <div class="modal-box">
-      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      <button type="button" class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
       <div class="modal-title">Klan Girişi</div>
       <div class="modal-sub">Kimliğini doğrula</div>
 
@@ -859,14 +744,14 @@
 
       <div id="modal-error" style="display:none;font-size:12px;color:#ff8080;margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(192,57,43,.2);background:rgba(192,57,43,.1)"></div>
 
-      <button id="login-btn" class="btn-glass" style="width:100%;margin-top:14px" onclick="processAuth()"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
+      <button type="button" id="login-btn" class="btn-glass" style="width:100%;margin-top:14px" onclick="processAuth()"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
       <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">Hesap yoksa otomatik oluşturulur ve admin onayı bekler.</div>
     </div>
   </div>
 
   <div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
     <div class="modal-box" style="max-width:390px">
-      <button class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
+      <button type="button" class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
       <div class="modal-title" style="font-size:18px">Kullanıcıyı Sustur</div>
       <div class="modal-sub" id="mute-target-name">Savaşçı</div>
       <input id="mute-target-id" type="hidden">
@@ -885,12 +770,12 @@
         </select>
       </div>
 
-      <button class="btn-glass btn-glass-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
+      <button type="button" class="btn-glass btn-glass-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
     </div>
   </div>
 
   <div class="lightbox-overlay" id="lightbox" onclick="if(event.target===this)closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+    <button type="button" class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
     <img id="lightbox-img" class="lightbox-img" src="" alt="">
   </div>
 
@@ -923,11 +808,10 @@
     let currentFilter = "all";
     let forumPosts = [];
     let allUsers = {};
+    let messagesCache = [];
     let countdownInterval = null;
     let isSendingMessage = false;
     let editingMessageId = null;
-
-    const protectedRoles = ["admin","westra","sturgiyali"];
 
     let rolesMap = {
       admin:      { name:"Yönetici", color:"#ff7070", className:"rank-admin", canCreateRole:true, canModerate:true },
@@ -942,14 +826,27 @@
     function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
     function escAttr(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
     function isMutedNow(data){ if(!data?.muteUntil) return false; if(data.muteUntil==="permanent") return true; return new Date(data.muteUntil) > new Date(); }
-
     function roleDisplay(roleKey){ return rolesMap[roleKey] || rolesMap["sturgiyali"]; }
     function roleBadge(roleKey){
       const r = roleDisplay(roleKey);
       return `<span class="badge-rank ${r.className || ''}" style="border-color:${r.color}66;color:${r.color};background:${r.color}1a">${escHtml(r.name || roleKey)}</span>`;
     }
 
-    window.showToast = (msg, isError = false) => {
+    function renderRolesPreview() {
+      const box = document.getElementById("roles-preview");
+      if (!box) return;
+      box.innerHTML = Object.entries(rolesMap).map(([k, r]) => {
+        const deletable = user?.role === "admin" && k !== "admin";
+        return `
+          <span class="role-pill" style="border-color:${r.color || "#a8d8ea"}66;color:${r.color || "#a8d8ea"}">
+            ${escHtml(r.name || k)} <small style="opacity:.7;margin-left:4px">(${k})</small>
+            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole('${k}')" title="Rolü sil"></i>` : ""}
+          </span>
+        `;
+      }).join("");
+    }
+
+    function showToast(msg, isError = false) {
       const t = document.getElementById("toast");
       document.getElementById("toast-text").innerText = msg;
       t.style.borderColor = isError ? "rgba(192,57,43,.35)" : "rgba(168,216,234,.2)";
@@ -957,7 +854,8 @@
       t.querySelector("i").className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
       t.classList.add("show");
       setTimeout(() => t.classList.remove("show"), 3500);
-    };
+    }
+    window.showToast = showToast;
 
     async function hashPassword(password, salt = null) {
       if (!salt) {
@@ -976,6 +874,13 @@
       return hash === storedHash;
     }
 
+    // Prevent accidental '#' navigations
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href='#']");
+      if (a) e.preventDefault();
+    });
+
+    // Session restore
     const rawSession = localStorage.getItem("st_session");
     if (rawSession) {
       try {
@@ -986,7 +891,9 @@
           user = null;
         } else {
           const d = userDoc.data();
-          user.role = d.role; user.approved = d.approved; user.nick = d.nick;
+          user.role = d.role;
+          user.approved = d.approved;
+          user.nick = d.nick;
           localStorage.setItem("st_session", JSON.stringify(user));
         }
       } catch {
@@ -1021,20 +928,7 @@
       txt.textContent = lvl.t;
     };
 
-    function renderRolesPreview() {
-      const box = document.getElementById("roles-preview");
-      if (!box) return;
-      box.innerHTML = Object.entries(rolesMap).map(([k, r]) => {
-        const deletable = user?.role === "admin" && !protectedRoles.includes(k);
-        return `
-          <span class="role-pill" style="border-color:${r.color || "#a8d8ea"}66;color:${r.color || "#a8d8ea"}">
-            ${escHtml(r.name || k)} <small style="opacity:.7;margin-left:4px">(${k})</small>
-            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole('${k}')" title="Rolü sil"></i>` : ""}
-          </span>
-        `;
-      }).join("");
-    }
-
+    // Roles listener
     onSnapshot(collection(db, "roles"), (snap) => {
       if (!snap.empty) {
         const next = {};
@@ -1044,6 +938,7 @@
       renderRolesPreview();
     });
 
+    // Users listener
     onSnapshot(collection(db, "users"), (snap) => {
       const grid = document.getElementById("warrior-grid");
       const table = document.getElementById("admin-table-body");
@@ -1097,7 +992,7 @@
               <span class="chat-member-name" style="${muted ? "color:var(--muted)" : ""}">${escHtml(d.nick)}</span>
               <div style="display:flex;align-items:center;gap:6px">
                 ${muted ? `<span class="muted-tag">mute</span>` : ""}
-                ${(user?.role === "admin" && s.id !== user.id) ? `<button class="btn-glass btn-glass-sm btn-glass-red" style="padding:4px 8px" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊" : "🔇"}</button>` : ""}
+                ${(user?.role === "admin" && s.id !== user.id) ? `<button type="button" class="btn-glass btn-glass-sm btn-glass-red" style="padding:4px 8px" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊" : "🔇"}</button>` : ""}
               </div>
             </div>
           `;
@@ -1124,8 +1019,8 @@
                     ${opts}
                   </select>
                   ${s.id!==user.id ? `
-                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊 Unmute" : "🔇 Mute"}</button>
-                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>
+                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊 Unmute" : "🔇 Mute"}</button>
+                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>
                   ` : ""}
                 </div>
               </td>
@@ -1149,8 +1044,8 @@
                     <div style="font-size:10px;color:var(--gold);margin-top:4px">⏳ Onay Bekliyor</div>
                   </div>
                   <div style="display:flex;gap:8px">
-                    <button class="btn-glass btn-glass-sm" style="color:var(--green);border-color:rgba(76,175,125,.24)" onclick="approveUser('${s.id}')"><i class="fas fa-check"></i></button>
-                    <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-times"></i></button>
+                    <button type="button" class="btn-glass btn-glass-sm" style="color:var(--green);border-color:rgba(76,175,125,.24)" onclick="approveUser('${s.id}')"><i class="fas fa-check"></i></button>
+                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-times"></i></button>
                   </div>
                 </div>
               </div>
@@ -1182,13 +1077,14 @@
       const end = new Date(until);
       countdownInterval = setInterval(() => {
         const diff = end - new Date();
-        if (diff <= 0) { clearInterval(countdownInterval); location.reload(); return; }
+        if (diff <= 0) { clearInterval(countdownInterval); return; }
         const m = Math.floor(diff/60000);
         const s = Math.floor((diff%60000)/1000);
         el.innerText = `${m}dk ${s}s`;
       }, 1000);
     }
 
+    // User admin actions
     window.approveUser = async (id) => {
       await updateDoc(doc(db,"users",id), { approved:true });
       showToast("Kullanıcı onaylandı.");
@@ -1200,11 +1096,12 @@
       showToast("Kullanıcı silindi.");
     };
 
-    // CHAT
-    onSnapshot(query(collection(db,"messages"), orderBy("ts")), (snap) => {
+    // Chat
+    function renderChatMessages() {
       const box = document.getElementById("chat-messages");
       if (!box) return;
-      if (snap.empty) {
+
+      if (!messagesCache.length) {
         box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`;
         return;
       }
@@ -1212,8 +1109,8 @@
       box.innerHTML = "";
       let lastAuthor = "";
 
-      snap.forEach(s => {
-        const d = s.data();
+      messagesCache.forEach(m => {
+        const d = m.data;
         const isOwn = d.uid === user?.id;
         const roleClass = d.role || "sturgiyali";
         const showHeader = lastAuthor !== d.uid;
@@ -1231,16 +1128,16 @@
               ${escHtml(d.text || "")} ${edited}
               ${(canEdit || canDelete) ? `
                 <div class="msg-actions">
-                  ${canEdit ? `<button class="msg-act-btn" onclick="startInlineEdit('${s.id}')"><i class="fas fa-pen"></i></button>` : ""}
-                  ${canDelete ? `<button class="msg-act-btn danger" onclick="deleteMsg('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
+                  ${canEdit ? `<button type="button" class="msg-act-btn" onclick="startInlineEdit('${m.id}')"><i class="fas fa-pen"></i></button>` : ""}
+                  ${canDelete ? `<button type="button" class="msg-act-btn danger" onclick="deleteMsg('${m.id}')"><i class="fas fa-trash"></i></button>` : ""}
                 </div>
               ` : ""}
 
-              ${editingMessageId === s.id ? `
+              ${editingMessageId === m.id ? `
                 <div class="msg-edit-wrap">
-                  <input id="edit-input-${s.id}" class="msg-edit-input" value="${escAttr(d.text || "")}">
-                  <button class="btn-glass btn-glass-sm" onclick="saveInlineEdit('${s.id}')"><i class="fas fa-check"></i></button>
-                  <button class="btn-glass btn-glass-sm btn-glass-red" onclick="cancelInlineEdit()"><i class="fas fa-times"></i></button>
+                  <input id="edit-input-${m.id}" class="msg-edit-input" value="${escAttr(d.text || "")}" onkeydown="handleInlineEditKey(event,'${m.id}')">
+                  <button type="button" class="btn-glass btn-glass-sm" onclick="saveInlineEdit('${m.id}')"><i class="fas fa-check"></i></button>
+                  <button type="button" class="btn-glass btn-glass-sm btn-glass-red" onclick="cancelInlineEdit()"><i class="fas fa-times"></i></button>
                 </div>
               ` : ""}
             </div>
@@ -1249,12 +1146,28 @@
       });
 
       box.scrollTop = box.scrollHeight;
+    }
+
+    onSnapshot(query(collection(db,"messages"), orderBy("ts")), (snap) => {
+      messagesCache = snap.docs.map(d => ({ id:d.id, data:d.data() }));
+      renderChatMessages();
     });
 
     window.handleChatKeydown = (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         sendMessage();
+      }
+    };
+
+    window.handleInlineEditKey = (event, id) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        saveInlineEdit(id);
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelInlineEdit();
       }
     };
 
@@ -1289,9 +1202,9 @@
       }
     };
 
-    window.startInlineEdit = async (id) => {
+    window.startInlineEdit = (id) => {
       editingMessageId = id;
-      show("chat");
+      renderChatMessages();
       setTimeout(() => {
         const el = document.getElementById(`edit-input-${id}`);
         if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
@@ -1300,7 +1213,7 @@
 
     window.cancelInlineEdit = () => {
       editingMessageId = null;
-      show("chat");
+      renderChatMessages();
     };
 
     window.saveInlineEdit = async (id) => {
@@ -1320,6 +1233,7 @@
 
       await updateDoc(ref, { text, editedAt:new Date().toISOString() });
       editingMessageId = null;
+      renderChatMessages();
       showToast("Mesaj güncellendi.");
     };
 
@@ -1331,10 +1245,11 @@
       if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu mesajı silemezsin.", true);
 
       await deleteDoc(ref);
+      if (editingMessageId === id) editingMessageId = null;
       showToast("Mesaj silindi.");
     };
 
-    // MUTE
+    // Mute
     window.openMuteModal = (id, nick) => {
       const d = allUsers[id];
       if (d && isMutedNow(d)) { unmute(id); return; }
@@ -1365,7 +1280,7 @@
       showToast("Mute kaldırıldı.");
     };
 
-    // FORUM
+    // Forum
     onSnapshot(query(collection(db,"forum_posts"), orderBy("ts","desc")), (snap) => {
       forumPosts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
       document.getElementById("forum-count").innerText = snap.size;
@@ -1455,8 +1370,8 @@
 
           ${canManage ? `
             <div style="display:flex;gap:8px;margin-top:14px">
-              <button class="btn-glass btn-glass-sm" onclick="editPost('${id}')"><i class="fas fa-pen"></i>Düzenle</button>
-              <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deletePost('${id}')"><i class="fas fa-trash"></i>Sil</button>
+              <button type="button" class="btn-glass btn-glass-sm" onclick="editPost('${id}')"><i class="fas fa-pen"></i>Düzenle</button>
+              <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deletePost('${id}')"><i class="fas fa-trash"></i>Sil</button>
             </div>
           ` : ""}
         </div>
@@ -1528,8 +1443,8 @@
             <div class="reply-text">${escHtml(r.text || "").replace(/\n/g,"<br>")}</div>
             ${canManage ? `
               <div class="reply-actions">
-                <button class="btn-glass btn-glass-sm" onclick="editReply('${postId}','${d.id}')"><i class="fas fa-pen"></i>Düzenle</button>
-                <button class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteReply('${postId}','${d.id}')"><i class="fas fa-trash"></i>Sil</button>
+                <button type="button" class="btn-glass btn-glass-sm" onclick="editReply('${postId}','${d.id}')"><i class="fas fa-pen"></i>Düzenle</button>
+                <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteReply('${postId}','${d.id}')"><i class="fas fa-trash"></i>Sil</button>
               </div>
             ` : ""}
           </div>
@@ -1547,7 +1462,7 @@
       });
 
       const post = forumPosts.find(p => p.id === currentForumPostId);
-      await updateDoc(doc(db,"forum_posts",currentForumPostId), { replyCount:(post?.replyCount || 0) + 1 });
+      await updateDoc(doc(db,"forum_posts",currentForumPostId), { replyCount: (post?.replyCount || 0) + 1 });
 
       document.getElementById("reply-input").value = "";
       await loadReplies(currentForumPostId);
@@ -1581,12 +1496,12 @@
 
       await deleteDoc(ref);
       const post = forumPosts.find(p => p.id === postId);
-      await updateDoc(doc(db,"forum_posts",postId), { replyCount:Math.max(0,(post?.replyCount || 0) - 1) });
+      await updateDoc(doc(db,"forum_posts",postId), { replyCount: Math.max(0, (post?.replyCount || 0) - 1) });
       await loadReplies(postId);
       showToast("Yanıt silindi.");
     };
 
-    // GALLERY
+    // Gallery
     function subscribeGallery() {
       const qRef = (user?.role === "admin")
         ? query(collection(db,"gallery"), orderBy("ts","desc"))
@@ -1617,8 +1532,8 @@
               <div class="gallery-item-overlay">
                 <span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}${d.approved===false ? " · (onay bekliyor)" : ""}</span>
               </div>
-              ${showApprove ? `<button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i></button>` : ""}
-              ${showDelete ? `<button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
+              ${showApprove ? `<button type="button" class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i></button>` : ""}
+              ${showDelete ? `<button type="button" class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
             </div>
           `;
         });
@@ -1640,8 +1555,8 @@
               <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
                 <img src="${escAttr(d.url)}" alt="${escAttr(d.caption || "")}">
                 <div class="gallery-item-overlay"><span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}</span></div>
-                <button class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i> Onay</button>
-                <button class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>
+                <button type="button" class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i> Onay</button>
+                <button type="button" class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>
               </div>
             `;
           });
@@ -1703,7 +1618,7 @@
 
     window.closeLightbox = () => document.getElementById("lightbox").classList.remove("open");
 
-    // AUTH
+    // Auth
     window.processAuth = async () => {
       const n = document.getElementById("login-nick").value.trim();
       const p = document.getElementById("login-pass").value;
@@ -1757,7 +1672,7 @@
         }
 
         localStorage.setItem("st_session", JSON.stringify(d));
-        setTimeout(() => location.reload(), 1000);
+        setTimeout(() => location.reload(), 800);
       } catch (e) {
         errEl.textContent = "Hata: " + e.message;
         errEl.style.display = "block";
@@ -1808,7 +1723,7 @@
 
       if (!key || !name) return showToast("Rol key ve adı zorunlu.", true);
       if (!/^[a-z0-9_-]+$/.test(key)) return showToast("Rol key sadece a-z 0-9 _ - içerebilir.", true);
-      if (key === "admin") return showToast("admin rolü oluşturulamaz/silinemez.", true);
+      if (key === "admin") return showToast("admin rolü oluşturulamaz.", true);
 
       await setDoc(doc(db,"roles",key), {
         name, color, className:"", canModerate, canCreateRole:false
@@ -1822,20 +1737,44 @@
       showToast("Yeni rol oluşturuldu.");
     };
 
+    async function ensureFallbackRole() {
+      // Prefer sturgiyali if exists, else first non-admin, else create "uyeler"
+      if (rolesMap["sturgiyali"]) return "sturgiyali";
+      const keys = Object.keys(rolesMap).filter(k => k !== "admin");
+      if (keys.length) return keys[0];
+
+      const key = "uyeler";
+      await setDoc(doc(db,"roles",key), {
+        name:"Üyeler",
+        color:"#8fb0d0",
+        className:"",
+        canModerate:false,
+        canCreateRole:false
+      }, { merge:true });
+      rolesMap[key] = { name:"Üyeler", color:"#8fb0d0", className:"", canModerate:false, canCreateRole:false };
+      return key;
+    }
+
     window.deleteRole = async (roleKey) => {
       if (user?.role !== "admin") return showToast("Sadece admin rol silebilir.", true);
-      if (protectedRoles.includes(roleKey)) return showToast("Temel roller silinemez.", true);
-
-      const usedBy = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
-      if (!usedBy.empty) return showToast("Bu rolü kullanan kullanıcılar var. Önce kullanıcı rollerini değiştir.", true);
+      if (roleKey === "admin") return showToast("admin rolü silinemez.", true);
 
       if (!confirm(`"${roleKey}" rolünü silmek istediğine emin misin?`)) return;
+
+      const fallbackRole = await ensureFallbackRole();
+
+      const usersWithRole = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
+      for (const u of usersWithRole.docs) {
+        await updateDoc(doc(db,"users",u.id), { role:fallbackRole });
+      }
+
       await deleteDoc(doc(db,"roles",roleKey));
       delete rolesMap[roleKey];
       renderRolesPreview();
-      showToast("Rol silindi.");
+      showToast(`"${roleKey}" rolü silindi.`);
     };
 
+    // Session UI
     if (user) {
       document.getElementById("auth-section").classList.add("d-none");
       document.getElementById("user-section").classList.remove("d-none");
@@ -1914,10 +1853,11 @@
       setTimeout(() => document.getElementById("login-nick")?.focus(), 80);
     };
     window.closeModal = () => document.getElementById("loginModal").classList.remove("open");
+    window.closeMuteModal = () => document.getElementById("muteModal").classList.remove("open");
   </script>
 
   <script>
-    // THREE.JS Neon Balls Background + Mouse Glow
+    // Three.js: round glowing particles
     (function() {
       const canvas = document.getElementById("bg-canvas");
       const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
@@ -1929,7 +1869,7 @@
       const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
       camera.position.z = 5;
 
-      const particleCount = 1400;
+      const particleCount = 1450;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
 
@@ -1941,24 +1881,47 @@
         new THREE.Color(0xf0d070)
       ];
 
-      for (let i=0; i<particleCount; i++) {
-        positions[i*3] = (Math.random()-0.5) * 30;
-        positions[i*3+1] = (Math.random()-0.5) * 20;
-        positions[i*3+2] = (Math.random()-0.5) * 12;
-        const c = palette[Math.floor(Math.random()*palette.length)];
-        colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 30;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 12;
+
+        const c = palette[Math.floor(Math.random() * palette.length)];
+        colors[i * 3] = c.r;
+        colors[i * 3 + 1] = c.g;
+        colors[i * 3 + 2] = c.b;
       }
 
       const geom = new THREE.BufferGeometry();
       geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
       geom.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
+      function createCircleTexture() {
+        const size = 128;
+        const c = document.createElement("canvas");
+        c.width = size; c.height = size;
+        const ctx = c.getContext("2d");
+        const g = ctx.createRadialGradient(size/2, size/2, 4, size/2, size/2, size/2);
+        g.addColorStop(0, "rgba(255,255,255,1)");
+        g.addColorStop(0.2, "rgba(255,255,255,0.9)");
+        g.addColorStop(0.55, "rgba(255,255,255,0.35)");
+        g.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,size,size);
+        const tex = new THREE.CanvasTexture(c);
+        tex.needsUpdate = true;
+        return tex;
+      }
+
       const mat = new THREE.PointsMaterial({
-        size:0.055,
+        size:0.06,
         transparent:true,
-        opacity:0.62,
+        opacity:0.68,
         vertexColors:true,
-        blending:THREE.AdditiveBlending
+        blending:THREE.AdditiveBlending,
+        depthWrite:false,
+        map:createCircleTexture(),
+        alphaTest:0.02
       });
 
       const particles = new THREE.Points(geom, mat);
@@ -1966,10 +1929,11 @@
 
       let mouseX = 0, mouseY = 0;
       document.addEventListener("mousemove", (e) => {
-        mouseX = (e.clientX/window.innerWidth - 0.5) * 0.7;
-        mouseY = (e.clientY/window.innerHeight - 0.5) * 0.45;
-        document.body.style.setProperty("--mx", `${(e.clientX/window.innerWidth)*100}%`);
-        document.body.style.setProperty("--my", `${(e.clientY/window.innerHeight)*100}%`);
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 0.7;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 0.45;
+
+        document.body.style.setProperty("--mx", `${(e.clientX / window.innerWidth) * 100}%`);
+        document.body.style.setProperty("--my", `${(e.clientY / window.innerHeight) * 100}%`);
       });
 
       let t = 0;
@@ -1979,7 +1943,7 @@
 
         particles.rotation.y = t * 0.06;
         particles.rotation.x = t * 0.02;
-        particles.material.opacity = 0.56 + Math.sin(t * 1.8) * 0.10;
+        particles.material.opacity = 0.60 + Math.sin(t * 1.8) * 0.12;
 
         camera.position.x += (mouseX - camera.position.x) * 0.05;
         camera.position.y += (-mouseY - camera.position.y) * 0.05;
