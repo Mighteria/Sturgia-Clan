@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>Sturgia Clan</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -22,7 +22,7 @@
 /* GRAIN */
 body{
   min-height:100vh;overflow-x:hidden;color:var(--text);
-  font-family:'Outfit',sans-serif;font-weight:400;
+  font-family:'Outfit','Inter',sans-serif;font-weight:400;
   background:var(--bg);
 }
 body::before{
@@ -104,25 +104,26 @@ body::after{
 @keyframes logoGlow{0%,100%{box-shadow:0 0 24px rgba(125,211,252,.18),inset 0 1px 0 rgba(255,255,255,.08)}50%{box-shadow:0 0 40px rgba(125,211,252,.32),0 0 60px rgba(99,102,241,.16),inset 0 1px 0 rgba(255,255,255,.12)}}
 
 .clan-name{
-  font-family:'Orbitron',monospace;font-size:14px;font-weight:800;
+  font-family:'Orbitron','Inter',monospace;font-size:14px;font-weight:800;
   letter-spacing:6px;text-transform:uppercase;
   background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold2));
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.clan-tagline{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.clan-tagline{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:5px;font-family:'Outfit','Inter',sans-serif}
 
 /* NAV */
 .sidenav-menu{flex:1;padding:14px 10px}
 .nav-section-label{
-  font-size:8px;letter-spacing:3.5px;text-transform:uppercase;
-  color:var(--muted);padding:14px 10px 7px;font-weight:600;
+  font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);padding:14px 10px 7px;font-weight:700;font-family:'Outfit','Inter',sans-serif;
 }
 .nav-link{
   display:flex;align-items:center;gap:11px;padding:10px 13px;
   border-radius:12px;border:1px solid transparent;
   color:var(--muted)!important;text-decoration:none;
-  font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+  font-size:12px;font-weight:600;letter-spacing:.3px;
   cursor:pointer;transition:.22s;margin-bottom:2px;position:relative;overflow:hidden;
+  font-family:'Outfit','Inter',sans-serif;
 }
 .nav-link::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
@@ -146,7 +147,7 @@ body::after{
 
 .sidenav-footer{padding:12px 10px;border-top:1px solid var(--b1)}
 .user-nick{
-  display:block;text-align:center;font-family:'Orbitron',monospace;
+  display:block;text-align:center;font-family:'Outfit','Inter',sans-serif;
   font-size:11px;color:var(--ice);margin-bottom:2px;letter-spacing:1px;
 }
 .user-rank-badge{display:block;text-align:center;font-size:10px;color:var(--muted);margin-bottom:10px}
@@ -172,7 +173,7 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 }
 .hero-eyebrow::before{content:'';width:24px;height:1px;background:linear-gradient(to right,var(--ice),transparent)}
 .hero-title{
-  font-family:'Orbitron',monospace;
+  font-family:'Outfit','Inter',sans-serif;
   font-size:clamp(32px,4.5vw,68px);line-height:1.06;
   color:#fff;font-weight:900;letter-spacing:-1px;
   text-shadow:0 0 60px rgba(125,211,252,.12);
@@ -201,7 +202,7 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 .stat-cell:hover::before{opacity:.4}
 .stat-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600}
 .stat-val{
-  font-family:'Orbitron',monospace;font-size:40px;color:#fff;
+  font-family:'Orbitron','Inter',monospace;font-size:40px;color:#fff;
   margin-top:10px;font-weight:700;letter-spacing:-1px;
 }
 
@@ -236,8 +237,8 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 .page-body{padding:38px 52px}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
 .section-title{
-  font-family:'Orbitron',monospace;font-size:14px;color:#fff;
-  letter-spacing:3px;text-transform:uppercase;font-weight:700;
+  font-family:'Outfit','Inter',sans-serif;font-size:14px;color:#fff;
+  letter-spacing:1.5px;text-transform:uppercase;font-weight:800;
   white-space:nowrap;
 }
 .section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(125,211,252,.25),transparent)}
@@ -305,7 +306,7 @@ textarea.form-input{resize:vertical;min-height:90px}
   align-items:center;justify-content:center;text-align:center;
 }
 .access-icon{font-size:56px;color:rgba(239,68,68,.35);margin-bottom:14px}
-.access-title{font-family:'Orbitron',monospace;font-size:22px;color:#fff;letter-spacing:2px}
+.access-title{font-family:'Outfit','Inter',sans-serif;font-size:22px;color:#fff;letter-spacing:1px;font-weight:800}
 .access-sub{max-width:400px;line-height:1.75;color:var(--muted);margin:10px 0 20px;font-size:13px}
 .pending-pill{
   display:inline-flex;align-items:center;gap:9px;
@@ -325,7 +326,7 @@ textarea.form-input{resize:vertical;min-height:90px}
   background:rgba(125,211,252,.03);display:flex;align-items:center;gap:10px;
 }
 .chat-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-.chat-title{font-family:'Orbitron',monospace;font-size:12px;color:#fff;letter-spacing:2px}
+.chat-title{font-family:'Outfit','Inter',sans-serif;font-size:13px;color:#fff;letter-spacing:1px;font-weight:700}
 .chat-messages{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:3px}
 .chat-messages::-webkit-scrollbar{width:3px}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--b2)}
@@ -410,7 +411,7 @@ textarea.form-input{resize:vertical;min-height:90px}
 .tag-event{background:rgba(34,197,94,.11);border:1px solid rgba(34,197,94,.2);color:#86efac}
 .tag-suggestion{background:rgba(125,211,252,.11);border:1px solid rgba(125,211,252,.2);color:var(--ice)}
 .tag-bug{background:rgba(239,68,68,.11);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
-.forum-post-title{font-family:'Orbitron',monospace;font-size:15px;color:#fff;margin-bottom:9px;letter-spacing:.5px}
+.forum-post-title{font-family:'Outfit','Inter',sans-serif;font-size:16px;color:#fff;margin-bottom:9px;letter-spacing:.3px;font-weight:800}
 .forum-post-preview{font-size:13px;color:var(--muted);line-height:1.78;margin-bottom:13px}
 .forum-post-meta{font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
 .reply-card{padding:15px 18px;margin-bottom:10px}
@@ -477,8 +478,8 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .roles-bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
 .role-panel{border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);padding:22px}
 .role-panel-title{
-  font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+  font-family:'Outfit','Inter',sans-serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:18px;font-weight:700;
   display:flex;align-items:center;gap:8px;
 }
 .role-panel-title i{color:var(--gold);font-size:11px}
@@ -555,8 +556,8 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   text-align:center;padding:14px 6px;border-radius:11px;
   border:1px solid var(--b1);background:rgba(255,255,255,.02);
 }
-.stat-mini-val{font-family:'Orbitron',monospace;font-size:26px;font-weight:800;color:#fff;line-height:1}
-.stat-mini-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.stat-mini-val{font-family:'Orbitron','Inter',monospace;font-size:26px;font-weight:800;color:#fff;line-height:1}
+.stat-mini-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:5px;font-family:'Outfit','Inter',sans-serif}
 
 /* lux-select */
 .lux-select{position:relative}
@@ -607,7 +608,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   transition:.18s;display:flex;align-items:center;justify-content:center;
 }
 .modal-close:hover{background:rgba(255,255,255,.12);color:var(--frost)}
-.modal-title{text-align:center;font-family:'Orbitron',monospace;font-size:18px;color:#fff;margin-bottom:4px;letter-spacing:2px}
+.modal-title{text-align:center;font-family:'Outfit','Inter',sans-serif;font-size:20px;color:#fff;margin-bottom:4px;letter-spacing:1px;font-weight:800}
 .modal-sub{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
 
 /* CONFIRM MODAL */
@@ -654,6 +655,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
 .empty-state i{font-size:44px;opacity:.15;display:block;margin-bottom:12px}
 
+
 /* RESPONSIVE */
 @media(max-width:1000px){
   .hamburger{display:block}
@@ -671,6 +673,185 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
 ::-webkit-scrollbar-track{background:transparent}
+
+/* === PREMIUM DESIGN UPGRADES === */
+
+/* Sidebar glow border */
+.sidenav{
+  border-right:1px solid rgba(125,211,252,.1);
+  box-shadow:inset -1px 0 0 rgba(125,211,252,.04), 4px 0 32px rgba(0,0,0,.4);
+}
+
+/* Sidebar active item — glowing pill */
+.nav-link.active{
+  background:linear-gradient(135deg,rgba(125,211,252,.13),rgba(99,102,241,.08));
+  border-color:rgba(125,211,252,.28);
+  color:var(--ice)!important;
+  box-shadow:0 0 16px rgba(125,211,252,.08), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.nav-link:hover{
+  background:linear-gradient(135deg,rgba(125,211,252,.07),rgba(99,102,241,.04));
+  border-color:rgba(125,211,252,.16);
+  color:var(--frost)!important;
+}
+
+/* Hero section — layered gradient background */
+.hero-section{
+  background:linear-gradient(160deg,rgba(99,102,241,.06) 0%,transparent 55%),
+             linear-gradient(to bottom,rgba(125,211,252,.03),transparent);
+  padding:80px 52px 64px;
+}
+
+/* Stats bento — hover glow */
+.stat-cell{
+  transition:background .3s, box-shadow .3s;
+}
+.stat-cell:hover{
+  background:rgba(125,211,252,.04);
+  box-shadow:inset 0 0 40px rgba(125,211,252,.04);
+}
+
+/* Quick action cards — premium */
+.qa-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset;
+}
+.qa-card:hover{
+  background:linear-gradient(145deg,rgba(125,211,252,.08),rgba(99,102,241,.06));
+}
+.qa-label{font-size:12px;letter-spacing:1px;font-weight:800}
+
+/* Warrior cards — subtle gradient */
+.warrior-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+}
+.warrior-card:hover{
+  background:linear-gradient(145deg,rgba(125,211,252,.07),rgba(99,102,241,.04));
+  box-shadow:0 4px 24px rgba(0,0,0,.3), 0 0 0 1px rgba(125,211,252,.16);
+}
+
+/* Buttons — improved depth */
+.btn{
+  background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset, 0 2px 8px rgba(0,0,0,.25);
+}
+.btn:hover{
+  box-shadow:0 0 20px rgba(125,211,252,.18),0 8px 24px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.1) inset;
+}
+.btn-ice{
+  background:linear-gradient(145deg,rgba(125,211,252,.14),rgba(125,211,252,.07));
+}
+.btn-gold{
+  background:linear-gradient(145deg,rgba(245,158,11,.14),rgba(245,158,11,.07));
+}
+.btn-red{
+  background:linear-gradient(145deg,rgba(239,68,68,.14),rgba(239,68,68,.07));
+}
+
+/* Forum cards */
+.forum-post-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+}
+.forum-post-card:hover{
+  background:linear-gradient(145deg,rgba(245,158,11,.05),rgba(99,102,241,.03));
+}
+
+/* Role panel */
+.role-panel{
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+}
+
+/* Admin table */
+.admin-table-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+}
+tbody tr:hover{
+  background:linear-gradient(90deg,rgba(125,211,252,.04),rgba(99,102,241,.03));
+}
+
+/* Modal — deeper shadow */
+.modal-box{
+  box-shadow:0 32px 100px rgba(0,0,0,.8),0 0 60px rgba(99,102,241,.12),0 1px 0 rgba(255,255,255,.06) inset;
+}
+
+/* Form inputs */
+.form-input{
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+}
+.form-input:focus{
+  background:linear-gradient(145deg,rgba(125,211,252,.06),rgba(125,211,252,.02));
+  box-shadow:0 0 0 3px rgba(125,211,252,.12), 0 0 20px rgba(125,211,252,.08);
+}
+
+/* Section header rule — gradient shine */
+.section-rule{
+  background:linear-gradient(to right,rgba(125,211,252,.3),rgba(99,102,241,.15),transparent);
+}
+
+/* Hamburger — bigger, more visible */
+.hamburger{
+  width:48px;height:48px;display:none;
+  align-items:center;justify-content:center;
+  position:fixed;top:12px;left:12px;z-index:400;
+  background:rgba(4,5,13,.94);
+  border:1px solid rgba(125,211,252,.2);
+  color:var(--ice);border-radius:14px;
+  cursor:pointer;transition:.2s;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  font-size:16px;
+}
+.hamburger:hover{
+  border-color:rgba(125,211,252,.4);
+  box-shadow:0 0 24px rgba(125,211,252,.2), 0 4px 20px rgba(0,0,0,.5);
+}
+@media(max-width:1000px){.hamburger{display:flex}}
+
+/* Gallery items */
+.gallery-item{
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+  transition:.28s cubic-bezier(.22,1,.36,1);
+}
+.gallery-item:hover{
+  transform:translateY(-4px) scale(1.01);
+  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(125,211,252,.2);
+}
+
+/* Chat messages area */
+.chat-main,.chat-sidebar{
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+}
+
+/* Toast */
+.toast{
+  box-shadow:0 12px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06) inset;
+}
+
+/* Role rows */
+.role-row{
+  background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+}
+.role-row:hover{
+  background:linear-gradient(145deg,rgba(125,211,252,.06),rgba(99,102,241,.03));
+}
+
+/* Pending pill animation */
+.pending-pill{
+  animation:pendingPulse 2.5s ease-in-out infinite;
+}
+@keyframes pendingPulse{0%,100%{box-shadow:0 0 0 rgba(245,158,11,0)}50%{box-shadow:0 0 16px rgba(245,158,11,.18)}}
+
+/* select styling */
+select.form-input{
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237dd3fc' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  padding-right:28px!important;cursor:pointer;
+}
+
+/* lux-select menu */
+.lux-sel-menu{
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06) inset;
+}
 </style>
 </head>
 <body>
@@ -812,7 +993,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
       <div id="forum-list-view">
         <div id="forum-compose-area" class="d-none">
           <div class="forum-compose-card">
-            <div style="font-family:'Orbitron',monospace;color:#fff;font-size:12px;letter-spacing:2px;margin-bottom:18px"><i class="fas fa-pen" style="color:var(--gold)"></i> YENİ KONU AÇ</div>
+            <div style="font-family:'Outfit','Inter',sans-serif;color:#fff;font-size:13px;letter-spacing:1.5px;margin-bottom:18px;font-weight:800;text-transform:uppercase"><i class="fas fa-pen" style="color:var(--gold)"></i> YENİ KONU AÇ</div>
             <div style="margin-bottom:12px"><label class="form-label">Başlık</label><input id="forum-title-input" class="form-input" placeholder="Konu başlığı..."></div>
             <div style="margin-bottom:12px">
               <label class="form-label">Kategori</label>
@@ -887,7 +1068,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
     <div class="section-header"><div class="section-title">Discord Sunucusu</div><div class="section-rule"></div></div>
     <div class="discord-hero">
       <div style="font-size:60px;color:#7289da;margin-bottom:14px"><i class="fab fa-discord"></i></div>
-      <div style="font-family:'Orbitron',monospace;font-size:26px;color:#fff;letter-spacing:3px;margin-bottom:10px">STURGIA DISCORD</div>
+      <div style="font-family:'Orbitron','Inter',monospace;font-size:26px;color:#fff;letter-spacing:3px;margin-bottom:10px">STURGIA DISCORD</div>
       <div style="margin:0 auto 22px;max-width:460px;color:var(--muted);font-size:14px;line-height:1.7">Sesli sohbet, etkinlikler ve klan duyuruları burada.</div>
       <a class="btn btn-discord" target="_blank" href="https://discord.gg/DAVET_LINKIN"><i class="fab fa-discord"></i>Sunucuya Katıl</a>
     </div>
@@ -899,7 +1080,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   <div class="page-body">
     <div class="section-header"><div class="section-title">Güvenlik Ayarları</div><div class="section-rule"></div></div>
     <div class="settings-card">
-      <div style="font-family:'Orbitron',monospace;color:#fff;font-size:13px;letter-spacing:2px;margin-bottom:5px">ŞİFRE DEĞİŞTİR</div>
+      <div style="font-family:'Outfit','Inter',sans-serif;color:#fff;font-size:13px;letter-spacing:1.5px;margin-bottom:5px;font-weight:800;text-transform:uppercase">ŞİFRE DEĞİŞTİR</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:22px">En az 8 karakter, büyük harf, rakam ve özel karakter önerilir.</div>
       <label class="form-label">Mevcut Şifre</label>
       <input id="current-password" type="password" class="form-input" style="margin-bottom:14px" placeholder="••••••••">
@@ -1146,7 +1327,11 @@ window.createRole=async()=>{
   if(rolesMap[key])return toast(`"${key}" zaten var!`,true);
   const btn=document.getElementById("btn-create-role");btn.disabled=true;
   try{
-    await setDoc(doc(db,"roles",key),{name,color,className:"",canModerate:modOn,canCreateRole:false},{merge:true});
+    const roleData={name,color,className:"",canModerate:modOn,canCreateRole:false};
+    await setDoc(doc(db,"roles",key),roleData,{merge:true});
+    // Hemen local map'e ekle, snapshot gelmesini bekleme
+    rolesMap[key]={...roleData};
+    renderRoles();
     document.getElementById("new-role-key").value="";document.getElementById("new-role-name").value="";
     document.getElementById("new-role-color").value="#7dd3fc";
     document.querySelectorAll(".swatch").forEach((s,i)=>{s.classList.toggle("on",i===0)});
@@ -1220,6 +1405,13 @@ onSnapshot(collection(db,"roles"),snap=>{
   const next={};snap.forEach(d=>{const data=d.data();if(!data._deleted)next[d.id]={...data}});
   rolesMap={admin:rolesMap.admin,westra:rolesMap.westra,sturgiyali:rolesMap.sturgiyali,...next};
   renderRoles();
+  // Admin tablosundaki tüm role select'lerini güncelle
+  if(user?.role==="admin"){
+    document.querySelectorAll("select[data-role-select]").forEach(sel=>{
+      const uid=sel.dataset.uid;const curRole=sel.dataset.currentRole||"sturgiyali";
+      sel.innerHTML=Object.entries(rolesMap).map(([k,r])=>`<option value="${k}" ${curRole===k?"selected":""}>${escH(r.name||k)}</option>`).join("");
+    });
+  }
 });
 
 // Users listener
@@ -1252,7 +1444,7 @@ onSnapshot(collection(db,"users"),snap=>{
       const d=s.data();if(d.approved===false)return;
       const mt=isMuted(d);
       const opts=Object.entries(rolesMap).map(([k,r])=>`<option value="${k}" ${d.role===k?"selected":""}>${escH(r.name||k)}</option>`).join("");
-      table.innerHTML+=`<tr><td><span class="warrior-name">${escH(d.nick)}</span></td><td>${roleBadge(d.role)}</td><td>${mt?`<span class="muted-tag" title="${escA(d.muteReason||"")}">🔇 Mute</span>`:'<span style="font-size:11px;color:var(--green)">Aktif</span>'}</td><td style="text-align:right"><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><select class="form-input" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">${opts}</select>${s.id!==user.id?`<button class="btn btn-red btn-sm" onclick="openMuteModal('${s.id}','${escH(d.nick)}')">${mt?"🔊 Unmute":"🔇 Mute"}</button><button class="btn btn-red btn-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>`:""}</div></td></tr>`;
+      table.innerHTML+=`<tr><td><span class="warrior-name">${escH(d.nick)}</span></td><td>${roleBadge(d.role)}</td><td>${mt?`<span class="muted-tag" title="${escA(d.muteReason||"")}">🔇 Mute</span>`:'<span style="font-size:11px;color:var(--green)">Aktif</span>'}</td><td style="text-align:right"><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><select class="form-input" data-role-select data-uid="${s.id}" data-current-role="${escA(d.role||"sturgiyali")}" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value);this.dataset.currentRole=this.value">${opts}</select>${s.id!==user.id?`<button class="btn btn-red btn-sm" onclick="openMuteModal('${s.id}','${escH(d.nick)}')">${mt?"🔊 Unmute":"🔇 Mute"}</button><button class="btn btn-red btn-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>`:""}</div></td></tr>`;
     });
   }
   if(pendingList&&user?.role==="admin"){
