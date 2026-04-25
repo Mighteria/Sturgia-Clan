@@ -1,1944 +1,1626 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Sturgia Clan | Elite Dashboard</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Sturgia Clan</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#04050d;--s1:rgba(255,255,255,.03);--s2:rgba(255,255,255,.06);--s3:rgba(255,255,255,.1);
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);--b3:rgba(255,255,255,.24);
+  --ice:#7dd3fc;--frost:#e0f2fe;--gold:#f59e0b;--gold2:#fcd34d;
+  --red:#ef4444;--green:#22c55e;--purple:#a78bfa;
+  --text:#cbd5e1;--muted:#475569;--dim:#1e293b;
+  --sw:280px;--r:16px;
+  --glow-ice:rgba(125,211,252,.35);--glow-gold:rgba(245,158,11,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
 
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Exo+2:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+/* GRAIN */
+body{
+  min-height:100vh;overflow-x:hidden;color:var(--text);
+  font-family:'Outfit',sans-serif;font-weight:400;
+  background:var(--bg);
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 10%,rgba(99,102,241,.09),transparent 55%),
+    radial-gradient(ellipse 55% 40% at 85% 5%,rgba(125,211,252,.07),transparent 50%),
+    radial-gradient(ellipse 45% 55% at 50% 90%,rgba(245,158,11,.05),transparent 55%),
+    radial-gradient(ellipse 30% 30% at 80% 70%,rgba(167,139,250,.06),transparent 50%);
+}
+/* grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.28;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='.18'/%3E%3C/svg%3E");
+}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+#mouse-glow{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),rgba(125,211,252,.07),transparent 65%);
+}
+.d-none{display:none!important}
 
-  <style>
-    :root{
-      --black:#03040a; --panel:#0a0d1a; --card:#0d1120;
-      --ice:#a8d8ea; --frost:#d4eef8; --steel:#7a96b4;
-      --gold:#c9a84c; --gold-light:#f0d070;
-      --red:#c0392b; --green:#4caf7d;
-      --text:#c8d8e8; --muted:#4a6078;
-      --sidebar-w:286px;
-      --mx:50%; --my:50%;
-    }
+/* GLASS UTIL */
+.glass{
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--b1);
+}
+.glass-hi{
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(32px) saturate(200%);
+  -webkit-backdrop-filter:blur(32px) saturate(200%);
+  border:1px solid var(--b2);
+}
 
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      min-height:100vh; overflow-x:hidden; color:var(--text); font-family:'Exo 2',sans-serif;
-      background:
-        radial-gradient(circle at 12% 20%, rgba(0,180,255,.08), transparent 35%),
-        radial-gradient(circle at 85% 15%, rgba(117,83,255,.10), transparent 38%),
-        radial-gradient(circle at 45% 85%, rgba(0,255,180,.05), transparent 38%),
-        #03040a;
-    }
+/* HAMBURGER */
+.hamburger{
+  display:none;position:fixed;top:14px;left:14px;z-index:400;
+  background:rgba(4,5,13,.9);border:1px solid var(--b2);color:var(--ice);
+  border-radius:12px;padding:10px 13px;cursor:pointer;transition:.2s;
+}
+.hamburger:hover{border-color:var(--b3);box-shadow:0 0 18px var(--glow-ice)}
+.sidenav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:90;backdrop-filter:blur(4px)}
 
-    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-    #mouse-neon{
-      position:fixed;inset:0;z-index:2;pointer-events:none;
-      background:radial-gradient(240px circle at var(--mx) var(--my), rgba(168,216,234,.12), rgba(114,137,218,.06) 35%, transparent 70%);
-      transition:background .05s linear;
-    }
+/* SIDEBAR */
+.sidenav{
+  position:fixed;left:0;top:0;z-index:100;width:var(--sw);height:100vh;
+  overflow-y:auto;display:flex;flex-direction:column;
+  background:rgba(4,5,13,.88);
+  backdrop-filter:blur(40px) saturate(160%);
+  border-right:1px solid var(--b1);
+}
+.sidenav::-webkit-scrollbar{width:3px}
+.sidenav::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
 
-    .d-none{display:none!important}
+/* CLAN BRAND */
+.clan-brand{
+  padding:28px 20px 22px;text-align:center;
+  border-bottom:1px solid var(--b1);position:relative;overflow:hidden;
+}
+.clan-brand::before{
+  content:'';position:absolute;left:50%;top:-40px;transform:translateX(-50%);
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(125,211,252,.12),transparent 65%);
+  pointer-events:none;animation:brandPulse 4s ease-in-out infinite;
+}
+@keyframes brandPulse{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
 
-    .btn-glass{
-      position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:12px 22px; border-radius:12px;
-      border:1px solid rgba(168,216,234,.25);
-      border-top-color:rgba(255,255,255,.25); border-left-color:rgba(255,255,255,.16);
-      background:rgba(168,216,234,.09);
-      backdrop-filter:blur(20px) saturate(200%);
-      -webkit-backdrop-filter:blur(20px) saturate(200%);
-      color:var(--frost);
-      font-family:'Cinzel',serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-      cursor:pointer; text-decoration:none; transition:.25s;
-    }
-    .btn-glass:hover{
-      transform:translateY(-2px);
-      border-color:rgba(168,216,234,.4);
-      color:#fff;
-      box-shadow:0 0 20px rgba(168,216,234,.28),0 0 40px rgba(114,137,218,.2),0 10px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.22);
-    }
-    .btn-glass-sm{padding:7px 12px;font-size:10px;letter-spacing:1.3px}
-    .btn-glass-gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.33);color:var(--gold-light)}
-    .btn-glass-red{background:rgba(192,57,43,.12);border-color:rgba(192,57,43,.35);color:#ff8080}
-    .btn-discord-glass{background:rgba(114,137,218,.12);border-color:rgba(114,137,218,.35);color:#bdcaff}
+.clan-logo-wrap{
+  width:88px;height:88px;border-radius:20px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#080c1e,#111c38);
+  border:1px solid rgba(125,211,252,.3);
+  box-shadow:0 0 32px rgba(125,211,252,.18),0 0 64px rgba(99,102,241,.12),inset 0 1px 0 rgba(255,255,255,.08);
+  position:relative;
+  animation:logoGlow 3s ease-in-out infinite;
+}
+@keyframes logoGlow{0%,100%{box-shadow:0 0 24px rgba(125,211,252,.18),inset 0 1px 0 rgba(255,255,255,.08)}50%{box-shadow:0 0 40px rgba(125,211,252,.32),0 0 60px rgba(99,102,241,.16),inset 0 1px 0 rgba(255,255,255,.12)}}
 
-    .hamburger{
-      display:none; position:fixed; top:14px; left:14px; z-index:300;
-      background:rgba(8,11,20,.9); border:1px solid rgba(168,216,234,.2); color:var(--ice);
-      border-radius:10px; padding:10px 12px; cursor:pointer;
-    }
-    .sidenav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90}
+.clan-name{
+  font-family:'Orbitron',monospace;font-size:14px;font-weight:800;
+  letter-spacing:6px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.clan-tagline{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:5px}
 
-    .sidenav{
-      position:fixed;left:0;top:0;z-index:100;
-      width:var(--sidebar-w);height:100vh;overflow-y:auto;
-      background:rgba(5,7,15,.84);
-      backdrop-filter:blur(30px) saturate(140%);
-      border-right:1px solid rgba(168,216,234,.08);
-      display:flex;flex-direction:column;
-    }
+/* NAV */
+.sidenav-menu{flex:1;padding:14px 10px}
+.nav-section-label{
+  font-size:8px;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--muted);padding:14px 10px 7px;font-weight:600;
+}
+.nav-link{
+  display:flex;align-items:center;gap:11px;padding:10px 13px;
+  border-radius:12px;border:1px solid transparent;
+  color:var(--muted)!important;text-decoration:none;
+  font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+  cursor:pointer;transition:.22s;margin-bottom:2px;position:relative;overflow:hidden;
+}
+.nav-link::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--ice),var(--purple));
+  border-radius:1px;opacity:0;transition:.22s;
+}
+.nav-link:hover{
+  background:rgba(125,211,252,.06);border-color:var(--b2);
+  color:var(--frost)!important;transform:translateX(2px);
+}
+.nav-link.active{
+  background:rgba(125,211,252,.09);border-color:rgba(125,211,252,.22);
+  color:var(--ice)!important;
+}
+.nav-link.active::before{opacity:1}
+.nav-link i{width:16px;text-align:center;font-size:13px}
+.nav-link.admin-link{color:var(--gold)!important}
+.nav-link.admin-link:hover,.nav-link.admin-link.active{
+  background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.22);color:var(--gold2)!important;
+}
 
-    .clan-brand{
-      padding:24px 20px 20px; text-align:center; border-bottom:1px solid rgba(168,216,234,.08);
-      position:relative;
-    }
-    .clan-brand::before{
-      content:''; position:absolute; left:50%; top:-55px; transform:translateX(-50%);
-      width:220px;height:220px;border-radius:50%;
-      background:radial-gradient(circle, rgba(168,216,234,.12), transparent 65%);
-      pointer-events:none;
-    }
-    .clan-avatar{
-      width:96px;height:96px;display:block;margin:0 auto 12px;
-      object-fit:cover;
-      border-radius:16px;
-      border:1px solid rgba(168,216,234,.35);
-      box-shadow:0 0 26px rgba(114,137,218,.26);
-      background:#111;
-    }
-    .clan-name{
-      font-family:'Cinzel Decorative',serif; font-size:16px; font-weight:900; letter-spacing:5px;
-      text-transform:uppercase; color:var(--gold-light);
-    }
-    .clan-tagline{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.sidenav-footer{padding:12px 10px;border-top:1px solid var(--b1)}
+.user-nick{
+  display:block;text-align:center;font-family:'Orbitron',monospace;
+  font-size:11px;color:var(--ice);margin-bottom:2px;letter-spacing:1px;
+}
+.user-rank-badge{display:block;text-align:center;font-size:10px;color:var(--muted);margin-bottom:10px}
 
-    .sidenav-menu{flex:1;padding:12px}
-    .nav-section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:12px 10px 6px}
-    .nav-link{
-      display:flex; align-items:center; gap:10px; padding:10px 12px;
-      border-radius:10px; border:1px solid transparent;
-      color:var(--steel)!important; text-decoration:none;
-      font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
-      cursor:pointer; transition:.2s;
-    }
-    .nav-link:hover{background:rgba(168,216,234,.06);border-color:rgba(168,216,234,.16);color:var(--frost)!important}
-    .nav-link.active{background:rgba(168,216,234,.09);border-color:rgba(168,216,234,.26);color:var(--ice)!important}
-    .nav-link.admin-link{color:var(--gold)!important}
-    .sidenav-footer{padding:12px;border-top:1px solid rgba(168,216,234,.08)}
-    .user-nick{display:block;text-align:center;font-family:'Exo 2',sans-serif;font-weight:700;font-size:13px;color:var(--ice);margin-bottom:2px}
-    .user-rank-badge{display:block;text-align:center;font-size:10px;color:var(--muted);margin-bottom:10px}
+/* MAIN */
+.main-content{margin-left:var(--sw);min-height:100vh;position:relative;z-index:3}
+section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-    .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:3}
-    section{animation:fadeIn .35s ease}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* HERO */
+.hero-section{
+  position:relative;padding:80px 52px 64px;overflow:hidden;
+  border-bottom:1px solid var(--b1);
+}
+.hero-section::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 80% 20%,rgba(99,102,241,.1),transparent 55%);
+}
+.hero-eyebrow{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--ice);font-weight:600;margin-bottom:18px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:linear-gradient(to right,var(--ice),transparent)}
+.hero-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(32px,4.5vw,68px);line-height:1.06;
+  color:#fff;font-weight:900;letter-spacing:-1px;
+  text-shadow:0 0 60px rgba(125,211,252,.12);
+}
+.hero-title .grd{
+  background:linear-gradient(135deg,var(--ice) 0%,var(--frost) 40%,var(--gold2) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-desc{margin-top:20px;max-width:500px;line-height:1.85;color:var(--muted);font-size:14px;font-weight:300}
 
-    .hero-section{
-      position:relative; padding:72px 50px 58px; border-bottom:1px solid rgba(168,216,234,.07);
-      overflow:hidden;
-    }
-    .hero-section::before{
-      content:''; position:absolute; inset:0;
-      background:radial-gradient(circle at 80% 10%, rgba(114,137,218,.14), transparent 42%);
-      pointer-events:none;
-    }
-    .hero-title{
-      font-family:'Cinzel Decorative',serif; font-size:clamp(28px,3.8vw,56px); line-height:1.08; color:#fff;
-      text-shadow:0 0 16px rgba(255,255,255,.08);
-    }
-    .hero-title span{
-      color:transparent;
-      background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold-light));
-      -webkit-background-clip:text;background-clip:text;
-    }
-    .hero-desc{margin-top:18px;max-width:530px;line-height:1.8;color:var(--steel)}
+/* STATS BENTO */
+.stats-bento{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--b1);border-bottom:1px solid var(--b1);
+}
+.stat-cell{
+  background:rgba(4,5,13,.9);padding:26px 32px;
+  position:relative;overflow:hidden;transition:.3s;
+}
+.stat-cell:hover{background:rgba(125,211,252,.03)}
+.stat-cell::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--ice),transparent);
+  opacity:0;transition:.3s;
+}
+.stat-cell:hover::before{opacity:.4}
+.stat-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat-val{
+  font-family:'Orbitron',monospace;font-size:40px;color:#fff;
+  margin-top:10px;font-weight:700;letter-spacing:-1px;
+}
 
-    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(168,216,234,.05)}
-    .stat-block{background:rgba(5,7,15,.83);padding:24px 30px}
-    .stat-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
-    .stat-value{font-family:'Cinzel',serif;font-size:38px;color:#fff;margin-top:8px}
+/* QUICK CARDS */
+.quick-actions{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  padding:28px 52px;border-bottom:1px solid var(--b1);
+}
+.qa-card{
+  text-decoration:none;color:var(--text);border-radius:var(--r);
+  border:1px solid var(--b1);background:var(--s1);
+  padding:22px 18px;text-align:center;transition:.26s;
+  position:relative;overflow:hidden;
+}
+.qa-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(125,211,252,.08),transparent 60%);
+  opacity:0;transition:.26s;
+}
+.qa-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(125,211,252,.28);
+  box-shadow:0 0 28px rgba(125,211,252,.14),0 16px 40px rgba(0,0,0,.4);
+}
+.qa-card:hover::before{opacity:1}
+.qa-icon{font-size:28px;color:var(--ice);display:block;margin-bottom:12px;transition:.26s}
+.qa-card:hover .qa-icon{text-shadow:0 0 16px var(--glow-ice)}
+.qa-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--frost)}
+.qa-sub{font-size:10px;color:var(--muted);margin-top:5px}
 
-    .quick-actions{
-      padding:28px 50px; border-bottom:1px solid rgba(168,216,234,.06);
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px;
-    }
-    .qa-card{
-      text-decoration:none;color:var(--text);
-      border-radius:14px;border:1px solid rgba(168,216,234,.12);
-      background:rgba(168,216,234,.04);
-      padding:18px;text-align:center;transition:.22s;
-    }
-    .qa-card:hover{transform:translateY(-3px);background:rgba(168,216,234,.09);border-color:rgba(168,216,234,.32);box-shadow:0 0 24px rgba(114,137,218,.22)}
-    .qa-icon{font-size:27px;color:var(--ice);display:block;margin-bottom:9px}
-    .qa-label{font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;text-transform:uppercase}
-    .qa-sub{font-size:10px;color:var(--muted);margin-top:5px}
+/* PAGE BODY */
+.page-body{padding:38px 52px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.section-title{
+  font-family:'Orbitron',monospace;font-size:14px;color:#fff;
+  letter-spacing:3px;text-transform:uppercase;font-weight:700;
+  white-space:nowrap;
+}
+.section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(125,211,252,.25),transparent)}
 
-    .page-body{padding:36px 50px}
-    .section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-    .section-title{font-family:'Cinzel',serif;font-size:20px;color:#fff;letter-spacing:2px}
-    .section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(168,216,234,.2),transparent)}
+/* WARRIOR CARDS */
+.warrior-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.warrior-card{
+  border-radius:14px;border:1px solid var(--b1);
+  background:var(--s1);padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transition:.22s;
+}
+.warrior-card:hover{border-color:var(--b2);background:var(--s2);transform:translateY(-2px)}
+.warrior-name{font-weight:600;color:var(--frost);font-size:14px;text-transform:none!important}
+.badge-rank{
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 11px;border-radius:8px;border:1px solid transparent;font-weight:700;
+}
 
-    .row{display:flex;flex-wrap:wrap;gap:12px}
-    .col-12{width:100%}
-    .col-md-4{width:calc(33.333% - 8px)}
-    .col-sm-6{width:calc(50% - 6px)}
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 20px;border-radius:12px;
+  border:1px solid var(--b2);background:var(--s2);
+  color:var(--frost);font-family:'Outfit',sans-serif;font-size:11px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;transition:.22s;position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),transparent);
+}
+.btn:hover{
+  transform:translateY(-2px);border-color:var(--b3);color:#fff;
+  box-shadow:0 0 20px rgba(125,211,252,.2),0 8px 24px rgba(0,0,0,.4);
+}
+.btn:active{transform:translateY(0)}
+.btn-sm{padding:7px 13px;font-size:10px;letter-spacing:1.5px;border-radius:9px}
+.btn-ice{background:rgba(125,211,252,.1);border-color:rgba(125,211,252,.28);color:var(--ice)}
+.btn-ice:hover{background:rgba(125,211,252,.18);box-shadow:0 0 24px rgba(125,211,252,.25),0 8px 24px rgba(0,0,0,.4)}
+.btn-gold{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--gold2)}
+.btn-gold:hover{background:rgba(245,158,11,.18);box-shadow:0 0 24px rgba(245,158,11,.22),0 8px 24px rgba(0,0,0,.4)}
+.btn-red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#fca5a5}
+.btn-red:hover{background:rgba(239,68,68,.18);box-shadow:0 0 24px rgba(239,68,68,.22),0 8px 24px rgba(0,0,0,.4)}
+.btn-discord{background:rgba(88,101,242,.12);border-color:rgba(88,101,242,.3);color:#a5b4fc}
 
-    .warrior-card{
-      border-radius:12px;border:1px solid rgba(168,216,234,.1);
-      background:rgba(10,13,26,.68);padding:14px 16px;
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-    }
-    /* FIX 4: warrior-name uses Exo 2 to preserve case */
-    .warrior-name{font-family:'Exo 2',sans-serif;font-weight:600;color:var(--frost);font-size:14px;text-transform:none!important}
-    .badge-rank{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid transparent;font-weight:700}
+/* FORM */
+.form-label{display:block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:600}
+.form-input{
+  width:100%;border-radius:11px;outline:none;
+  border:1px solid var(--b1);background:rgba(255,255,255,.03);
+  color:var(--text);padding:11px 14px;font-family:'Outfit',sans-serif;font-size:13px;
+  transition:.2s;
+}
+.form-input:focus{
+  border-color:rgba(125,211,252,.35);background:rgba(125,211,252,.04);
+  box-shadow:0 0 0 3px rgba(125,211,252,.1);
+}
+.form-input::placeholder{color:var(--muted)}
+textarea.form-input{resize:vertical;min-height:90px}
 
-    .access-wall{min-height:56vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-    .access-wall-icon{font-size:62px;color:rgba(192,57,43,.45);margin-bottom:12px}
-    .access-wall-title{font-family:'Cinzel',serif;font-size:24px;color:#fff}
-    .access-wall-sub{max-width:430px;line-height:1.7;color:var(--muted);margin:10px 0 18px}
-    .pending-notice{
-      display:inline-flex;align-items:center;gap:8px;
-      background:rgba(201,168,76,.11);border:1px solid rgba(201,168,76,.25);
-      padding:10px 14px;border-radius:10px;color:var(--gold);
-    }
+/* ACCESS WALL */
+.access-wall{
+  min-height:58vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+}
+.access-icon{font-size:56px;color:rgba(239,68,68,.35);margin-bottom:14px}
+.access-title{font-family:'Orbitron',monospace;font-size:22px;color:#fff;letter-spacing:2px}
+.access-sub{max-width:400px;line-height:1.75;color:var(--muted);margin:10px 0 20px;font-size:13px}
+.pending-pill{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);
+  padding:10px 16px;border-radius:12px;color:var(--gold2);font-size:12px;
+}
 
-    .chat-wrapper{display:grid;grid-template-columns:1fr 290px;gap:16px;height:calc(100vh - 200px)}
-    .chat-main,.chat-sidebar{
-      border-radius:14px;border:1px solid rgba(168,216,234,.1);
-      background:rgba(7,10,20,.74);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-      overflow:hidden;
-    }
-    .chat-main{display:flex;flex-direction:column}
-    .chat-head,.chat-members-head{
-      padding:14px 16px;border-bottom:1px solid rgba(168,216,234,.08);
-      background:rgba(168,216,234,.03);
-    }
-    .chat-status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin-right:8px}
-    .chat-title{font-family:'Cinzel',serif;font-size:14px;color:#fff}
-    .chat-messages{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
-    .msg-group{margin-bottom:4px}
-    .msg-author-line{display:flex;gap:8px;align-items:center;margin-bottom:4px;margin-top:8px}
-    /* FIX 4: msg-author uses Exo 2 to preserve username case */
-    .msg-author{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px;text-transform:none!important}
-    .msg-author.admin{color:#ff7070}.msg-author.westra{color:var(--ice)}.msg-author.sturgiyali{color:var(--steel)}
-    .msg-time{font-size:10px;color:var(--muted)}
-    .msg-bubble{
-      position:relative;border-radius:6px 12px 12px 12px;background:rgba(168,216,234,.04);
-      border:1px solid rgba(168,216,234,.1);padding:10px 12px;line-height:1.55;font-size:14px;
-    }
-    .msg-bubble.own{
-      border-radius:12px 6px 12px 12px;background:rgba(168,216,234,.08);border-color:rgba(168,216,234,.2);
-    }
-    .msg-actions{position:absolute;right:8px;top:8px;display:flex;gap:5px;opacity:0;transition:.18s}
-    .msg-bubble:hover .msg-actions{opacity:1}
-    .msg-act-btn{
-      border-radius:5px;border:1px solid rgba(168,216,234,.35);background:rgba(5,7,15,.9);color:var(--ice);
-      cursor:pointer;font-size:10px;padding:2px 7px;
-    }
-    .msg-act-btn.danger{border-color:rgba(192,57,43,.35);color:#ff8080}
-    .msg-edit-wrap{margin-top:8px;display:flex;gap:6px;align-items:center}
-    .msg-edit-input{
-      flex:1;background:rgba(168,216,234,.06);border:1px solid rgba(168,216,234,.25);
-      border-radius:8px;color:var(--text);padding:7px 9px;font-size:13px;outline:none;
-    }
-    .msg-edit-input:focus{border-color:rgba(168,216,234,.46);box-shadow:0 0 0 2px rgba(168,216,234,.1)}
-    .chat-input-area{border-top:1px solid rgba(168,216,234,.08);padding:12px;display:flex;gap:8px}
-    .chat-input{
-      flex:1;border-radius:10px;outline:none;padding:10px 12px;
-      border:1px solid rgba(168,216,234,.15);background:rgba(168,216,234,.04);color:var(--text);
-    }
-    .chat-input:focus{border-color:rgba(168,216,234,.35)}
-    /* FIX 4: chat member name preserves case */
-    .chat-member-item{padding:8px 10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between}
-    .chat-member-item:hover{background:rgba(168,216,234,.05)}
-    .chat-member-name{font-family:'Exo 2',sans-serif;font-size:12px;font-weight:600;text-transform:none!important}
-    .muted-tag{
-      font-size:9px;text-transform:uppercase;border:1px solid rgba(192,57,43,.25);
-      background:rgba(192,57,43,.14);color:#ff8080;padding:2px 6px;border-radius:4px;
-    }
-    .muted-notice-bar{
-      background:rgba(192,57,43,.11);border:1px solid rgba(192,57,43,.2);
-      color:#ff8080;border-radius:8px;padding:10px 12px;text-align:center;font-size:12px;
-    }
+/* CHAT */
+.chat-wrapper{display:grid;grid-template-columns:1fr 270px;gap:14px;height:calc(100vh - 190px)}
+.chat-main,.chat-sidebar{
+  border-radius:var(--r);border:1px solid var(--b1);
+  background:rgba(4,5,13,.7);backdrop-filter:blur(24px);overflow:hidden;
+}
+.chat-main{display:flex;flex-direction:column}
+.chat-head{
+  padding:14px 18px;border-bottom:1px solid var(--b1);
+  background:rgba(125,211,252,.03);display:flex;align-items:center;gap:10px;
+}
+.chat-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.chat-title{font-family:'Orbitron',monospace;font-size:12px;color:#fff;letter-spacing:2px}
+.chat-messages{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:3px}
+.chat-messages::-webkit-scrollbar{width:3px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--b2)}
+.chat-date-sep{
+  text-align:center;margin:12px 0 6px;font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--muted);position:relative;
+}
+.chat-date-sep::before,.chat-date-sep::after{
+  content:'';position:absolute;top:50%;width:28%;height:1px;
+  background:linear-gradient(to right,transparent,var(--b2),transparent);
+}
+.chat-date-sep::before{left:0}.chat-date-sep::after{right:0}
+.msg-group{margin-bottom:2px}
+.msg-author-line{display:flex;gap:8px;align-items:center;margin-bottom:4px;margin-top:10px}
+.msg-author{font-size:13px;font-weight:700;letter-spacing:.3px;text-transform:none!important}
+.msg-author.admin{color:#fca5a5}.msg-author.westra{color:var(--ice)}.msg-author.sturgiyali{color:#94a3b8}
+.msg-time{font-size:10px;color:var(--muted)}
+.msg-bubble{
+  position:relative;border-radius:5px 13px 13px 13px;
+  background:rgba(255,255,255,.03);border:1px solid var(--b1);
+  padding:9px 13px;line-height:1.58;font-size:13.5px;transition:.18s;
+}
+.msg-bubble.own{border-radius:13px 5px 13px 13px;background:rgba(125,211,252,.06);border-color:rgba(125,211,252,.15)}
+.msg-bubble:hover{background:rgba(255,255,255,.05)}
+.msg-actions{position:absolute;right:8px;top:8px;display:flex;gap:5px;opacity:0;transition:.15s}
+.msg-bubble:hover .msg-actions{opacity:1}
+.msg-act-btn{
+  border-radius:6px;border:1px solid var(--b2);background:rgba(4,5,13,.92);
+  color:var(--ice);cursor:pointer;font-size:9px;padding:3px 8px;transition:.15s;
+}
+.msg-act-btn:hover{border-color:var(--b3);background:rgba(125,211,252,.08)}
+.msg-act-btn.danger{border-color:rgba(239,68,68,.3);color:#fca5a5}
+.msg-edit-wrap{margin-top:8px;display:flex;gap:6px;align-items:center}
+.msg-edit-input{
+  flex:1;background:rgba(125,211,252,.05);border:1px solid rgba(125,211,252,.25);
+  border-radius:9px;color:var(--text);padding:7px 10px;font-size:13px;outline:none;font-family:'Outfit',sans-serif;
+}
+.msg-edit-input:focus{border-color:rgba(125,211,252,.5)}
+.chat-input-area{border-top:1px solid var(--b1);padding:12px 14px;display:flex;gap:9px;align-items:center}
+.chat-input{
+  flex:1;border-radius:11px;outline:none;padding:10px 14px;
+  border:1px solid var(--b1);background:rgba(255,255,255,.04);
+  color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;transition:.2s;
+}
+.chat-input:focus{border-color:rgba(125,211,252,.3);background:rgba(125,211,252,.04)}
+.chat-members-head{
+  padding:13px 16px;border-bottom:1px solid var(--b1);background:rgba(125,211,252,.03);
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600;
+}
+.chat-members{padding:8px;overflow:auto}
+.chat-member-item{
+  padding:8px 10px;border-radius:10px;display:flex;
+  align-items:center;justify-content:space-between;transition:.18s;
+}
+.chat-member-item:hover{background:rgba(255,255,255,.04)}
+.chat-member-name{font-size:12px;font-weight:600;text-transform:none!important}
+.muted-tag{
+  font-size:8px;text-transform:uppercase;border:1px solid rgba(239,68,68,.25);
+  background:rgba(239,68,68,.12);color:#fca5a5;padding:2px 7px;border-radius:5px;font-weight:700;
+}
+.muted-bar{
+  background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.18);
+  color:#fca5a5;border-radius:10px;padding:10px 14px;text-align:center;font-size:12px;
+}
 
-    /* Date separator for chat */
-    .chat-date-sep{
-      text-align:center;margin:10px 0 6px;
-      font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
-      position:relative;
-    }
-    .chat-date-sep::before,.chat-date-sep::after{
-      content:'';position:absolute;top:50%;width:30%;height:1px;background:rgba(168,216,234,.1);
-    }
-    .chat-date-sep::before{left:0}.chat-date-sep::after{right:0}
+/* FORUM */
+.forum-compose-card,.forum-post-card,.reply-card{
+  border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);
+}
+.forum-compose-card{padding:22px;margin-bottom:18px}
+.forum-post-card{padding:20px;cursor:pointer;transition:.24s}
+.forum-post-card:hover{
+  transform:translateY(-3px);border-color:rgba(245,158,11,.25);
+  box-shadow:0 0 28px rgba(245,158,11,.1),0 16px 40px rgba(0,0,0,.35);
+}
+.forum-tag{
+  display:inline-block;padding:3px 10px;border-radius:6px;
+  font-size:8px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:11px;font-weight:700;
+}
+.tag-general{background:rgba(100,116,139,.14);border:1px solid rgba(100,116,139,.2);color:#94a3b8}
+.tag-strategy{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);color:var(--gold2)}
+.tag-event{background:rgba(34,197,94,.11);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.tag-suggestion{background:rgba(125,211,252,.11);border:1px solid rgba(125,211,252,.2);color:var(--ice)}
+.tag-bug{background:rgba(239,68,68,.11);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.forum-post-title{font-family:'Orbitron',monospace;font-size:15px;color:#fff;margin-bottom:9px;letter-spacing:.5px}
+.forum-post-preview{font-size:13px;color:var(--muted);line-height:1.78;margin-bottom:13px}
+.forum-post-meta{font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.reply-card{padding:15px 18px;margin-bottom:10px}
+.reply-header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.reply-author{font-size:13px;font-weight:700;text-transform:none!important}
+.reply-author.admin{color:#fca5a5}.reply-author.westra{color:var(--ice)}.reply-author.sturgiyali{color:#94a3b8}
+.reply-time{font-size:11px;color:var(--muted)}
+.reply-text{font-size:13.5px;line-height:1.65}
+.reply-actions{display:flex;gap:7px;margin-top:11px}
 
-    .forum-compose,.forum-post-card,.reply-card,.settings-card,.admin-table-wrap,.role-card{
-      border-radius:12px;border:1px solid rgba(168,216,234,.1);background:rgba(10,13,26,.68)
-    }
-    .forum-compose{padding:20px;margin-bottom:18px}
-    .forum-post-card{padding:18px;cursor:pointer;transition:.2s}
-    .forum-post-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.28);box-shadow:0 0 24px rgba(201,168,76,.12)}
-    .forum-tag{
-      display:inline-block;padding:3px 9px;border-radius:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
-      margin-bottom:10px;font-weight:700;
-    }
-    .tag-general{background:rgba(128,150,176,.14);border:1px solid rgba(128,150,176,.2);color:var(--steel)}
-    .tag-strategy{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.2);color:var(--gold)}
-    .tag-event{background:rgba(76,175,125,.13);border:1px solid rgba(76,175,125,.2);color:var(--green)}
-    .tag-suggestion{background:rgba(168,216,234,.12);border:1px solid rgba(168,216,234,.2);color:var(--ice)}
-    .tag-bug{background:rgba(192,57,43,.13);border:1px solid rgba(192,57,43,.2);color:#ff8080}
-    .forum-post-title{font-family:'Cinzel',serif;font-size:16px;color:#fff;margin-bottom:8px}
-    .forum-post-preview{font-size:13px;color:var(--steel);line-height:1.75;margin-bottom:12px}
-    .forum-post-meta{font-size:11px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px}
+.gallery-item{
+  position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:14px;cursor:pointer;
+  border:1px solid var(--b1);background:var(--s1);
+}
+.gallery-item img{width:100%;height:100%;object-fit:cover;filter:brightness(.85);transition:.28s}
+.gallery-item:hover img{filter:brightness(1);transform:scale(1.04)}
+.gallery-item:hover{border-color:var(--b2)}
+.gallery-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(4,5,13,.88),transparent 55%);
+  display:flex;align-items:flex-end;padding:11px;
+}
+.gallery-caption{font-size:11px;color:var(--frost);font-weight:500}
+.gallery-del-btn,.gallery-ok-btn{
+  position:absolute;top:10px;border:none;border-radius:7px;
+  color:#fff;font-size:10px;padding:4px 9px;cursor:pointer;transition:.18s;
+}
+.gallery-del-btn{right:10px;background:rgba(239,68,68,.72)}.gallery-del-btn:hover{background:rgba(239,68,68,.95)}
+.gallery-ok-btn{left:10px;background:rgba(34,197,94,.72)}.gallery-ok-btn:hover{background:rgba(34,197,94,.95)}
+.upload-zone{
+  border:2px dashed rgba(125,211,252,.25);border-radius:var(--r);padding:36px;
+  text-align:center;background:rgba(125,211,252,.025);margin-bottom:20px;cursor:pointer;transition:.22s;
+}
+.upload-zone:hover,.upload-zone.dragover{
+  border-color:rgba(125,211,252,.5);background:rgba(125,211,252,.07);
+}
+.upload-icon{font-size:40px;color:rgba(125,211,252,.38);display:block;margin-bottom:12px}
+.upload-text{font-size:13px;color:var(--muted);line-height:1.7}
 
-    .reply-card{padding:14px 16px;margin-bottom:10px}
-    .reply-header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-    .reply-author{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;text-transform:none!important}
-    .reply-author.admin{color:#ff7070}.reply-author.westra{color:var(--ice)}.reply-author.sturgiyali{color:var(--steel)}
-    .reply-time{font-size:11px;color:var(--muted)}
-    .reply-text{font-size:14px;line-height:1.6}
-    .reply-actions{display:flex;gap:6px;margin-top:10px}
+/* DISCORD */
+.discord-hero{
+  border-radius:20px;border:1px solid rgba(88,101,242,.18);
+  background:rgba(88,101,242,.07);text-align:center;padding:40px;
+}
 
-    .form-label-custom{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .form-input{
-      width:100%;border-radius:10px;outline:none;border:1px solid rgba(168,216,234,.14);
-      background:rgba(168,216,234,.04);color:var(--text);padding:11px 12px;
-    }
-    .form-input:focus{border-color:rgba(168,216,234,.38);box-shadow:0 0 0 3px rgba(168,216,234,.08)}
-    textarea.form-input{resize:vertical;min-height:90px}
+/* SETTINGS */
+.settings-card{
+  max-width:500px;padding:26px;border-radius:var(--r);
+  border:1px solid var(--b1);background:var(--s1);
+}
 
-    .lux-select{position:relative}
-    .lux-select-btn{
-      width:100%;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      border-radius:12px; border:1px solid rgba(168,216,234,.35);
-      background:linear-gradient(135deg, rgba(168,216,234,.12), rgba(114,137,218,.10)), rgba(8,12,24,.92);
-      color:var(--frost); padding:11px 12px;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 0 1px rgba(168,216,234,.08),0 8px 24px rgba(0,0,0,.28);
-      cursor:pointer;
-    }
-    .lux-select-btn:hover{border-color:rgba(168,216,234,.5)}
-    .lux-select-btn:focus{outline:none;border-color:rgba(168,216,234,.65);box-shadow:0 0 0 3px rgba(168,216,234,.12),0 0 24px rgba(114,137,218,.25)}
-    .lux-select-left{display:flex;align-items:center;gap:8px}
-    .lux-select-icon{color:#9fd7ff;text-shadow:0 0 10px rgba(159,215,255,.6);font-size:12px}
-    .lux-select-caret{color:#f0d070;font-size:11px;transition:.2s}
-    .lux-select.open .lux-select-caret{transform:rotate(180deg)}
-    .lux-select-menu{
-      position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:50;
-      border-radius:12px;border:1px solid rgba(168,216,234,.32);
-      background:rgba(8,12,24,.98);
-      box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 18px rgba(114,137,218,.2);
-      padding:8px; display:none;
-    }
-    .lux-select.open .lux-select-menu{display:block}
-    .lux-option{
-      width:100%;text-align:left;border:none;cursor:pointer;
-      border-radius:8px;padding:10px 10px;
-      background:transparent;color:var(--text);
-      display:flex;align-items:center;gap:8px;
-      transition:.18s;
-    }
-    .lux-option:hover{background:rgba(168,216,234,.08)}
-    .lux-option.active{background:rgba(114,137,218,.22);color:#fff}
-    .lux-dot{width:8px;height:8px;border-radius:50%}
+/* ADMIN */
+.admin-table-card{border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);overflow:hidden;margin-bottom:22px}
+.admin-table-head{padding:16px 20px;border-bottom:1px solid var(--b1);background:rgba(125,211,252,.02)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:11px 16px;text-align:left;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:700}
+tbody td{padding:13px 16px;border-top:1px solid var(--b1);font-size:13px}
+tbody tr{transition:.18s}
+tbody tr:hover{background:rgba(125,211,252,.03)}
 
-    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-    .gallery-item{
-      position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;cursor:pointer;
-      border:1px solid rgba(168,216,234,.12);background:rgba(10,13,26,.7);
-    }
-    .gallery-item img{width:100%;height:100%;object-fit:cover;filter:brightness(.9);transition:.25s}
-    .gallery-item:hover img{filter:brightness(1);transform:scale(1.03)}
-    .gallery-item-overlay{
-      position:absolute;inset:0;background:linear-gradient(to top, rgba(5,7,15,.86), transparent 55%);
-      display:flex;align-items:flex-end;padding:10px;
-    }
-    .gallery-item-caption{font-family:'Cinzel',serif;font-size:12px;color:var(--frost)}
-    .gallery-delete-btn,.gallery-approve-btn{
-      position:absolute;top:10px;border:none;border-radius:6px;color:#fff;font-size:11px;padding:4px 8px;cursor:pointer;
-    }
-    .gallery-delete-btn{right:10px;background:rgba(192,57,43,.75)}
-    .gallery-approve-btn{left:10px;background:rgba(76,175,125,.78)}
+/* ROLE MANAGEMENT — new design */
+.roles-bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.role-panel{border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);padding:22px}
+.role-panel-title{
+  font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;
+}
+.role-panel-title i{color:var(--gold);font-size:11px}
 
-    .gallery-upload-zone{
-      border:2px dashed rgba(168,216,234,.28);border-radius:14px;padding:34px;text-align:center;
-      background:rgba(168,216,234,.03);margin-bottom:18px;cursor:pointer;
-    }
-    .gallery-upload-zone:hover{border-color:rgba(168,216,234,.45);background:rgba(168,216,234,.08)}
-    .gallery-upload-zone.dragover{border-color:var(--ice);background:rgba(168,216,234,.1)}
-    .gallery-upload-icon{font-size:42px;color:rgba(168,216,234,.4);display:block;margin-bottom:10px}
-    .gallery-upload-text{font-size:13px;color:var(--muted);line-height:1.65}
+.role-list{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto}
+.role-list::-webkit-scrollbar{width:3px}
+.role-list::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.role-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:11px;border:1px solid var(--b1);
+  background:rgba(255,255,255,.02);transition:.2s;
+  animation:rowIn .3s ease forwards;opacity:0;
+}
+.role-row:hover{background:rgba(255,255,255,.05);border-color:var(--b2)}
+@keyframes rowIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.role-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.role-row-left{display:flex;align-items:center;gap:10px}
+.role-row-name{font-size:13px;font-weight:600;color:var(--frost)}
+.role-row-key{font-size:10px;color:var(--muted);font-family:monospace}
+.role-row-badges{display:flex;gap:6px;align-items:center}
+.rbadge{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:5px}
+.rbadge-admin{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.rbadge-mod{background:rgba(125,211,252,.11);border:1px solid rgba(125,211,252,.2);color:var(--ice)}
+.rbadge-lock{background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.15);color:var(--muted)}
+.rbadge-new{background:rgba(34,197,94,.11);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.role-del-btn{
+  width:28px;height:28px;border-radius:8px;border:1px solid rgba(239,68,68,.2);
+  background:rgba(239,68,68,.07);color:#fca5a5;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.18s;font-size:11px;
+}
+.role-del-btn:hover{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4);transform:scale(1.05)}
 
-    .discord-hero{
-      border-radius:16px;border:1px solid rgba(114,137,218,.16);
-      background:rgba(114,137,218,.07);text-align:center;padding:36px;
-    }
+/* color swatches */
+.color-row{display:flex;align-items:center;gap:10px}
+.color-inp{
+  width:44px;height:44px;border-radius:11px;border:1px solid var(--b2);
+  background:transparent;cursor:pointer;padding:4px;
+}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{width:24px;height:24px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:.15s}
+.swatch:hover{transform:scale(1.12)}
+.swatch.on{border-color:rgba(255,255,255,.65);transform:scale(1.12)}
+/* toggle */
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-radius:11px;border:1px solid var(--b1);
+  background:rgba(255,255,255,.02);margin-bottom:14px;
+}
+.toggle-label{font-size:13px;color:var(--frost);font-weight:500}
+.toggle-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.tog{
+  width:44px;height:26px;border-radius:13px;border:1px solid var(--b2);
+  background:rgba(255,255,255,.08);cursor:pointer;position:relative;transition:.22s;flex-shrink:0;
+}
+.tog.on{background:rgba(34,197,94,.22);border-color:rgba(34,197,94,.38)}
+.tog-k{
+  width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.38);
+  position:absolute;top:2px;left:2px;transition:.22s;
+}
+.tog.on .tog-k{left:20px;background:var(--green)}
+/* preview badge */
+.preview-box{
+  padding:14px 16px;border-radius:12px;border:1px solid var(--b1);
+  background:rgba(255,255,255,.02);margin-bottom:14px;
+}
+.preview-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.preview-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 13px;border-radius:9px;font-size:12px;font-weight:700;letter-spacing:.5px;
+}
+/* stats mini */
+.stats-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-mini{
+  text-align:center;padding:14px 6px;border-radius:11px;
+  border:1px solid var(--b1);background:rgba(255,255,255,.02);
+}
+.stat-mini-val{font-family:'Orbitron',monospace;font-size:26px;font-weight:800;color:#fff;line-height:1}
+.stat-mini-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:5px}
 
-    .settings-card{max-width:530px;padding:24px}
+/* lux-select */
+.lux-select{position:relative}
+.lux-sel-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-radius:11px;border:1px solid var(--b2);
+  background:linear-gradient(135deg,rgba(125,211,252,.09),rgba(99,102,241,.07)),rgba(4,5,13,.9);
+  color:var(--frost);padding:11px 13px;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);transition:.18s;
+}
+.lux-sel-btn:hover{border-color:var(--b3)}
+.lux-sel-btn:focus{outline:none;border-color:rgba(125,211,252,.5);box-shadow:0 0 0 3px rgba(125,211,252,.1)}
+.lux-sel-caret{color:var(--gold2);font-size:11px;transition:.2s}
+.lux-select.open .lux-sel-caret{transform:rotate(180deg)}
+.lux-sel-menu{
+  position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:50;
+  border-radius:13px;border:1px solid var(--b2);background:rgba(4,5,13,.98);
+  box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 20px rgba(99,102,241,.15);
+  padding:8px;display:none;
+}
+.lux-select.open .lux-sel-menu{display:block}
+.lux-opt{
+  width:100%;text-align:left;border:none;cursor:pointer;border-radius:9px;
+  padding:10px 11px;background:transparent;color:var(--text);
+  display:flex;align-items:center;gap:9px;transition:.16s;font-family:'Outfit',sans-serif;font-size:13px;
+}
+.lux-opt:hover{background:rgba(125,211,252,.07)}
+.lux-opt.active{background:rgba(99,102,241,.2);color:#fff}
+.lux-dot{width:8px;height:8px;border-radius:50%}
 
-    .admin-table-wrap{overflow:hidden}
-    .admin-table-head{padding:16px;border-bottom:1px solid rgba(168,216,234,.1);background:rgba(168,216,234,.03)}
-    table{width:100%;border-collapse:collapse}
-    thead th{padding:11px 14px;text-align:left;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-    tbody td{padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
-    tbody tr:hover{background:rgba(168,216,234,.04)}
+/* MODALS */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;padding:18px;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(8px);
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  width:100%;max-width:460px;position:relative;border-radius:20px;
+  border:1px solid var(--b2);background:rgba(4,5,13,.97);padding:30px;
+  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 50px rgba(99,102,241,.1);
+  animation:modalIn .3s cubic-bezier(.22,1,.36,1);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.modal-close{
+  position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--b2);background:rgba(255,255,255,.06);color:var(--muted);cursor:pointer;
+  transition:.18s;display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{background:rgba(255,255,255,.12);color:var(--frost)}
+.modal-title{text-align:center;font-family:'Orbitron',monospace;font-size:18px;color:#fff;margin-bottom:4px;letter-spacing:2px}
+.modal-sub{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
 
-    .role-card{padding:18px;margin-bottom:18px}
-    .role-pills{display:flex;gap:8px;flex-wrap:wrap}
-    .role-pill{
-      border:1px solid rgba(168,216,234,.25);border-radius:999px;padding:6px 10px;font-size:11px;background:rgba(168,216,234,.08);
-      display:inline-flex;align-items:center;
-    }
-    .role-del{margin-left:8px;color:#ff8b8b;cursor:pointer;font-size:11px}
-    .role-del:hover{color:#ff4f4f}
+/* CONFIRM MODAL */
+.confirm-box{max-width:360px}
+.confirm-btns{display:flex;gap:10px;margin-top:18px}
+.confirm-cancel{
+  flex:1;padding:11px;border-radius:11px;border:1px solid var(--b2);
+  background:transparent;color:var(--muted);cursor:pointer;font-size:13px;
+  transition:.15s;font-family:'Outfit',sans-serif;
+}
+.confirm-cancel:hover{background:rgba(255,255,255,.06);color:var(--frost)}
+.confirm-del{
+  flex:1;padding:11px;border-radius:11px;border:1px solid rgba(239,68,68,.3);
+  background:rgba(239,68,68,.1);color:#fca5a5;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.15s;font-family:'Outfit',sans-serif;
+}
+.confirm-del:hover{background:rgba(239,68,68,.22);border-color:rgba(239,68,68,.5)}
 
-    .modal-overlay{
-      display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;
-      padding:18px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
-    }
-    .modal-overlay.open{display:flex}
-    .modal-box{
-      width:100%;max-width:460px;position:relative;border-radius:16px;border:1px solid rgba(168,216,234,.15);
-      background:rgba(8,11,20,.96);padding:28px;
-      box-shadow:0 20px 70px rgba(0,0,0,.6),0 0 40px rgba(114,137,218,.12);
-    }
-    .modal-close{
-      position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:var(--muted);cursor:pointer;
-    }
-    .modal-title{text-align:center;font-family:'Cinzel Decorative',serif;font-size:20px;color:#fff;margin-bottom:4px}
-    .modal-sub{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+/* TOAST */
+.toast{
+  position:fixed;bottom:22px;right:22px;z-index:3000;
+  padding:12px 18px;border-radius:14px;border:1px solid var(--b2);
+  background:rgba(4,5,13,.96);color:var(--text);font-size:13px;
+  display:flex;align-items:center;gap:10px;
+  transform:translateY(80px);opacity:0;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter:blur(24px);box-shadow:0 12px 40px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-    .toast-msg{
-      position:fixed;top:18px;right:18px;z-index:3000;transform:translateX(130%);transition:.35s;
-      border-radius:12px;border:1px solid rgba(168,216,234,.2);background:rgba(8,11,20,.9);
-      padding:11px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 10px 28px rgba(0,0,0,.45);
-    }
-    .toast-msg.show{transform:translateX(0)}
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.94);backdrop-filter:blur(10px);align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:88vh;border-radius:12px;border:1px solid var(--b2)}
+.lightbox-x{position:absolute;right:20px;top:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--b2);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-    .lightbox-overlay{
-      display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.92);
-      backdrop-filter:blur(8px);align-items:center;justify-content:center;
-    }
-    .lightbox-overlay.open{display:flex}
-    .lightbox-img{max-width:90vw;max-height:86vh;border-radius:10px;border:1px solid rgba(168,216,234,.18)}
-    .lightbox-close{
-      position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;
-    }
+/* STRENGTH */
+#strength-bar{height:3px;border-radius:2px;background:var(--b1);margin-top:8px;transition:width .3s}
+#strength-text{font-size:10px;letter-spacing:1px;margin-top:5px}
 
-    .empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
-    .empty-state i{font-size:48px;opacity:.2;display:block;margin-bottom:10px}
+/* EMPTY */
+.empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty-state i{font-size:44px;opacity:.15;display:block;margin-bottom:12px}
 
-    @media (max-width:960px){
-      .hamburger{display:block}
-      .sidenav{transform:translateX(-100%);transition:.25s}
-      .sidenav.open{transform:translateX(0)}
-      .sidenav-overlay.open{display:block}
-      .main-content{margin-left:0;padding-top:56px}
-      .hero-section,.page-body{padding:24px}
-      .quick-actions{padding:20px;grid-template-columns:repeat(2,1fr)}
-      .chat-wrapper{grid-template-columns:1fr;height:auto;min-height:64vh}
-      .chat-sidebar{display:none}
-      .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-      .col-md-4,.col-sm-6{width:100%}
-    }
-
-    ::-webkit-scrollbar{width:5px;height:5px}
-    ::-webkit-scrollbar-thumb{background:rgba(168,216,234,.15);border-radius:5px}
-    ::-webkit-scrollbar-track{background:transparent}
-  </style>
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .hamburger{display:block}
+  .sidenav{transform:translateX(-100%);transition:.28s}
+  .sidenav.open{transform:translateX(0)}
+  .sidenav-overlay.open{display:block}
+  .main-content{margin-left:0;padding-top:58px}
+  .hero-section,.page-body{padding:22px}
+  .quick-actions,.stats-bento{grid-template-columns:repeat(2,1fr)}
+  .chat-wrapper{grid-template-columns:1fr;height:auto;min-height:66vh}
+  .chat-sidebar{display:none}
+  .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .roles-bento{grid-template-columns:1fr}
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
+</style>
 </head>
 <body>
-  <canvas id="bg-canvas"></canvas>
-  <div id="mouse-neon"></div>
+<canvas id="bg-canvas"></canvas>
+<div id="mouse-glow"></div>
 
-  <button type="button" class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-  <div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
+<button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<div class="sidenav-overlay" id="sidenav-overlay" onclick="closeSidebar()"></div>
 
-  <nav class="sidenav" id="sidenav">
-    <div class="clan-brand">
-      <!-- FIX 2: SVG logo instead of broken image path -->
-      <div id="clan-logo" class="clan-avatar" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#0a1020,#141e35);border-radius:16px;border:1px solid rgba(168,216,234,.35);box-shadow:0 0 26px rgba(114,137,218,.26);width:96px;height:96px;margin:0 auto 12px;">
-        <svg width="62" height="62" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="31,5 55,18 55,44 31,57 7,44 7,18" fill="none" stroke="#a8d8ea" stroke-width="1.4" opacity="0.55"/>
-          <polygon points="31,12 48,22 48,40 31,50 14,40 14,22" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.45"/>
-          <text x="31" y="39" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#c9a84c" opacity="0.95">S</text>
-          <circle cx="31" cy="31" r="28" fill="none" stroke="rgba(168,216,234,0.12)" stroke-width="0.8"/>
-          <circle cx="31" cy="31" r="2" fill="rgba(201,168,76,0.4)"/>
-        </svg>
-      </div>
-      <div class="clan-name">Sturgia</div>
-      <div class="clan-tagline">Elite Clan · Since the North</div>
+<nav class="sidenav" id="sidenav">
+  <div class="clan-brand">
+    <div class="clan-logo-wrap">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+        <polygon points="28,4 50,16 50,40 28,52 6,40 6,16" fill="none" stroke="#7dd3fc" stroke-width="1.2" opacity=".5"/>
+        <polygon points="28,11 44,20 44,36 28,45 12,36 12,20" fill="none" stroke="#f59e0b" stroke-width=".9" opacity=".4"/>
+        <text x="28" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#f59e0b" opacity=".95">S</text>
+        <circle cx="28" cy="28" r="25" fill="none" stroke="rgba(125,211,252,.1)" stroke-width=".7"/>
+      </svg>
     </div>
+    <div class="clan-name">Sturgia</div>
+    <div class="clan-tagline">Elite Clan · Since the North</div>
+  </div>
 
-    <div class="sidenav-menu">
-      <div class="nav-section-label">Ana Menü</div>
-      <a href="#" class="nav-link active" id="nav-home" onclick="show('home');closeSidebar()"><i class="fas fa-compass"></i>Anasayfa</a>
-      <a href="#" class="nav-link" id="nav-warriors" onclick="show('warriors');closeSidebar()"><i class="fas fa-users"></i>Savaşçılar</a>
-      <a href="#" class="nav-link" id="nav-chat" onclick="show('chat');closeSidebar()"><i class="fas fa-comments"></i>Klan Sohbeti</a>
-      <a href="#" class="nav-link" id="nav-forum" onclick="show('forum');closeSidebar()"><i class="fas fa-scroll"></i>Forum</a>
-      <a href="#" class="nav-link" id="nav-gallery" onclick="show('gallery');closeSidebar()"><i class="fas fa-images"></i>Galeri</a>
-
-      <div class="nav-section-label">Topluluk</div>
-      <a href="#" class="nav-link" id="nav-discord" onclick="show('discord');closeSidebar()"><i class="fab fa-discord"></i>Discord</a>
-      <a href="#" class="nav-link" id="nav-settings" onclick="show('settings');closeSidebar()"><i class="fas fa-shield-alt"></i>Güvenlik</a>
-
-      <div id="admin-nav-item" class="d-none">
-        <div class="nav-section-label">Yönetim</div>
-        <a href="#" class="nav-link admin-link" id="nav-admin" onclick="show('admin');closeSidebar()"><i class="fas fa-crown"></i>Admin Paneli</a>
-      </div>
-    </div>
-
-    <div class="sidenav-footer">
-      <div id="auth-section">
-        <button type="button" class="btn-glass" style="width:100%" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
-      </div>
-      <div id="user-section" class="d-none">
-        <span id="display-nick" class="user-nick"></span>
-        <span id="display-rank" class="user-rank-badge"></span>
-        <button type="button" class="btn-glass btn-glass-red btn-glass-sm" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
-      </div>
-    </div>
-  </nav>
-
-  <main class="main-content">
-    <section id="page-home">
-      <div class="hero-section">
-        <h1 class="hero-title">Kuzeyin<br><span>Soğuk Nefesi</span></h1>
-        <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Sohbet, forum, galeri ve yönetim tek merkezde.</p>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-block"><div class="stat-label">Toplam Savaşçı</div><div class="stat-value" id="army-total">0</div></div>
-        <div class="stat-block"><div class="stat-label">Aktif Rütbe</div><div class="stat-value" style="font-size:24px;padding-top:8px" id="hero-rank">—</div></div>
-        <div class="stat-block"><div class="stat-label">Forum Konuları</div><div class="stat-value" id="forum-count">0</div></div>
-        <div class="stat-block"><div class="stat-label">Durum</div><div class="stat-value" style="font-size:20px;color:var(--green);padding-top:10px">AKTİF</div></div>
-      </div>
-
-      <div class="quick-actions">
-        <a href="#" class="qa-card" onclick="show('chat')"><span class="qa-icon"><i class="fas fa-comments"></i></span><div class="qa-label">Sohbet</div><div class="qa-sub">Canlı konuş</div></a>
-        <a href="#" class="qa-card" onclick="show('forum')"><span class="qa-icon"><i class="fas fa-scroll"></i></span><div class="qa-label">Forum</div><div class="qa-sub">Konu aç</div></a>
-        <a href="#" class="qa-card" onclick="show('gallery')"><span class="qa-icon"><i class="fas fa-images"></i></span><div class="qa-label">Galeri</div><div class="qa-sub">Anılar</div></a>
-        <a href="#" class="qa-card" onclick="show('discord')"><span class="qa-icon"><i class="fab fa-discord"></i></span><div class="qa-label">Discord</div><div class="qa-sub">Sunucuya katıl</div></a>
-      </div>
-    </section>
-
-    <section id="page-warriors" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Klan Savaşçıları</div><div class="section-rule"></div></div>
-        <div id="warrior-grid" class="row"></div>
-      </div>
-    </section>
-
-    <section id="page-chat" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Klan Sohbeti</div><div class="section-rule"></div></div>
-
-        <div id="chat-access-wall" class="d-none">
-          <div class="access-wall">
-            <div class="access-wall-icon"><i class="fas fa-lock"></i></div>
-            <div class="access-wall-title">Erişim Kısıtlandı</div>
-            <div class="access-wall-sub" id="chat-wall-msg">Sohbet için giriş yapmalısın.</div>
-            <button type="button" class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
-          </div>
-        </div>
-
-        <div id="chat-approved-area" class="d-none">
-          <div class="chat-wrapper">
-            <div class="chat-main">
-              <div class="chat-head">
-                <span class="chat-status-dot"></span><span class="chat-title">Genel Kanal</span>
-                <span style="float:right;font-size:10px;color:var(--muted);letter-spacing:2px"># STURGIA</span>
-              </div>
-
-              <div class="chat-messages" id="chat-messages">
-                <div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>
-              </div>
-
-              <div class="chat-input-area" id="chat-input-area">
-                <input id="chat-input" class="chat-input" placeholder="Bir şeyler yaz..." onkeydown="handleChatKeydown(event)">
-                <button type="button" id="send-btn" class="btn-glass btn-glass-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-              </div>
-
-              <div id="muted-notice" class="d-none" style="padding:10px;border-top:1px solid rgba(168,216,234,.08)">
-                <div class="muted-notice-bar">
-                  <div><i class="fas fa-volume-mute"></i> Susturuldunuz. Kalan: <span id="mute-countdown"></span></div>
-                  <div id="mute-reason-view" style="margin-top:5px;font-size:11px;opacity:.9"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="chat-sidebar">
-              <div class="chat-members-head" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">
-                <i class="fas fa-users"></i> Üyeler
-              </div>
-              <div class="chat-members" id="chat-members-list"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="page-forum" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Klan Forumu</div><div class="section-rule"></div></div>
-
-        <div id="forum-access-wall" class="d-none">
-          <div class="access-wall">
-            <div class="access-wall-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="access-wall-title">Forum Kilitli</div>
-            <div class="access-wall-sub" id="forum-wall-msg">Forum için giriş yapmalısın.</div>
-            <button type="button" class="btn-glass" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
-          </div>
-        </div>
-
-        <div id="forum-approved-area" class="d-none">
-          <div id="forum-list-view">
-            <div id="forum-compose-area" class="d-none">
-              <div class="forum-compose">
-                <div style="font-family:'Cinzel',serif;color:#fff;margin-bottom:16px"><i class="fas fa-pen" style="color:var(--gold)"></i> Yeni Konu Aç</div>
-
-                <div style="margin-bottom:12px">
-                  <label class="form-label-custom">Başlık</label>
-                  <input id="forum-title-input" class="form-input" placeholder="Konu başlığı...">
-                </div>
-
-                <div style="margin-bottom:12px">
-                  <label class="form-label-custom">Kategori</label>
-                  <div class="lux-select" id="forum-tag-select">
-                    <button type="button" class="lux-select-btn" id="forum-tag-btn">
-                      <span class="lux-select-left"><i class="fas fa-filter lux-select-icon"></i><span id="forum-tag-label">Genel</span></span>
-                      <i class="fas fa-chevron-down lux-select-caret"></i>
-                    </button>
-                    <div class="lux-select-menu" id="forum-tag-menu">
-                      <button type="button" class="lux-option active" data-value="general" data-label="Genel"><span class="lux-dot" style="background:#7a96b4"></span>Genel</button>
-                      <button type="button" class="lux-option" data-value="strategy" data-label="Strateji"><span class="lux-dot" style="background:#c9a84c"></span>Strateji</button>
-                      <button type="button" class="lux-option" data-value="event" data-label="Etkinlik"><span class="lux-dot" style="background:#4caf7d"></span>Etkinlik</button>
-                      <button type="button" class="lux-option" data-value="suggestion" data-label="Öneri"><span class="lux-dot" style="background:#a8d8ea"></span>Öneri</button>
-                      <button type="button" class="lux-option" data-value="bug" data-label="Hata Bildiri"><span class="lux-dot" style="background:#ff8080"></span>Hata Bildiri</button>
-                    </div>
-                    <input type="hidden" id="forum-tag-input" value="general">
-                  </div>
-                </div>
-
-                <div style="margin-bottom:12px">
-                  <label class="form-label-custom">İçerik</label>
-                  <textarea id="forum-body-input" class="form-input" placeholder="Ne paylaşmak istiyorsun?"></textarea>
-                </div>
-
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button type="button" class="btn-glass btn-glass-gold" onclick="submitForumPost()"><i class="fas fa-paper-plane"></i>Gönder</button>
-                  <button type="button" class="btn-glass" onclick="document.getElementById('forum-compose-area').classList.add('d-none')">İptal</button>
-                </div>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('all')">Tümü</button>
-                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('general')">Genel</button>
-                <button type="button" class="btn-glass btn-glass-sm btn-glass-gold" onclick="filterForum('strategy')">Strateji</button>
-                <button type="button" class="btn-glass btn-glass-sm" onclick="filterForum('event')">Etkinlik</button>
-              </div>
-              <button type="button" class="btn-glass btn-glass-gold" onclick="toggleCompose()"><i class="fas fa-plus"></i>Yeni Konu</button>
-            </div>
-
-            <div id="forum-posts" style="display:flex;flex-direction:column;gap:12px"></div>
-          </div>
-
-          <div id="forum-detail-view" class="d-none">
-            <button type="button" class="btn-glass btn-glass-sm" style="margin-bottom:14px" onclick="backToForum()"><i class="fas fa-arrow-left"></i>Geri</button>
-            <div id="forum-detail-content"></div>
-
-            <div style="margin-top:18px">
-              <div class="section-header" style="margin-bottom:12px"><div class="section-title" style="font-size:16px">Yanıtlar</div><div class="section-rule"></div></div>
-              <div id="forum-replies"></div>
-
-              <div id="reply-compose" class="d-none" style="margin-top:10px">
-                <textarea id="reply-input" class="form-input" placeholder="Yanıtını yaz..." style="min-height:82px;margin-bottom:10px"></textarea>
-                <button type="button" class="btn-glass" onclick="submitReply()"><i class="fas fa-reply"></i>Yanıtla</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="page-gallery" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Klan Galerisi</div><div class="section-rule"></div></div>
-
-        <div id="gallery-upload-area" class="d-none">
-          <div class="gallery-upload-zone" id="upload-zone" onclick="document.getElementById('gallery-file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-            <span class="gallery-upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-            <div class="gallery-upload-text">
-              <strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br>
-              <span style="font-size:12px">JPG, PNG, GIF, WEBP · Maks. 5MB</span>
-            </div>
-          </div>
-          <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
-        </div>
-
-        <div id="gallery-grid" class="gallery-grid"></div>
-        <div id="gallery-empty" class="empty-state d-none"><i class="fas fa-images"></i><p>Henüz fotoğraf yok.</p></div>
-      </div>
-    </section>
-
-    <section id="page-discord" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Discord Sunucusu</div><div class="section-rule"></div></div>
-        <div class="discord-hero">
-          <div style="font-size:64px;color:#7289da;margin-bottom:10px"><i class="fab fa-discord"></i></div>
-          <div style="font-family:'Cinzel Decorative',serif;font-size:28px;color:#fff">Sturgia Discord</div>
-          <div style="margin:10px auto 20px;max-width:500px;color:var(--steel)">Sesli sohbet, etkinlikler ve klan duyuruları burada.</div>
-          <a class="btn-glass btn-discord-glass" target="_blank" href="https://discord.gg/DAVET_LINKIN"><i class="fab fa-discord"></i>Sunucuya Katıl</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="page-settings" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Güvenlik Ayarları</div><div class="section-rule"></div></div>
-        <div class="settings-card">
-          <div style="font-family:'Cinzel',serif;color:#fff;font-size:18px;margin-bottom:4px">Şifre Değiştir</div>
-          <div style="font-size:13px;color:var(--muted);margin-bottom:20px">En az 8 karakter + büyük harf + rakam + özel karakter önerilir.</div>
-
-          <label class="form-label-custom">Mevcut Şifre</label>
-          <input id="current-password" type="password" class="form-input" style="margin-bottom:12px" placeholder="••••••••">
-
-          <label class="form-label-custom">Yeni Şifre</label>
-          <input id="new-password" type="password" class="form-input" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
-          <div id="strength-bar" style="height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:8px"></div>
-          <div id="strength-text" style="font-size:10px;letter-spacing:1px;margin-top:4px"></div>
-
-          <button type="button" class="btn-glass" style="margin-top:16px;width:100%" onclick="updatePassword()"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="page-admin" class="d-none">
-      <div class="page-body">
-        <div class="section-header"><div class="section-title">Klan Yönetimi</div><div class="section-rule"></div></div>
-
-        <div id="pending-section" style="margin-bottom:24px">
-          <div class="section-header" style="margin-bottom:10px"><div class="section-title" style="font-size:15px;color:var(--gold)"><i class="fas fa-clock"></i> Onay Bekleyen Üyeler</div><div class="section-rule"></div></div>
-          <div id="pending-list" class="row"></div>
-        </div>
-
-        <div class="role-card">
-          <div style="font-family:'Cinzel',serif;color:#fff;font-size:15px;margin-bottom:12px"><i class="fas fa-layer-group" style="color:var(--gold)"></i> Yeni Rol Oluştur (Sadece Admin)</div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <label class="form-label-custom">Rol Key</label>
-              <input id="new-role-key" class="form-input" placeholder="ornek: elite_guard">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label-custom">Rol Adı</label>
-              <input id="new-role-name" class="form-input" placeholder="Elite Guard">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label-custom">Renk</label>
-              <input id="new-role-color" type="color" class="form-input" value="#a8d8ea" style="height:42px;padding:5px">
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:8px;align-items:center">
-            <div class="col-md-4">
-              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)">
-                <input id="new-role-moderate" type="checkbox"> Moderasyon Yetkisi
-              </label>
-            </div>
-            <div class="col-md-4">
-              <button type="button" class="btn-glass btn-glass-gold" style="width:100%" onclick="createRole()">Rol Oluştur</button>
-            </div>
-          </div>
-
-          <div style="margin-top:12px">
-            <div class="form-label-custom" style="margin-bottom:8px">Mevcut Roller (admin dışı roller silinebilir)</div>
-            <div id="roles-preview" class="role-pills"></div>
-          </div>
-        </div>
-
-        <div class="admin-table-wrap">
-          <div class="admin-table-head"><span style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Savaşçı Listesi · Rol / Mute Yönetimi</span></div>
-          <table>
-            <thead><tr><th>Savaşçı</th><th>Rol</th><th>Durum</th><th style="text-align:right">İşlemler</th></tr></thead>
-            <tbody id="admin-table-body"></tbody>
-          </table>
-        </div>
-
-        <div class="section-header" style="margin:24px 0 10px"><div class="section-title" style="font-size:15px;color:var(--gold)">Galeri Onay Kuyruğu</div><div class="section-rule"></div></div>
-        <div id="gallery-pending-grid" class="gallery-grid"></div>
-      </div>
-    </section>
-  </main>
-
-  <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal()">
-    <div class="modal-box">
-      <button type="button" class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-      <div class="modal-title">Klan Girişi</div>
-      <div class="modal-sub">Kimliğini doğrula</div>
-
-      <div style="margin-bottom:12px">
-        <label class="form-label-custom">Savaşçı Adı</label>
-        <input id="login-nick" class="form-input" placeholder="Adını gir" autocomplete="username">
-      </div>
-
-      <div>
-        <label class="form-label-custom">Şifre</label>
-        <input id="login-pass" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')processAuth()">
-      </div>
-
-      <div id="modal-error" style="display:none;font-size:12px;color:#ff8080;margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(192,57,43,.2);background:rgba(192,57,43,.1)"></div>
-
-      <button type="button" id="login-btn" class="btn-glass" style="width:100%;margin-top:14px" onclick="processAuth()"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
-      <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">Hesap yoksa otomatik oluşturulur ve admin onayı bekler.</div>
+  <div class="sidenav-menu">
+    <div class="nav-section-label">Ana Menü</div>
+    <a href="#" class="nav-link active" id="nav-home" onclick="show('home');closeSidebar()"><i class="fas fa-compass"></i>Anasayfa</a>
+    <a href="#" class="nav-link" id="nav-warriors" onclick="show('warriors');closeSidebar()"><i class="fas fa-users"></i>Savaşçılar</a>
+    <a href="#" class="nav-link" id="nav-chat" onclick="show('chat');closeSidebar()"><i class="fas fa-comments"></i>Klan Sohbeti</a>
+    <a href="#" class="nav-link" id="nav-forum" onclick="show('forum');closeSidebar()"><i class="fas fa-scroll"></i>Forum</a>
+    <a href="#" class="nav-link" id="nav-gallery" onclick="show('gallery');closeSidebar()"><i class="fas fa-images"></i>Galeri</a>
+    <div class="nav-section-label">Topluluk</div>
+    <a href="#" class="nav-link" id="nav-discord" onclick="show('discord');closeSidebar()"><i class="fab fa-discord"></i>Discord</a>
+    <a href="#" class="nav-link" id="nav-settings" onclick="show('settings');closeSidebar()"><i class="fas fa-shield-alt"></i>Güvenlik</a>
+    <div id="admin-nav-item" class="d-none">
+      <div class="nav-section-label">Yönetim</div>
+      <a href="#" class="nav-link admin-link" id="nav-admin" onclick="show('admin');closeSidebar()"><i class="fas fa-crown"></i>Admin Paneli</a>
     </div>
   </div>
 
-  <div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
-    <div class="modal-box" style="max-width:420px">
-      <button type="button" class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
-      <div class="modal-title" style="font-size:18px">Kullanıcıyı Sustur</div>
-      <div class="modal-sub" id="mute-target-name">Savaşçı</div>
-      <input id="mute-target-id" type="hidden">
-
-      <div style="margin-bottom:12px">
-        <label class="form-label-custom">Süre</label>
-        <select id="mute-duration" class="form-input">
-          <option value="5">5 dakika</option>
-          <option value="15">15 dakika</option>
-          <option value="30">30 dakika</option>
-          <option value="60">1 saat</option>
-          <option value="120">2 saat</option>
-          <option value="1440">24 saat</option>
-          <option value="10080">7 gün</option>
-          <option value="99999">Kalıcı</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom:12px">
-        <label class="form-label-custom">Sebep (Opsiyonel)</label>
-        <textarea id="mute-reason" class="form-input" placeholder="Örn: Spam / Küfür / Flood..." style="min-height:78px"></textarea>
-      </div>
-
-      <button type="button" class="btn-glass btn-glass-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
+  <div class="sidenav-footer">
+    <div id="auth-section">
+      <button class="btn btn-ice" style="width:100%" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+    </div>
+    <div id="user-section" class="d-none">
+      <span id="display-nick" class="user-nick"></span>
+      <span id="display-rank" class="user-rank-badge"></span>
+      <button class="btn btn-red btn-sm" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış Yap</button>
     </div>
   </div>
+</nav>
 
-  <div class="lightbox-overlay" id="lightbox" onclick="if(event.target===this)closeLightbox()">
-    <button type="button" class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
-    <img id="lightbox-img" class="lightbox-img" src="" alt="">
+<main class="main-content">
+
+<!-- HOME -->
+<section id="page-home">
+  <div class="hero-section">
+    <div class="hero-eyebrow"><span></span>Klan Merkezi</div>
+    <h1 class="hero-title">Kuzeyin<br><span class="grd">Soğuk Nefesi</span></h1>
+    <p class="hero-desc">Sturgia klanı, sadakat ve onur üzerine kurulu bir kardeşliktir. Sohbet, forum, galeri ve yönetim tek merkezde.</p>
   </div>
-
-  <div class="toast-msg" id="toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toast-text">İşlem başarılı</span>
+  <div class="stats-bento">
+    <div class="stat-cell"><div class="stat-lbl">Toplam Savaşçı</div><div class="stat-val" id="army-total">0</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Aktif Rütbe</div><div class="stat-val" style="font-size:20px;padding-top:12px" id="hero-rank">—</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Forum Konuları</div><div class="stat-val" id="forum-count">0</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Durum</div><div class="stat-val" style="font-size:18px;color:var(--green);padding-top:12px">AKTİF</div></div>
   </div>
+  <div class="quick-actions">
+    <a href="#" class="qa-card" onclick="show('chat')"><span class="qa-icon"><i class="fas fa-comments"></i></span><div class="qa-label">Sohbet</div><div class="qa-sub">Canlı konuş</div></a>
+    <a href="#" class="qa-card" onclick="show('forum')"><span class="qa-icon"><i class="fas fa-scroll"></i></span><div class="qa-label">Forum</div><div class="qa-sub">Konu aç</div></a>
+    <a href="#" class="qa-card" onclick="show('gallery')"><span class="qa-icon"><i class="fas fa-images"></i></span><div class="qa-label">Galeri</div><div class="qa-sub">Anılar</div></a>
+    <a href="#" class="qa-card" onclick="show('discord')"><span class="qa-icon"><i class="fab fa-discord"></i></span><div class="qa-label">Discord</div><div class="qa-sub">Sunucuya katıl</div></a>
+  </div>
+</section>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore, collection, onSnapshot, query, where,
-      getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp, getDoc, setDoc
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<!-- WARRIORS -->
+<section id="page-warriors" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Klan Savaşçıları</div><div class="section-rule"></div></div>
+    <div id="warrior-grid" class="warrior-grid"></div>
+  </div>
+</section>
 
-    const firebaseConfig = {
-      apiKey:"AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",
-      authDomain:"sturgia-clan.firebaseapp.com",
-      projectId:"sturgia-clan",
-      storageBucket:"sturgia-clan.firebasestorage.app",
-      messagingSenderId:"257587521790",
-      appId:"1:257587521790:web:59b1a1b38029d1564dddaf"
-    };
+<!-- CHAT -->
+<section id="page-chat" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Klan Sohbeti</div><div class="section-rule"></div></div>
+    <div id="chat-access-wall" class="d-none">
+      <div class="access-wall">
+        <div class="access-icon"><i class="fas fa-lock"></i></div>
+        <div class="access-title">Erişim Kısıtlandı</div>
+        <div class="access-sub" id="chat-wall-msg">Sohbet için giriş yapmalısın.</div>
+        <button class="btn btn-ice" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+      </div>
+    </div>
+    <div id="chat-approved-area" class="d-none">
+      <div class="chat-wrapper">
+        <div class="chat-main">
+          <div class="chat-head">
+            <div class="chat-dot"></div>
+            <span class="chat-title">Genel Kanal</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--muted);letter-spacing:2px"># STURGIA</span>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>
+          </div>
+          <div class="chat-input-area" id="chat-input-area">
+            <input id="chat-input" class="chat-input" placeholder="Bir şeyler yaz..." onkeydown="handleChatKeydown(event)">
+            <button id="send-btn" class="btn btn-ice btn-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+          </div>
+          <div id="muted-notice" class="d-none" style="padding:10px 14px;border-top:1px solid var(--b1)">
+            <div class="muted-bar">
+              <i class="fas fa-volume-mute"></i> Susturuldunuz. Kalan: <span id="mute-countdown"></span>
+              <div id="mute-reason-view" style="margin-top:5px;font-size:11px;opacity:.8"></div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-sidebar">
+          <div class="chat-members-head"><i class="fas fa-users"></i> Üyeler</div>
+          <div class="chat-members" id="chat-members-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<!-- FORUM -->
+<section id="page-forum" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Klan Forumu</div><div class="section-rule"></div></div>
+    <div id="forum-access-wall" class="d-none">
+      <div class="access-wall">
+        <div class="access-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="access-title">Forum Kilitli</div>
+        <div class="access-sub" id="forum-wall-msg">Forum için giriş yapmalısın.</div>
+        <button class="btn btn-ice" onclick="openModal()"><i class="fas fa-sign-in-alt"></i>Giriş Yap</button>
+      </div>
+    </div>
+    <div id="forum-approved-area" class="d-none">
+      <div id="forum-list-view">
+        <div id="forum-compose-area" class="d-none">
+          <div class="forum-compose-card">
+            <div style="font-family:'Orbitron',monospace;color:#fff;font-size:12px;letter-spacing:2px;margin-bottom:18px"><i class="fas fa-pen" style="color:var(--gold)"></i> YENİ KONU AÇ</div>
+            <div style="margin-bottom:12px"><label class="form-label">Başlık</label><input id="forum-title-input" class="form-input" placeholder="Konu başlığı..."></div>
+            <div style="margin-bottom:12px">
+              <label class="form-label">Kategori</label>
+              <div class="lux-select" id="forum-tag-select">
+                <button class="lux-sel-btn" id="forum-tag-btn">
+                  <span style="display:flex;align-items:center;gap:8px"><i class="fas fa-filter" style="color:var(--ice);font-size:11px"></i><span id="forum-tag-label">Genel</span></span>
+                  <i class="fas fa-chevron-down lux-sel-caret"></i>
+                </button>
+                <div class="lux-sel-menu" id="forum-tag-menu">
+                  <button class="lux-opt active" data-value="general" data-label="Genel"><span class="lux-dot" style="background:#64748b"></span>Genel</button>
+                  <button class="lux-opt" data-value="strategy" data-label="Strateji"><span class="lux-dot" style="background:#f59e0b"></span>Strateji</button>
+                  <button class="lux-opt" data-value="event" data-label="Etkinlik"><span class="lux-dot" style="background:#22c55e"></span>Etkinlik</button>
+                  <button class="lux-opt" data-value="suggestion" data-label="Öneri"><span class="lux-dot" style="background:#7dd3fc"></span>Öneri</button>
+                  <button class="lux-opt" data-value="bug" data-label="Hata Bildiri"><span class="lux-dot" style="background:#ef4444"></span>Hata Bildiri</button>
+                </div>
+                <input type="hidden" id="forum-tag-input" value="general">
+              </div>
+            </div>
+            <div style="margin-bottom:14px"><label class="form-label">İçerik</label><textarea id="forum-body-input" class="form-input" placeholder="Ne paylaşmak istiyorsun?"></textarea></div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="btn btn-gold" onclick="submitForumPost()"><i class="fas fa-paper-plane"></i>Gönder</button>
+              <button class="btn" onclick="document.getElementById('forum-compose-area').classList.add('d-none')">İptal</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm" onclick="filterForum('all')">Tümü</button>
+            <button class="btn btn-sm" onclick="filterForum('general')">Genel</button>
+            <button class="btn btn-gold btn-sm" onclick="filterForum('strategy')">Strateji</button>
+            <button class="btn btn-sm" onclick="filterForum('event')">Etkinlik</button>
+          </div>
+          <button class="btn btn-gold" onclick="toggleCompose()"><i class="fas fa-plus"></i>Yeni Konu</button>
+        </div>
+        <div id="forum-posts" style="display:flex;flex-direction:column;gap:12px"></div>
+      </div>
+      <div id="forum-detail-view" class="d-none">
+        <button class="btn btn-sm" style="margin-bottom:16px" onclick="backToForum()"><i class="fas fa-arrow-left"></i>Geri</button>
+        <div id="forum-detail-content"></div>
+        <div style="margin-top:20px">
+          <div class="section-header" style="margin-bottom:13px"><div class="section-title" style="font-size:12px">Yanıtlar</div><div class="section-rule"></div></div>
+          <div id="forum-replies"></div>
+          <div id="reply-compose" class="d-none" style="margin-top:12px">
+            <textarea id="reply-input" class="form-input" placeholder="Yanıtını yaz..." style="min-height:82px;margin-bottom:10px"></textarea>
+            <button class="btn btn-ice" onclick="submitReply()"><i class="fas fa-reply"></i>Yanıtla</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    let user = null;
-    let currentForumPostId = null;
-    let currentFilter = "all";
-    let forumPosts = [];
-    let allUsers = {};
-    let messagesCache = [];
-    let countdownInterval = null;
-    let isSendingMessage = false;
-    let editingMessageId = null;
-    let galleryMainUnsub = null;
-    let galleryPendingUnsub = null;
+<!-- GALLERY -->
+<section id="page-gallery" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Klan Galerisi</div><div class="section-rule"></div></div>
+    <div id="gallery-upload-area" class="d-none">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('gallery-file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+        <div class="upload-text"><strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br><span style="font-size:12px">JPG, PNG, GIF, WEBP · Maks. 5MB</span></div>
+      </div>
+      <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
+    </div>
+    <div id="gallery-grid" class="gallery-grid"></div>
+    <div id="gallery-empty" class="empty-state d-none"><i class="fas fa-images"></i><p>Henüz fotoğraf yok.</p></div>
+  </div>
+</section>
 
-    let rolesMap = {
-      admin:      { name:"Yönetici", color:"#ff7070", className:"rank-admin", canCreateRole:true, canModerate:true },
-      westra:     { name:"Westra / Abak 🌊", color:"#a8d8ea", className:"rank-westra", canModerate:false },
-      sturgiyali: { name:"Sturgiyalı", color:"#7a96b4", className:"rank-sturgiyali", canModerate:false }
-    };
+<!-- DISCORD -->
+<section id="page-discord" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Discord Sunucusu</div><div class="section-rule"></div></div>
+    <div class="discord-hero">
+      <div style="font-size:60px;color:#7289da;margin-bottom:14px"><i class="fab fa-discord"></i></div>
+      <div style="font-family:'Orbitron',monospace;font-size:26px;color:#fff;letter-spacing:3px;margin-bottom:10px">STURGIA DISCORD</div>
+      <div style="margin:0 auto 22px;max-width:460px;color:var(--muted);font-size:14px;line-height:1.7">Sesli sohbet, etkinlikler ve klan duyuruları burada.</div>
+      <a class="btn btn-discord" target="_blank" href="https://discord.gg/DAVET_LINKIN"><i class="fab fa-discord"></i>Sunucuya Katıl</a>
+    </div>
+  </div>
+</section>
 
-    const tagLabels = {
-      general:"Genel", strategy:"Strateji", event:"Etkinlik", suggestion:"Öneri", bug:"Hata"
-    };
+<!-- SETTINGS -->
+<section id="page-settings" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Güvenlik Ayarları</div><div class="section-rule"></div></div>
+    <div class="settings-card">
+      <div style="font-family:'Orbitron',monospace;color:#fff;font-size:13px;letter-spacing:2px;margin-bottom:5px">ŞİFRE DEĞİŞTİR</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:22px">En az 8 karakter, büyük harf, rakam ve özel karakter önerilir.</div>
+      <label class="form-label">Mevcut Şifre</label>
+      <input id="current-password" type="password" class="form-input" style="margin-bottom:14px" placeholder="••••••••">
+      <label class="form-label">Yeni Şifre</label>
+      <input id="new-password" type="password" class="form-input" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
+      <div id="strength-bar"></div>
+      <div id="strength-text"></div>
+      <button class="btn btn-ice" style="margin-top:18px;width:100%" onclick="updatePassword()"><i class="fas fa-lock"></i>Şifreyi Güncelle</button>
+    </div>
+  </div>
+</section>
 
-    function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-    function escAttr(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
-    function isMutedNow(data){ if(!data?.muteUntil) return false; if(data.muteUntil==="permanent") return true; return new Date(data.muteUntil) > new Date(); }
-    function roleDisplay(roleKey){ return rolesMap[roleKey] || rolesMap["sturgiyali"]; }
-    function roleBadge(roleKey){
-      const r = roleDisplay(roleKey);
-      return `<span class="badge-rank ${r.className || ''}" style="border-color:${r.color}66;color:${r.color};background:${r.color}1a">${escHtml(r.name || roleKey)}</span>`;
-    }
+<!-- ADMIN -->
+<section id="page-admin" class="d-none">
+  <div class="page-body">
+    <div class="section-header"><div class="section-title">Klan Yönetimi</div><div class="section-rule"></div></div>
 
-    function renderRolesPreview() {
-      const box = document.getElementById("roles-preview");
-      if (!box) return;
-      box.innerHTML = Object.entries(rolesMap).map(([k, r]) => {
-        const deletable = user?.role === "admin" && k !== "admin";
-        return `
-          <span class="role-pill" style="border-color:${r.color || "#a8d8ea"}66;color:${r.color || "#a8d8ea"}">
-            ${escHtml(r.name || k)} <small style="opacity:.7;margin-left:4px">(${k})</small>
-            ${deletable ? `<i class="fas fa-trash role-del" onclick="deleteRole(event,'${k}')" title="Rolü sil"></i>` : ""}
+    <!-- pending -->
+    <div style="margin-bottom:26px">
+      <div class="section-header" style="margin-bottom:12px">
+        <div class="section-title" style="font-size:11px;color:var(--gold)"><i class="fas fa-clock"></i> Onay Bekleyen Üyeler</div>
+        <div class="section-rule"></div>
+      </div>
+      <div id="pending-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- ROLE MANAGEMENT — bento -->
+    <div class="section-header" style="margin-bottom:14px">
+      <div class="section-title" style="font-size:11px;color:var(--gold)"><i class="fas fa-layer-group"></i> Rol Yönetimi</div>
+      <div class="section-rule"></div>
+    </div>
+    <div class="roles-bento">
+      <!-- LEFT: role list -->
+      <div class="role-panel">
+        <div class="role-panel-title"><i class="fas fa-list"></i>Mevcut Roller</div>
+        <div class="stats-mini">
+          <div class="stat-mini"><div class="stat-mini-val" id="rm-total">0</div><div class="stat-mini-lbl">Toplam</div></div>
+          <div class="stat-mini"><div class="stat-mini-val" id="rm-mod">0</div><div class="stat-mini-lbl">Moderatör</div></div>
+          <div class="stat-mini"><div class="stat-mini-val" id="rm-custom">0</div><div class="stat-mini-lbl">Özel</div></div>
+        </div>
+        <div class="role-list" id="role-list-render"></div>
+      </div>
+      <!-- RIGHT: create form -->
+      <div class="role-panel">
+        <div class="role-panel-title"><i class="fas fa-plus-circle"></i>Yeni Rol Oluştur</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div><label class="form-label">Rol Anahtarı</label><input id="new-role-key" class="form-input" placeholder="elite_guard" spellcheck="false"></div>
+          <div><label class="form-label">Görünen Ad</label><input id="new-role-name" class="form-input" placeholder="Elite Guard"></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label class="form-label">Renk</label>
+          <div class="color-row">
+            <input type="color" class="color-inp" id="new-role-color" value="#7dd3fc">
+            <div class="swatches" id="role-swatches"></div>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Moderasyon Yetkisi</div><div class="toggle-sub">Üyeleri susturabilir</div></div>
+          <div class="tog" id="tog-mod" onclick="toggleMod()"><div class="tog-k"></div></div>
+        </div>
+        <div class="preview-box">
+          <div class="preview-label">Önizleme</div>
+          <span class="preview-badge" id="prev-badge">
+            <span style="width:9px;height:9px;border-radius:50%;background:#7dd3fc;flex-shrink:0" id="prev-dot"></span>
+            <span id="prev-text">Elite Guard</span>
           </span>
-        `;
-      }).join("");
-    }
-
-    function showToast(msg, isError = false) {
-      const t = document.getElementById("toast");
-      document.getElementById("toast-text").innerText = msg;
-      t.style.borderColor = isError ? "rgba(192,57,43,.35)" : "rgba(168,216,234,.2)";
-      t.style.color = isError ? "#ff8080" : "var(--ice)";
-      t.querySelector("i").className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 3500);
-    }
-    window.showToast = showToast;
-
-    async function hashPassword(password, salt = null) {
-      if (!salt) {
-        const arr = new Uint8Array(16);
-        crypto.getRandomValues(arr);
-        salt = Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
-      }
-      const data = new TextEncoder().encode(salt + password + "sturgia_secret_2024");
-      const hashBuf = await crypto.subtle.digest("SHA-256", data);
-      const hash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
-      return { hash, salt };
-    }
-
-    async function verifyPassword(password, storedHash, salt) {
-      const { hash } = await hashPassword(password, salt);
-      return hash === storedHash;
-    }
-
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest("a[href='#']");
-      if (a) e.preventDefault();
-    });
-    document.addEventListener("submit", (e) => e.preventDefault());
-
-    // Session restore
-    const rawSession = localStorage.getItem("st_session");
-    if (rawSession) {
-      try {
-        user = JSON.parse(rawSession);
-        const userDoc = await getDoc(doc(db, "users", user.id));
-        if (!userDoc.exists()) {
-          localStorage.removeItem("st_session");
-          user = null;
-        } else {
-          const d = userDoc.data();
-          user.role = d.role;
-          user.approved = d.approved;
-          user.nick = d.nick;
-          localStorage.setItem("st_session", JSON.stringify(user));
-        }
-      } catch {
-        localStorage.removeItem("st_session");
-        user = null;
-      }
-    }
-
-    window.checkPasswordStrength = (pw) => {
-      const bar = document.getElementById("strength-bar");
-      const txt = document.getElementById("strength-text");
-      if (!pw) { bar.style.width = "0"; txt.textContent = ""; return; }
-      let score = 0;
-      if (pw.length >= 8) score++;
-      if (pw.length >= 12) score++;
-      if (/[A-Z]/.test(pw)) score++;
-      if (/[0-9]/.test(pw)) score++;
-      if (/[^A-Za-z0-9]/.test(pw)) score++;
-      const levels = [
-        {w:"20%", c:"#e57373", t:"Çok Zayıf"},
-        {w:"40%", c:"#ff9800", t:"Zayıf"},
-        {w:"60%", c:"#ffc107", t:"Orta"},
-        {w:"80%", c:"#8bc34a", t:"İyi"},
-        {w:"100%", c:"#4caf7d", t:"Güçlü"}
-      ];
-      const lvl = levels[Math.min(score-1,4)] || levels[0];
-      bar.style.width = lvl.w;
-      bar.style.background = lvl.c;
-      txt.style.color = lvl.c;
-      txt.textContent = lvl.t;
-    };
-
-    function initForumTagSelect() {
-      const wrap = document.getElementById("forum-tag-select");
-      const btn = document.getElementById("forum-tag-btn");
-      const menu = document.getElementById("forum-tag-menu");
-      const label = document.getElementById("forum-tag-label");
-      const hidden = document.getElementById("forum-tag-input");
-      if (!wrap || !btn || !menu || !label || !hidden) return;
-      btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); wrap.classList.toggle("open"); });
-      menu.querySelectorAll(".lux-option").forEach(opt => {
-        opt.addEventListener("click", (e) => {
-          e.preventDefault(); e.stopPropagation();
-          hidden.value = opt.dataset.value;
-          label.textContent = opt.dataset.label;
-          menu.querySelectorAll(".lux-option").forEach(o => o.classList.remove("active"));
-          opt.classList.add("active");
-          wrap.classList.remove("open");
-        });
-      });
-      document.addEventListener("click", (e) => { if (!wrap.contains(e.target)) wrap.classList.remove("open"); });
-    }
-    initForumTagSelect();
-
-    // FIX 1: Roles listener - filter out _deleted roles
-    onSnapshot(collection(db, "roles"), (snap) => {
-      if (!snap.empty) {
-        const next = {};
-        snap.forEach(d => {
-          const data = d.data();
-          if (!data._deleted) next[d.id] = { ...data };
-        });
-        // Preserve built-in defaults
-        rolesMap = {
-          admin: rolesMap.admin,
-          westra: rolesMap.westra,
-          sturgiyali: rolesMap.sturgiyali,
-          ...next
-        };
-      }
-      renderRolesPreview();
-    });
-
-    // Users listener
-    onSnapshot(collection(db, "users"), (snap) => {
-      const grid = document.getElementById("warrior-grid");
-      const table = document.getElementById("admin-table-body");
-      const membersList = document.getElementById("chat-members-list");
-      const count = document.getElementById("army-total");
-      const pendingList = document.getElementById("pending-list");
-
-      allUsers = {};
-      let approvedCount = 0;
-
-      snap.forEach(s => {
-        allUsers[s.id] = { id:s.id, ...s.data() };
-        if (s.data().approved !== false) approvedCount++;
-      });
-
-      count.innerText = approvedCount;
-      if (grid) grid.innerHTML = "";
-      if (membersList) membersList.innerHTML = "";
-
-      const approvedUsers = snap.docs.filter(d => d.data().approved !== false);
-      const pendingUsers = snap.docs.filter(d => d.data().approved === false);
-
-      if (grid) {
-        if (!approvedUsers.length) {
-          grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-users"></i><p>Henüz savaşçı yok.</p></div></div>`;
-        } else {
-          approvedUsers.forEach(s => {
-            const d = s.data();
-            const muted = isMutedNow(d);
-            grid.innerHTML += `
-              <div class="col-md-4 col-sm-6">
-                <div class="warrior-card">
-                  <div>
-                    <span class="warrior-name">${escHtml(d.nick)}</span>
-                    ${muted ? `<div style="font-size:10px;color:#ff8080;margin-top:4px">🔇 Susturuldu</div>` : ""}
-                  </div>
-                  ${roleBadge(d.role)}
-                </div>
-              </div>
-            `;
-          });
-        }
-      }
-
-      if (membersList) {
-        approvedUsers.forEach(s => {
-          const d = s.data();
-          const muted = isMutedNow(d);
-          membersList.innerHTML += `
-            <div class="chat-member-item">
-              <span class="chat-member-name" style="${muted ? "color:var(--muted)" : ""}">${escHtml(d.nick)}</span>
-              <div style="display:flex;align-items:center;gap:6px">
-                ${muted ? `<span class="muted-tag">mute</span>` : ""}
-                ${(user?.role === "admin" && s.id !== user.id) ? `<button type="button" class="btn-glass btn-glass-sm btn-glass-red" style="padding:4px 8px" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊" : "🔇"}</button>` : ""}
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      if (table && user?.role === "admin") {
-        table.innerHTML = "";
-        snap.forEach(s => {
-          const d = s.data();
-          if (d.approved === false) return;
-          const muted = isMutedNow(d);
-          const opts = Object.entries(rolesMap).map(([k,r]) => `<option value="${k}" ${d.role===k?"selected":""}>${escHtml(r.name || k)}</option>`).join("");
-          table.innerHTML += `
-            <tr>
-              <td><span class="warrior-name">${escHtml(d.nick)}</span></td>
-              <td>${roleBadge(d.role)}</td>
-              <td>${muted ? `<span class="muted-tag" title="${escAttr(d.muteReason || '')}">🔇 Mute</span>` : `<span style="font-size:11px;color:var(--green)">Aktif</span>`}</td>
-              <td style="text-align:right">
-                <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-                  <select class="form-input" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">${opts}</select>
-                  ${s.id!==user.id ? `
-                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="openMuteModal('${s.id}','${escHtml(d.nick)}')">${muted ? "🔊 Unmute" : "🔇 Mute"}</button>
-                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>
-                  ` : ""}
-                </div>
-              </td>
-            </tr>
-          `;
-        });
-      }
-
-      if (pendingList && user?.role === "admin") {
-        pendingList.innerHTML = "";
-        if (!pendingUsers.length) {
-          pendingList.innerHTML = `<div class="col-12"><div style="font-size:13px;color:var(--muted);padding:10px 0">Onay bekleyen üye yok.</div></div>`;
-        } else {
-          pendingUsers.forEach(s => {
-            const d = s.data();
-            pendingList.innerHTML += `
-              <div class="col-md-4 col-sm-6">
-                <div class="warrior-card" style="border-color:rgba(201,168,76,.22)">
-                  <div>
-                    <span class="warrior-name">${escHtml(d.nick)}</span>
-                    <div style="font-size:10px;color:var(--gold);margin-top:4px">⏳ Onay Bekliyor</div>
-                  </div>
-                  <div style="display:flex;gap:8px">
-                    <button type="button" class="btn-glass btn-glass-sm" style="color:var(--green);border-color:rgba(76,175,125,.24)" onclick="approveUser('${s.id}')"><i class="fas fa-check"></i></button>
-                    <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-times"></i></button>
-                  </div>
-                </div>
-              </div>
-            `;
-          });
-        }
-      }
-
-      if (user) {
-        const me = snap.docs.find(d => d.id === user.id);
-        if (me) {
-          const md = me.data();
-          const muted = isMutedNow(md);
-          const inputArea = document.getElementById("chat-input-area");
-          const mutedNotice = document.getElementById("muted-notice");
-          const reasonView = document.getElementById("mute-reason-view");
-          if (inputArea) inputArea.style.display = muted ? "none" : "flex";
-          if (mutedNotice) mutedNotice.classList.toggle("d-none", !muted);
-          if (reasonView) reasonView.textContent = muted && md.muteReason ? `Sebep: ${md.muteReason}` : "";
-          if (muted && md.muteUntil) startMuteCountdown(md.muteUntil);
-        }
-      }
-    });
-
-    function startMuteCountdown(until){
-      if (countdownInterval) clearInterval(countdownInterval);
-      const el = document.getElementById("mute-countdown");
-      if (!el) return;
-      if (until === "permanent") { el.innerText = "Kalıcı"; return; }
-      const end = new Date(until);
-      countdownInterval = setInterval(() => {
-        const diff = end - new Date();
-        if (diff <= 0) { clearInterval(countdownInterval); return; }
-        const m = Math.floor(diff/60000);
-        const s = Math.floor((diff%60000)/1000);
-        el.innerText = `${m}dk ${s}s`;
-      }, 1000);
-    }
-
-    window.approveUser = async (id) => {
-      await updateDoc(doc(db,"users",id), { approved:true });
-      showToast("Kullanıcı onaylandı.");
-    };
-
-    window.deleteUser = async (id) => {
-      if (!confirm("Bu kullanıcıyı silmek istediğine emin misin?")) return;
-      await deleteDoc(doc(db,"users",id));
-      showToast("Kullanıcı silindi.");
-    };
-
-    // FIX 3: Chat - Discord-style message rendering with proper timestamps
-    function formatMsgTime(ts) {
-      if (!ts) return "";
-      const d = ts.toDate ? ts.toDate() : new Date(ts);
-      const now = new Date();
-      const isToday = d.toDateString() === now.toDateString();
-      const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
-      const isYesterday = d.toDateString() === yesterday.toDateString();
-      const timeStr = d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
-      if (isToday) return "Bugün " + timeStr;
-      if (isYesterday) return "Dün " + timeStr;
-      return d.toLocaleDateString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric"}) + " " + timeStr;
-    }
-
-    function formatDateLabel(ts) {
-      if (!ts) return "";
-      const d = ts.toDate ? ts.toDate() : new Date(ts);
-      const now = new Date();
-      const isToday = d.toDateString() === now.toDateString();
-      const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
-      const isYesterday = d.toDateString() === yesterday.toDateString();
-      if (isToday) return "Bugün";
-      if (isYesterday) return "Dün";
-      return d.toLocaleDateString("tr-TR",{day:"2-digit",month:"long",year:"numeric"});
-    }
-
-    function renderChatMessages() {
-      const box = document.getElementById("chat-messages");
-      if (!box) return;
-
-      if (!messagesCache.length) {
-        box.innerHTML = `<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>`;
-        return;
-      }
-
-      box.innerHTML = "";
-      let lastAuthorId = "";
-      let lastDateLabel = "";
-      let lastMsgTs = null;
-
-      messagesCache.forEach((m, idx) => {
-        const d = m.data;
-        const isOwn = d.uid === user?.id;
-        const roleClass = d.role || "sturgiyali";
-
-        // FIX 3: Date separator
-        const curDateLabel = formatDateLabel(d.ts);
-        if (curDateLabel !== lastDateLabel) {
-          box.innerHTML += `<div class="chat-date-sep">${curDateLabel}</div>`;
-          lastDateLabel = curDateLabel;
-        }
-
-        // FIX 3: Show header if different author OR > 5 min gap
-        const curTs = d.ts?.toDate ? d.ts.toDate() : null;
-        const timeDiff = curTs && lastMsgTs ? (curTs - lastMsgTs) / 60000 : 999;
-        const showHeader = lastAuthorId !== d.uid || timeDiff > 5;
-        lastAuthorId = d.uid;
-        lastMsgTs = curTs;
-
-        const timeStr = d.ts ? formatMsgTime(d.ts) : "";
-        const edited = d.editedAt ? `<span style="font-size:10px;color:var(--muted);margin-left:6px">(düzenlendi)</span>` : "";
-        const canEdit = !!user && (isOwn || user.role === "admin");
-        const canDelete = !!user && (isOwn || user.role === "admin");
-
-        box.innerHTML += `
-          <div class="msg-group">
-            ${showHeader ? `<div class="msg-author-line"><span class="msg-author ${roleClass}">${escHtml(d.nick || "Bilinmeyen")}</span><span class="msg-time">${timeStr}</span></div>` : ""}
-            <div class="msg-bubble ${isOwn ? "own" : ""}">
-              ${escHtml(d.text || "")} ${edited}
-              ${(canEdit || canDelete) ? `
-                <div class="msg-actions">
-                  ${canEdit ? `<button type="button" class="msg-act-btn" onclick="startInlineEdit('${m.id}')"><i class="fas fa-pen"></i></button>` : ""}
-                  ${canDelete ? `<button type="button" class="msg-act-btn danger" onclick="deleteMsg('${m.id}')"><i class="fas fa-trash"></i></button>` : ""}
-                </div>
-              ` : ""}
-              ${editingMessageId === m.id ? `
-                <div class="msg-edit-wrap">
-                  <input id="edit-input-${m.id}" class="msg-edit-input" value="${escAttr(d.text || "")}" onkeydown="handleInlineEditKey(event,'${m.id}')">
-                  <button type="button" class="btn-glass btn-glass-sm" onclick="saveInlineEdit('${m.id}')"><i class="fas fa-check"></i></button>
-                  <button type="button" class="btn-glass btn-glass-sm btn-glass-red" onclick="cancelInlineEdit()"><i class="fas fa-times"></i></button>
-                </div>
-              ` : ""}
-            </div>
-          </div>
-        `;
-      });
-
-      box.scrollTop = box.scrollHeight;
-    }
-
-    onSnapshot(query(collection(db,"messages"), orderBy("ts")), (snap) => {
-      messagesCache = snap.docs.map(d => ({ id:d.id, data:d.data() }));
-      renderChatMessages();
-    });
-
-    window.handleChatKeydown = (event) => {
-      if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); }
-    };
-
-    window.handleInlineEditKey = (event, id) => {
-      if (event.key === "Enter") { event.preventDefault(); saveInlineEdit(id); }
-      if (event.key === "Escape") { event.preventDefault(); cancelInlineEdit(); }
-    };
-
-    window.sendMessage = async () => {
-      if (!user) { showToast("Önce giriş yapmalısın.", true); openModal(); return; }
-      if (isSendingMessage) return;
-      const input = document.getElementById("chat-input");
-      const btn = document.getElementById("send-btn");
-      const text = input.value.trim();
-      if (!text) return;
-      isSendingMessage = true;
-      btn.disabled = true;
-      try {
-        const me = await getDoc(doc(db,"users",user.id));
-        if (!me.exists()) { showToast("Oturum geçersiz.", true); return; }
-        const md = me.data();
-        if (isMutedNow(md)) { showToast("Susturuldunuz.", true); return; }
-        await addDoc(collection(db,"messages"), {
-          uid:user.id, nick:user.nick, role:user.role,
-          text, editedAt:null, ts:serverTimestamp()
-        });
-        input.value = "";
-      } catch (e) {
-        showToast("Mesaj gönderilemedi: " + e.message, true);
-      } finally {
-        setTimeout(() => { isSendingMessage = false; btn.disabled = false; }, 250);
-      }
-    };
-
-    window.startInlineEdit = (id) => {
-      editingMessageId = id;
-      renderChatMessages();
-      setTimeout(() => {
-        const el = document.getElementById(`edit-input-${id}`);
-        if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
-      }, 30);
-    };
-
-    window.cancelInlineEdit = () => { editingMessageId = null; renderChatMessages(); };
-
-    window.saveInlineEdit = async (id) => {
-      const ref = doc(db,"messages",id);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu mesajı düzenleyemezsin.", true);
-      const input = document.getElementById(`edit-input-${id}`);
-      if (!input) return;
-      const text = input.value.trim();
-      if (!text) return showToast("Mesaj boş olamaz.", true);
-      await updateDoc(ref, { text, editedAt:new Date().toISOString() });
-      editingMessageId = null;
-      renderChatMessages();
-      showToast("Mesaj güncellendi.");
-    };
-
-    window.deleteMsg = async (id) => {
-      const ref = doc(db,"messages",id);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu mesajı silemezsin.", true);
-      await deleteDoc(ref);
-      if (editingMessageId === id) editingMessageId = null;
-      showToast("Mesaj silindi.");
-    };
-
-    window.openMuteModal = (id, nick) => {
-      const d = allUsers[id];
-      if (d && isMutedNow(d)) { unmute(id); return; }
-      document.getElementById("mute-target-id").value = id;
-      document.getElementById("mute-target-name").innerText = nick + " adlı savaşçı";
-      document.getElementById("mute-reason").value = "";
-      document.getElementById("muteModal").classList.add("open");
-    };
-    window.closeMuteModal = () => document.getElementById("muteModal").classList.remove("open");
-
-    window.applyMute = async () => {
-      const id = document.getElementById("mute-target-id").value;
-      const mins = parseInt(document.getElementById("mute-duration").value, 10);
-      const reason = document.getElementById("mute-reason").value.trim();
-      let until;
-      if (mins === 99999) until = "permanent";
-      else { const d = new Date(); d.setMinutes(d.getMinutes() + mins); until = d.toISOString(); }
-      await updateDoc(doc(db,"users",id), { muteUntil:until, muteReason:reason || null });
-      showToast("Kullanıcı susturuldu.");
-      closeMuteModal();
-    };
-
-    window.unmute = async (id) => {
-      await updateDoc(doc(db,"users",id), { muteUntil:null, muteReason:null });
-      showToast("Mute kaldırıldı.");
-    };
-
-    onSnapshot(query(collection(db,"forum_posts"), orderBy("ts","desc")), (snap) => {
-      forumPosts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      document.getElementById("forum-count").innerText = snap.size;
-      renderForum();
-    });
-
-    function renderForum() {
-      const box = document.getElementById("forum-posts");
-      if (!box) return;
-      const list = currentFilter === "all" ? forumPosts : forumPosts.filter(p => p.tag === currentFilter);
-      if (!list.length) {
-        box.innerHTML = `<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok.</p></div>`;
-        return;
-      }
-      box.innerHTML = list.map(p => {
-        const time = p.ts ? new Date(p.ts.toDate()).toLocaleDateString("tr-TR") : "";
-        return `
-          <div class="forum-post-card" onclick="openForumPost('${p.id}')">
-            <span class="forum-tag tag-${p.tag || "general"}">${tagLabels[p.tag] || "Genel"}</span>
-            <div class="forum-post-title">${escHtml(p.title || "")}</div>
-            <div class="forum-post-preview">${escHtml((p.body || "").slice(0,150))}${(p.body || "").length > 150 ? "..." : ""}</div>
-            <div class="forum-post-meta">
-              <span><i class="fas fa-user"></i> ${escHtml(p.nick || "")}</span>
-              <span><i class="fas fa-calendar"></i> ${time}</span>
-              <span><i class="fas fa-comment"></i> ${p.replyCount || 0} yanıt</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    window.filterForum = (tag) => { currentFilter = tag; renderForum(); };
-
-    window.toggleCompose = () => {
-      if (!user) { showToast("Konu açmak için giriş yap.", true); openModal(); return; }
-      document.getElementById("forum-compose-area").classList.toggle("d-none");
-    };
-
-    window.submitForumPost = async () => {
-      if (!user) return showToast("Giriş yapmalısın.", true);
-      const title = document.getElementById("forum-title-input").value.trim();
-      const body = document.getElementById("forum-body-input").value.trim();
-      const tag = document.getElementById("forum-tag-input").value;
-      if (!title || !body) return showToast("Başlık ve içerik zorunlu.", true);
-      await addDoc(collection(db,"forum_posts"), {
-        title, body, tag, nick:user.nick, uid:user.id, role:user.role,
-        replyCount:0, editedAt:null, ts:serverTimestamp()
-      });
-      document.getElementById("forum-title-input").value = "";
-      document.getElementById("forum-body-input").value = "";
-      document.getElementById("forum-compose-area").classList.add("d-none");
-      showToast("Konu açıldı.");
-    };
-
-    window.openForumPost = async (id) => {
-      currentForumPostId = id;
-      const post = forumPosts.find(p => p.id === id);
-      if (!post) return;
-      document.getElementById("forum-list-view").classList.add("d-none");
-      document.getElementById("forum-detail-view").classList.remove("d-none");
-      const time = post.ts ? new Date(post.ts.toDate()).toLocaleDateString("tr-TR") : "";
-      const edited = post.editedAt ? `<span style="font-size:11px;color:var(--muted);margin-left:8px">(düzenlendi)</span>` : "";
-      const canManage = user && (user.role === "admin" || user.id === post.uid);
-      document.getElementById("forum-detail-content").innerHTML = `
-        <div class="forum-compose">
-          <span class="forum-tag tag-${post.tag || "general"}">${tagLabels[post.tag] || "Genel"}</span>
-          <div class="forum-post-title" style="font-size:22px">${escHtml(post.title || "")} ${edited}</div>
-          <div style="font-size:14px;line-height:1.8;margin-bottom:14px">${escHtml(post.body || "").replace(/\n/g,"<br>")}</div>
-          <div class="forum-post-meta">
-            <span><i class="fas fa-user"></i> ${escHtml(post.nick || "")}</span>
-            <span><i class="fas fa-calendar"></i> ${time}</span>
-          </div>
-          ${canManage ? `
-            <div style="display:flex;gap:8px;margin-top:14px">
-              <button type="button" class="btn-glass btn-glass-sm" onclick="editPost('${id}')"><i class="fas fa-pen"></i>Düzenle</button>
-              <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deletePost('${id}')"><i class="fas fa-trash"></i>Sil</button>
-            </div>
-          ` : ""}
         </div>
-      `;
-      await loadReplies(id);
-      document.getElementById("reply-compose").classList.toggle("d-none", !user);
-    };
+        <button class="btn btn-gold" id="btn-create-role" style="width:100%" onclick="createRole()"><i class="fas fa-plus"></i>Rol Oluştur</button>
+      </div>
+    </div>
 
-    window.backToForum = () => {
-      currentForumPostId = null;
-      document.getElementById("forum-list-view").classList.remove("d-none");
-      document.getElementById("forum-detail-view").classList.add("d-none");
-    };
+    <!-- warrior table -->
+    <div class="admin-table-card">
+      <div class="admin-table-head"><span style="font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase">Savaşçı Listesi · Rol / Mute Yönetimi</span></div>
+      <table>
+        <thead><tr><th>Savaşçı</th><th>Rol</th><th>Durum</th><th style="text-align:right">İşlemler</th></tr></thead>
+        <tbody id="admin-table-body"></tbody>
+      </table>
+    </div>
 
-    window.editPost = async (id) => {
-      const ref = doc(db,"forum_posts",id);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu konuyu düzenleyemezsin.", true);
-      const title = prompt("Yeni başlık:", d.title || "");
-      if (title === null) return;
-      const body = prompt("Yeni içerik:", d.body || "");
-      if (body === null) return;
-      if (!title.trim() || !body.trim()) return showToast("Başlık/içerik boş olamaz.", true);
-      await updateDoc(ref, { title:title.trim(), body:body.trim(), editedAt:new Date().toISOString() });
-      showToast("Konu güncellendi.");
-    };
+    <div class="section-header" style="margin:24px 0 12px"><div class="section-title" style="font-size:11px;color:var(--gold)">Galeri Onay Kuyruğu</div><div class="section-rule"></div></div>
+    <div id="gallery-pending-grid" class="gallery-grid"></div>
+  </div>
+</section>
+</main>
 
-    window.deletePost = async (id) => {
-      const ref = doc(db,"forum_posts",id);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu konuyu silemezsin.", true);
-      if (!confirm("Bu konuyu silmek istediğine emin misin?")) return;
-      await deleteDoc(ref);
-      backToForum();
-      showToast("Konu silindi.");
-    };
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-title">Klan Girişi</div>
+    <div class="modal-sub">Kimliğini doğrula</div>
+    <div style="margin-bottom:13px"><label class="form-label">Savaşçı Adı</label><input id="login-nick" class="form-input" placeholder="Adını gir" autocomplete="username"></div>
+    <div><label class="form-label">Şifre</label><input id="login-pass" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')processAuth()"></div>
+    <div id="modal-error" style="display:none;font-size:12px;color:#fca5a5;margin-top:9px;padding:9px 12px;border-radius:10px;border:1px solid rgba(239,68,68,.22);background:rgba(239,68,68,.09)"></div>
+    <button id="login-btn" class="btn btn-ice" style="width:100%;margin-top:16px" onclick="processAuth()"><i class="fas fa-sign-in-alt"></i>Devam Et</button>
+    <div style="text-align:center;margin-top:13px;font-size:11px;color:var(--muted)">Hesap yoksa otomatik oluşturulur ve admin onayı bekler.</div>
+  </div>
+</div>
 
-    async function loadReplies(postId) {
-      const box = document.getElementById("forum-replies");
-      const snap = await getDocs(query(collection(db,"forum_posts",postId,"replies"), orderBy("ts")));
-      if (snap.empty) {
-        box.innerHTML = `<div style="font-size:13px;color:var(--muted);padding:10px 0">Henüz yanıt yok.</div>`;
-        return;
-      }
-      box.innerHTML = snap.docs.map(d => {
-        const r = d.data();
-        const time = r.ts ? new Date(r.ts.toDate()).toLocaleString("tr-TR") : "";
-        const canManage = user && (user.role === "admin" || user.id === r.uid);
-        return `
-          <div class="reply-card">
-            <div class="reply-header">
-              <span class="reply-author ${r.role || "sturgiyali"}">${escHtml(r.nick || "")}</span>
-              ${roleBadge(r.role)}
-              <span class="reply-time">${time}</span>
-              ${r.editedAt ? `<span class="reply-time">(düzenlendi)</span>` : ""}
-            </div>
-            <div class="reply-text">${escHtml(r.text || "").replace(/\n/g,"<br>")}</div>
-            ${canManage ? `
-              <div class="reply-actions">
-                <button type="button" class="btn-glass btn-glass-sm" onclick="editReply('${postId}','${d.id}')"><i class="fas fa-pen"></i>Düzenle</button>
-                <button type="button" class="btn-glass btn-glass-red btn-glass-sm" onclick="deleteReply('${postId}','${d.id}')"><i class="fas fa-trash"></i>Sil</button>
-              </div>
-            ` : ""}
-          </div>
-        `;
-      }).join("");
+<!-- MUTE MODAL -->
+<div class="modal-overlay" id="muteModal" onclick="if(event.target===this)closeMuteModal()">
+  <div class="modal-box" style="max-width:420px">
+    <button class="modal-close" onclick="closeMuteModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-title" style="font-size:16px">Kullanıcıyı Sustur</div>
+    <div class="modal-sub" id="mute-target-name">Savaşçı</div>
+    <input id="mute-target-id" type="hidden">
+    <div style="margin-bottom:13px"><label class="form-label">Süre</label>
+      <select id="mute-duration" class="form-input">
+        <option value="5">5 dakika</option><option value="15">15 dakika</option>
+        <option value="30">30 dakika</option><option value="60">1 saat</option>
+        <option value="120">2 saat</option><option value="1440">24 saat</option>
+        <option value="10080">7 gün</option><option value="99999">Kalıcı</option>
+      </select>
+    </div>
+    <div style="margin-bottom:14px"><label class="form-label">Sebep (Opsiyonel)</label><textarea id="mute-reason" class="form-input" placeholder="Örn: Spam / Küfür / Flood..." style="min-height:78px"></textarea></div>
+    <button class="btn btn-red" style="width:100%" onclick="applyMute()"><i class="fas fa-volume-mute"></i>Sustur</button>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box confirm-box">
+    <div class="modal-title" style="font-size:16px">Rolü Sil</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:8px" id="confirm-msg">Bu rolü silmek istediğine emin misin?</div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">İptal</button>
+      <button class="confirm-del" id="confirm-ok">Sil</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-x" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-dot" id="toast-dot"></div><span id="toast-text">İşlem başarılı</span></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import{getFirestore,collection,onSnapshot,query,where,getDocs,addDoc,updateDoc,deleteDoc,doc,orderBy,serverTimestamp,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDKd2xNlNn9pi6foaLGix8MOSasqehoS_U",authDomain:"sturgia-clan.firebaseapp.com",projectId:"sturgia-clan",storageBucket:"sturgia-clan.firebasestorage.app",messagingSenderId:"257587521790",appId:"1:257587521790:web:59b1a1b38029d1564dddaf"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+
+let user=null,currentForumPostId=null,currentFilter="all",forumPosts=[],allUsers={},messagesCache=[],countdownInterval=null,isSending=false,editingMsgId=null,galleryUnsub=null,galleryPendingUnsub=null,modOn=false,pendingDelRole=null,toastT=null;
+
+let rolesMap={
+  admin:{name:"Yönetici",color:"#ef4444",canModerate:true,canCreateRole:true,builtin:true},
+  westra:{name:"Westra / Abak 🌊",color:"#7dd3fc",canModerate:false,builtin:true},
+  sturgiyali:{name:"Sturgiyalı",color:"#94a3b8",canModerate:false,builtin:true}
+};
+const tagLabels={general:"Genel",strategy:"Strateji",event:"Etkinlik",suggestion:"Öneri",bug:"Hata"};
+const SWATCHES=["#7dd3fc","#f59e0b","#ef4444","#22c55e","#a78bfa","#fb923c","#f472b6","#38bdf8","#818cf8","#a3e635"];
+
+function escH(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function escA(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+function isMuted(d){if(!d?.muteUntil)return false;if(d.muteUntil==="permanent")return true;return new Date(d.muteUntil)>new Date()}
+function roleDisp(k){return rolesMap[k]||rolesMap.sturgiyali}
+function roleBadge(k){const r=roleDisp(k);return`<span class="badge-rank" style="border-color:${r.color}55;color:${r.color};background:${r.color}18">${escH(r.name||k)}</span>`}
+
+// SWATCHES init
+const sw=document.getElementById("role-swatches");
+SWATCHES.forEach((c,i)=>{
+  const d=document.createElement("div");d.className="swatch"+(i===0?" on":"");
+  d.style.background=c;
+  d.onclick=()=>{document.getElementById("new-role-color").value=c;document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("on"));d.classList.add("on");updatePreview()};
+  sw.appendChild(d);
+});
+document.getElementById("new-role-color").addEventListener("input",()=>{document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("on"));updatePreview()});
+document.getElementById("new-role-name").addEventListener("input",updatePreview);
+
+function updatePreview(){
+  const name=document.getElementById("new-role-name").value||"Yeni Rol";
+  const color=document.getElementById("new-role-color").value;
+  const b=document.getElementById("prev-badge");
+  document.getElementById("prev-dot").style.background=color;
+  document.getElementById("prev-text").textContent=name;
+  b.style.background=color+"18";b.style.border=`1px solid ${color}33`;b.style.color=color;
+}
+updatePreview();
+
+window.toggleMod=()=>{modOn=!modOn;document.getElementById("tog-mod").classList.toggle("on",modOn)};
+
+function renderRoles(){
+  const box=document.getElementById("role-list-render");if(!box)return;
+  const keys=Object.keys(rolesMap);
+  if(!keys.length){box.innerHTML='<div class="empty-state"><i class="fas fa-layer-group"></i><p>Henüz rol yok</p></div>';return}
+  box.innerHTML=keys.map((k,i)=>{
+    const r=rolesMap[k];const isAdmin=k==="admin";
+    return`<div class="role-row" style="animation-delay:${i*35}ms">
+      <div class="role-row-left">
+        <div class="role-dot" style="background:${r.color};box-shadow:0 0 7px ${r.color}70"></div>
+        <div><span class="role-row-name">${escH(r.name||k)}</span> <span class="role-row-key">(${k})</span></div>
+      </div>
+      <div class="role-row-badges">
+        ${isAdmin?'<span class="rbadge rbadge-admin">Admin</span>':""}
+        ${r.canModerate&&!isAdmin?'<span class="rbadge rbadge-mod">Mod</span>':""}
+        ${r.builtin&&!isAdmin?'<span class="rbadge rbadge-lock">Yerleşik</span>':""}
+        ${!r.builtin?'<span class="rbadge rbadge-new">Özel</span>':""}
+        ${!isAdmin?`<button class="role-del-btn" onclick="askDelRole('${k}')"><i class="fas fa-times"></i></button>`:'<div style="width:28px"></div>'}
+      </div>
+    </div>`
+  }).join("");
+  const total=keys.length,mod=keys.filter(k=>rolesMap[k].canModerate).length,custom=keys.filter(k=>!rolesMap[k].builtin).length;
+  const rt=document.getElementById("rm-total");const rm=document.getElementById("rm-mod");const rc=document.getElementById("rm-custom");
+  if(rt)rt.textContent=total;if(rm)rm.textContent=mod;if(rc)rc.textContent=custom;
+}
+
+window.askDelRole=(key)=>{
+  pendingDelRole=key;const r=rolesMap[key];
+  document.getElementById("confirm-msg").textContent=`"${r?.name||key}" rolünü silmek istediğine emin misin? Bu role sahip tüm üyeler varsayılan role aktarılacak.`;
+  document.getElementById("confirm-ok").onclick=()=>execDelRole();
+  document.getElementById("confirmModal").classList.add("open");
+};
+window.closeConfirm=()=>{document.getElementById("confirmModal").classList.remove("open");pendingDelRole=null};
+
+window.execDelRole=async()=>{
+  if(!pendingDelRole)return;const key=pendingDelRole;
+  closeConfirm();
+  if(user?.role!=="admin")return toast("Sadece admin silebilir.",true);
+  if(key==="admin")return toast("Admin silinemez.",true);
+  try{
+    const fb=await ensureFallback();
+    const usrs=await getDocs(query(collection(db,"users"),where("role","==",key)));
+    await Promise.all(usrs.docs.map(u=>updateDoc(doc(db,"users",u.id),{role:fb})));
+    try{await deleteDoc(doc(db,"roles",key))}
+    catch{await setDoc(doc(db,"roles",key),{_deleted:true,name:key,color:"#333",canModerate:false,canCreateRole:false})}
+    delete rolesMap[key];renderRoles();toast(`"${key}" rolü silindi.`);
+  }catch(e){toast("Silinemedi: "+e.message,true)}
+};
+
+window.createRole=async()=>{
+  if(user?.role!=="admin")return toast("Sadece admin oluşturabilir.",true);
+  const key=document.getElementById("new-role-key").value.trim().toLowerCase();
+  const name=document.getElementById("new-role-name").value.trim();
+  const color=document.getElementById("new-role-color").value;
+  if(!key||!name)return toast("Anahtar ve ad zorunlu.",true);
+  if(!/^[a-z0-9_-]+$/.test(key))return toast("Anahtar: sadece a-z 0-9 _ -",true);
+  if(key==="admin")return toast("admin oluşturulamaz.",true);
+  if(rolesMap[key])return toast(`"${key}" zaten var!`,true);
+  const btn=document.getElementById("btn-create-role");btn.disabled=true;
+  try{
+    await setDoc(doc(db,"roles",key),{name,color,className:"",canModerate:modOn,canCreateRole:false},{merge:true});
+    document.getElementById("new-role-key").value="";document.getElementById("new-role-name").value="";
+    document.getElementById("new-role-color").value="#7dd3fc";
+    document.querySelectorAll(".swatch").forEach((s,i)=>{s.classList.toggle("on",i===0)});
+    modOn=false;document.getElementById("tog-mod").classList.remove("on");updatePreview();
+    toast(`"${name}" rolü oluşturuldu.`);
+  }catch(e){toast("Hata: "+e.message,true)}finally{btn.disabled=false}
+};
+
+async function ensureFallback(){
+  if(rolesMap["sturgiyali"])return"sturgiyali";
+  const keys=Object.keys(rolesMap).filter(k=>k!=="admin");
+  if(keys.length)return keys[0];
+  await setDoc(doc(db,"roles","uyeler"),{name:"Üyeler",color:"#64748b",className:"",canModerate:false,canCreateRole:false},{merge:true});
+  return"uyeler";
+}
+
+function toast(msg,err=false){
+  if(toastT)clearTimeout(toastT);
+  document.getElementById("toast-text").textContent=msg;
+  const dot=document.getElementById("toast-dot");
+  dot.style.background=err?"#ef4444":"#22c55e";
+  document.getElementById("toast").classList.add("show");
+  toastT=setTimeout(()=>document.getElementById("toast").classList.remove("show"),3000);
+}
+window.showToast=toast;
+
+async function hashPw(pw,salt=null){
+  if(!salt){const a=new Uint8Array(16);crypto.getRandomValues(a);salt=Array.from(a).map(b=>b.toString(16).padStart(2,"0")).join("")}
+  const data=new TextEncoder().encode(salt+pw+"sturgia_secret_2024");
+  const h=await crypto.subtle.digest("SHA-256",data);
+  return{hash:Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,"0")).join(""),salt};
+}
+async function verifyPw(pw,hash,salt){return(await hashPw(pw,salt)).hash===hash}
+
+document.addEventListener("click",e=>{const a=e.target.closest("a[href='#']");if(a)e.preventDefault()});
+document.addEventListener("submit",e=>e.preventDefault());
+
+// Session restore
+const raw=localStorage.getItem("st_session");
+if(raw){
+  try{
+    user=JSON.parse(raw);
+    const ud=await getDoc(doc(db,"users",user.id));
+    if(!ud.exists()){localStorage.removeItem("st_session");user=null}
+    else{const d=ud.data();user.role=d.role;user.approved=d.approved;user.nick=d.nick;localStorage.setItem("st_session",JSON.stringify(user))}
+  }catch{localStorage.removeItem("st_session");user=null}
+}
+
+window.checkPasswordStrength=pw=>{
+  const bar=document.getElementById("strength-bar"),txt=document.getElementById("strength-text");
+  if(!pw){bar.style.width="0";txt.textContent="";return}
+  let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
+  const lvls=[{w:"20%",c:"#ef4444",t:"Çok Zayıf"},{w:"40%",c:"#f97316",t:"Zayıf"},{w:"60%",c:"#eab308",t:"Orta"},{w:"80%",c:"#84cc16",t:"İyi"},{w:"100%",c:"#22c55e",t:"Güçlü"}];
+  const l=lvls[Math.min(s-1,4)]||lvls[0];
+  bar.style.width=l.w;bar.style.background=l.c;txt.style.color=l.c;txt.textContent=l.t;
+};
+
+// Forum select
+(()=>{
+  const wrap=document.getElementById("forum-tag-select"),btn=document.getElementById("forum-tag-btn"),menu=document.getElementById("forum-tag-menu"),label=document.getElementById("forum-tag-label"),hidden=document.getElementById("forum-tag-input");
+  if(!wrap)return;
+  btn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle("open")});
+  menu.querySelectorAll(".lux-opt").forEach(opt=>{
+    opt.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();hidden.value=opt.dataset.value;label.textContent=opt.dataset.label;menu.querySelectorAll(".lux-opt").forEach(o=>o.classList.remove("active"));opt.classList.add("active");wrap.classList.remove("open")});
+  });
+  document.addEventListener("click",e=>{if(!wrap.contains(e.target))wrap.classList.remove("open")});
+})();
+
+// Roles listener
+onSnapshot(collection(db,"roles"),snap=>{
+  const next={};snap.forEach(d=>{const data=d.data();if(!data._deleted)next[d.id]={...data}});
+  rolesMap={admin:rolesMap.admin,westra:rolesMap.westra,sturgiyali:rolesMap.sturgiyali,...next};
+  renderRoles();
+});
+
+// Users listener
+onSnapshot(collection(db,"users"),snap=>{
+  const grid=document.getElementById("warrior-grid"),table=document.getElementById("admin-table-body"),
+    membersList=document.getElementById("chat-members-list"),count=document.getElementById("army-total"),
+    pendingList=document.getElementById("pending-list");
+  allUsers={};let approvedCount=0;
+  snap.forEach(s=>{allUsers[s.id]={id:s.id,...s.data()};if(s.data().approved!==false)approvedCount++});
+  count.innerText=approvedCount;
+  if(grid)grid.innerHTML="";if(membersList)membersList.innerHTML="";
+  const approved=snap.docs.filter(d=>d.data().approved!==false);
+  const pending=snap.docs.filter(d=>d.data().approved===false);
+
+  if(grid){
+    if(!approved.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-users"></i><p>Henüz savaşçı yok.</p></div>'}
+    else approved.forEach(s=>{
+      const d=s.data();const mt=isMuted(d);
+      grid.innerHTML+=`<div class="warrior-card"><div><span class="warrior-name">${escH(d.nick)}</span>${mt?'<div style="font-size:10px;color:#fca5a5;margin-top:4px">🔇 Susturuldu</div>':""}</div>${roleBadge(d.role)}</div>`;
+    });
+  }
+  if(membersList)approved.forEach(s=>{
+    const d=s.data();const mt=isMuted(d);
+    membersList.innerHTML+=`<div class="chat-member-item"><span class="chat-member-name" style="${mt?"color:var(--muted)":""}">${escH(d.nick)}</span><div style="display:flex;align-items:center;gap:6px">${mt?'<span class="muted-tag">mute</span>':""}${(user?.role==="admin"&&s.id!==user.id)?`<button class="btn btn-red btn-sm" style="padding:3px 8px" onclick="openMuteModal('${s.id}','${escH(d.nick)}')">${mt?"🔊":"🔇"}</button>`:""}</div></div>`;
+  });
+
+  if(table&&user?.role==="admin"){
+    table.innerHTML="";
+    snap.forEach(s=>{
+      const d=s.data();if(d.approved===false)return;
+      const mt=isMuted(d);
+      const opts=Object.entries(rolesMap).map(([k,r])=>`<option value="${k}" ${d.role===k?"selected":""}>${escH(r.name||k)}</option>`).join("");
+      table.innerHTML+=`<tr><td><span class="warrior-name">${escH(d.nick)}</span></td><td>${roleBadge(d.role)}</td><td>${mt?`<span class="muted-tag" title="${escA(d.muteReason||"")}">🔇 Mute</span>`:'<span style="font-size:11px;color:var(--green)">Aktif</span>'}</td><td style="text-align:right"><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><select class="form-input" style="width:auto;padding:7px 10px;font-size:12px" onchange="updRole('${s.id}',this.value)">${opts}</select>${s.id!==user.id?`<button class="btn btn-red btn-sm" onclick="openMuteModal('${s.id}','${escH(d.nick)}')">${mt?"🔊 Unmute":"🔇 Mute"}</button><button class="btn btn-red btn-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-trash"></i></button>`:""}</div></td></tr>`;
+    });
+  }
+  if(pendingList&&user?.role==="admin"){
+    pendingList.innerHTML="";
+    if(!pending.length){pendingList.innerHTML='<div style="font-size:13px;color:var(--muted);padding:10px 0">Onay bekleyen üye yok.</div>'}
+    else pending.forEach(s=>{
+      const d=s.data();
+      pendingList.innerHTML+=`<div class="warrior-card" style="border-color:rgba(245,158,11,.22)"><div><span class="warrior-name">${escH(d.nick)}</span><div style="font-size:10px;color:var(--gold);margin-top:4px">⏳ Onay Bekliyor</div></div><div style="display:flex;gap:8px"><button class="btn btn-sm" style="color:var(--green);border-color:rgba(34,197,94,.24)" onclick="approveUser('${s.id}')"><i class="fas fa-check"></i></button><button class="btn btn-red btn-sm" onclick="deleteUser('${s.id}')"><i class="fas fa-times"></i></button></div></div>`;
+    });
+  }
+  if(user){
+    const me=snap.docs.find(d=>d.id===user.id);
+    if(me){
+      const md=me.data();const mt=isMuted(md);
+      const ia=document.getElementById("chat-input-area"),mn=document.getElementById("muted-notice"),rv=document.getElementById("mute-reason-view");
+      if(ia)ia.style.display=mt?"none":"flex";
+      if(mn)mn.classList.toggle("d-none",!mt);
+      if(rv)rv.textContent=mt&&md.muteReason?`Sebep: ${md.muteReason}`:"";
+      if(mt&&md.muteUntil)startCountdown(md.muteUntil);
     }
+  }
+});
 
-    window.submitReply = async () => {
-      if (!user || !currentForumPostId) return;
-      const text = document.getElementById("reply-input").value.trim();
-      if (!text) return showToast("Yanıt boş olamaz.", true);
-      await addDoc(collection(db,"forum_posts",currentForumPostId,"replies"), {
-        nick:user.nick, uid:user.id, role:user.role, text, editedAt:null, ts:serverTimestamp()
-      });
-      const post = forumPosts.find(p => p.id === currentForumPostId);
-      await updateDoc(doc(db,"forum_posts",currentForumPostId), { replyCount: (post?.replyCount || 0) + 1 });
-      document.getElementById("reply-input").value = "";
-      await loadReplies(currentForumPostId);
-      showToast("Yanıt gönderildi.");
-    };
+function startCountdown(until){
+  if(countdownInterval)clearInterval(countdownInterval);
+  const el=document.getElementById("mute-countdown");if(!el)return;
+  if(until==="permanent"){el.innerText="Kalıcı";return}
+  const end=new Date(until);
+  countdownInterval=setInterval(()=>{const diff=end-new Date();if(diff<=0){clearInterval(countdownInterval);return}el.innerText=`${Math.floor(diff/60000)}dk ${Math.floor((diff%60000)/1000)}s`},1000);
+}
 
-    window.editReply = async (postId, replyId) => {
-      const ref = doc(db,"forum_posts",postId,"replies",replyId);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu yanıtı düzenleyemezsin.", true);
-      const next = prompt("Yanıtı düzenle:", d.text || "");
-      if (next === null) return;
-      if (!next.trim()) return showToast("Yanıt boş olamaz.", true);
-      await updateDoc(ref, { text:next.trim(), editedAt:new Date().toISOString() });
-      await loadReplies(postId);
-      showToast("Yanıt güncellendi.");
-    };
+window.approveUser=async id=>{await updateDoc(doc(db,"users",id),{approved:true});toast("Kullanıcı onaylandı.")};
+window.deleteUser=async id=>{if(!confirm("Bu kullanıcıyı silmek istediğine emin misin?"))return;await deleteDoc(doc(db,"users",id));toast("Kullanıcı silindi.")};
 
-    window.deleteReply = async (postId, replyId) => {
-      const ref = doc(db,"forum_posts",postId,"replies",replyId);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const d = snap.data();
-      if (d.uid !== user?.id && user?.role !== "admin") return showToast("Bu yanıtı silemezsin.", true);
-      await deleteDoc(ref);
-      const post = forumPosts.find(p => p.id === postId);
-      await updateDoc(doc(db,"forum_posts",postId), { replyCount: Math.max(0, (post?.replyCount || 0) - 1) });
-      await loadReplies(postId);
-      showToast("Yanıt silindi.");
-    };
+// Chat
+function fmtTime(ts){
+  if(!ts)return"";const d=ts.toDate?ts.toDate():new Date(ts);const now=new Date();
+  const isToday=d.toDateString()===now.toDateString();const yest=new Date(now);yest.setDate(now.getDate()-1);
+  const isYest=d.toDateString()===yest.toDateString();
+  const t=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+  return isToday?"Bugün "+t:isYest?"Dün "+t:d.toLocaleDateString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric"})+" "+t;
+}
+function fmtDateLbl(ts){
+  if(!ts)return"";const d=ts.toDate?ts.toDate():new Date(ts);const now=new Date();
+  const isToday=d.toDateString()===now.toDateString();const yest=new Date(now);yest.setDate(now.getDate()-1);
+  if(isToday)return"Bugün";if(d.toDateString()===yest.toDateString())return"Dün";
+  return d.toLocaleDateString("tr-TR",{day:"2-digit",month:"long",year:"numeric"});
+}
 
-    // Gallery
-    function subscribeGallery() {
-      if (galleryMainUnsub) galleryMainUnsub();
-      if (galleryPendingUnsub) galleryPendingUnsub();
-      const qRef = (user?.role === "admin")
-        ? query(collection(db,"gallery"), orderBy("ts","desc"))
-        : query(collection(db,"gallery"), where("approved","==",true), orderBy("ts","desc"));
-      galleryMainUnsub = onSnapshot(qRef, (snap) => {
-        const grid = document.getElementById("gallery-grid");
-        const empty = document.getElementById("gallery-empty");
-        if (!grid) return;
-        grid.innerHTML = "";
-        if (snap.empty) { empty.classList.remove("d-none"); return; }
-        empty.classList.add("d-none");
-        snap.forEach(s => {
-          const d = s.data();
-          const isAdmin = user?.role === "admin";
-          const isOwner = user?.id === d.uid;
-          const showDelete = isAdmin || isOwner;
-          const showApprove = isAdmin && d.approved === false;
-          grid.innerHTML += `
-            <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
-              <img src="${escAttr(d.url)}" alt="${escAttr(d.caption || "")}" loading="lazy">
-              <div class="gallery-item-overlay">
-                <span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}${d.approved===false ? " · (onay bekliyor)" : ""}</span>
-              </div>
-              ${showApprove ? `<button type="button" class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i></button>` : ""}
-              ${showDelete ? `<button type="button" class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>` : ""}
-            </div>
-          `;
-        });
-      });
-      if (user?.role === "admin") {
-        galleryPendingUnsub = onSnapshot(query(collection(db,"gallery"), where("approved","==",false), orderBy("ts","desc")), (snap) => {
-          const g = document.getElementById("gallery-pending-grid");
-          if (!g) return;
-          g.innerHTML = "";
-          if (snap.empty) { g.innerHTML = `<div class="empty-state" style="width:100%"><p>Onay bekleyen fotoğraf yok.</p></div>`; return; }
-          snap.forEach(s => {
-            const d = s.data();
-            g.innerHTML += `
-              <div class="gallery-item" onclick="openLightbox('${escAttr(d.url)}')">
-                <img src="${escAttr(d.url)}" alt="${escAttr(d.caption || "")}">
-                <div class="gallery-item-overlay"><span class="gallery-item-caption">${escHtml(d.caption || d.nick || "")}</span></div>
-                <button type="button" class="gallery-approve-btn" onclick="event.stopPropagation();approveGalleryItem('${s.id}')"><i class="fas fa-check"></i> Onay</button>
-                <button type="button" class="gallery-delete-btn" onclick="event.stopPropagation();deleteGalleryItem('${s.id}')"><i class="fas fa-trash"></i></button>
-              </div>
-            `;
-          });
-        });
-      }
+function renderChat(){
+  const box=document.getElementById("chat-messages");if(!box)return;
+  if(!messagesCache.length){box.innerHTML='<div class="empty-state"><i class="fas fa-comments"></i><p>Henüz mesaj yok. İlk sen yaz!</p></div>';return}
+  box.innerHTML="";let lastAuth="",lastDate="",lastTs=null;
+  messagesCache.forEach(m=>{
+    const d=m.data;const isOwn=d.uid===user?.id;const rc=d.role||"sturgiyali";
+    const dl=fmtDateLbl(d.ts);
+    if(dl!==lastDate){box.innerHTML+=`<div class="chat-date-sep">${dl}</div>`;lastDate=dl}
+    const curTs=d.ts?.toDate?d.ts.toDate():null;
+    const diff=curTs&&lastTs?(curTs-lastTs)/60000:999;
+    const showH=lastAuth!==d.uid||diff>5;lastAuth=d.uid;lastTs=curTs;
+    const t=fmtTime(d.ts);const ed=d.editedAt?'<span style="font-size:10px;color:var(--muted);margin-left:6px">(düzenlendi)</span>':"";
+    const canE=!!user&&(isOwn||user.role==="admin");const canD=!!user&&(isOwn||user.role==="admin");
+    box.innerHTML+=`<div class="msg-group">${showH?`<div class="msg-author-line"><span class="msg-author ${rc}">${escH(d.nick||"Bilinmeyen")}</span><span class="msg-time">${t}</span></div>`:""}<div class="msg-bubble${isOwn?" own":""}">${escH(d.text||"")} ${ed}${canE||canD?`<div class="msg-actions">${canE?`<button class="msg-act-btn" onclick="startEdit('${m.id}')"><i class="fas fa-pen"></i></button>`:""}${canD?`<button class="msg-act-btn danger" onclick="deleteMsg('${m.id}')"><i class="fas fa-trash"></i></button>`:""}</div>`:""} ${editingMsgId===m.id?`<div class="msg-edit-wrap"><input id="ei-${m.id}" class="msg-edit-input" value="${escA(d.text||"")}" onkeydown="handleEditKey(event,'${m.id}')"><button class="btn btn-ice btn-sm" onclick="saveEdit('${m.id}')"><i class="fas fa-check"></i></button><button class="btn btn-red btn-sm" onclick="cancelEdit()"><i class="fas fa-times"></i></button></div>`:""}</div></div>`;
+  });
+  box.scrollTop=box.scrollHeight;
+}
+
+onSnapshot(query(collection(db,"messages"),orderBy("ts")),snap=>{messagesCache=snap.docs.map(d=>({id:d.id,data:d.data()}));renderChat()});
+
+window.handleChatKeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}};
+window.handleEditKey=(e,id)=>{if(e.key==="Enter"){e.preventDefault();saveEdit(id)}if(e.key==="Escape"){e.preventDefault();cancelEdit()}};
+
+window.sendMessage=async()=>{
+  if(!user){toast("Önce giriş yap.",true);openModal();return}if(isSending)return;
+  const inp=document.getElementById("chat-input"),btn=document.getElementById("send-btn"),text=inp.value.trim();
+  if(!text)return;isSending=true;btn.disabled=true;
+  try{
+    const me=await getDoc(doc(db,"users",user.id));if(!me.exists()){toast("Oturum geçersiz.",true);return}
+    if(isMuted(me.data())){toast("Susturuldunuz.",true);return}
+    await addDoc(collection(db,"messages"),{uid:user.id,nick:user.nick,role:user.role,text,editedAt:null,ts:serverTimestamp()});
+    inp.value="";
+  }catch(e){toast("Hata: "+e.message,true)}finally{setTimeout(()=>{isSending=false;btn.disabled=false},250)}
+};
+
+window.startEdit=id=>{editingMsgId=id;renderChat();setTimeout(()=>{const el=document.getElementById(`ei-${id}`);if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},30)};
+window.cancelEdit=()=>{editingMsgId=null;renderChat()};
+window.saveEdit=async id=>{
+  const ref=doc(db,"messages",id);const snap=await getDoc(ref);if(!snap.exists())return;
+  const d=snap.data();if(d.uid!==user?.id&&user?.role!=="admin")return toast("Düzenleyemezsin.",true);
+  const inp=document.getElementById(`ei-${id}`);if(!inp)return;const text=inp.value.trim();if(!text)return toast("Boş olamaz.",true);
+  await updateDoc(ref,{text,editedAt:new Date().toISOString()});editingMsgId=null;renderChat();toast("Güncellendi.");
+};
+window.deleteMsg=async id=>{
+  const ref=doc(db,"messages",id);const snap=await getDoc(ref);if(!snap.exists())return;
+  const d=snap.data();if(d.uid!==user?.id&&user?.role!=="admin")return toast("Silemezsin.",true);
+  await deleteDoc(ref);if(editingMsgId===id)editingMsgId=null;toast("Silindi.");
+};
+
+window.openMuteModal=(id,nick)=>{
+  const d=allUsers[id];if(d&&isMuted(d)){unmute(id);return}
+  document.getElementById("mute-target-id").value=id;
+  document.getElementById("mute-target-name").innerText=nick+" adlı savaşçı";
+  document.getElementById("mute-reason").value="";
+  document.getElementById("muteModal").classList.add("open");
+};
+window.closeMuteModal=()=>document.getElementById("muteModal").classList.remove("open");
+window.applyMute=async()=>{
+  const id=document.getElementById("mute-target-id").value;
+  const mins=parseInt(document.getElementById("mute-duration").value,10);
+  const reason=document.getElementById("mute-reason").value.trim();
+  let until;if(mins===99999)until="permanent";else{const d=new Date();d.setMinutes(d.getMinutes()+mins);until=d.toISOString()}
+  await updateDoc(doc(db,"users",id),{muteUntil:until,muteReason:reason||null});toast("Susturuldu.");closeMuteModal();
+};
+window.unmute=async id=>{await updateDoc(doc(db,"users",id),{muteUntil:null,muteReason:null});toast("Mute kaldırıldı.")};
+
+// Forum
+onSnapshot(query(collection(db,"forum_posts"),orderBy("ts","desc")),snap=>{
+  forumPosts=snap.docs.map(d=>({id:d.id,...d.data()}));
+  document.getElementById("forum-count").innerText=snap.size;renderForum();
+});
+function renderForum(){
+  const box=document.getElementById("forum-posts");if(!box)return;
+  const list=currentFilter==="all"?forumPosts:forumPosts.filter(p=>p.tag===currentFilter);
+  if(!list.length){box.innerHTML='<div class="empty-state"><i class="fas fa-scroll"></i><p>Henüz konu yok.</p></div>';return}
+  box.innerHTML=list.map(p=>{
+    const t=p.ts?new Date(p.ts.toDate()).toLocaleDateString("tr-TR"):"";
+    return`<div class="forum-post-card" onclick="openPost('${p.id}')"><span class="forum-tag tag-${p.tag||"general"}">${tagLabels[p.tag]||"Genel"}</span><div class="forum-post-title">${escH(p.title||"")}</div><div class="forum-post-preview">${escH((p.body||"").slice(0,150))}${(p.body||"").length>150?"...":""}</div><div class="forum-post-meta"><span><i class="fas fa-user"></i> ${escH(p.nick||"")}</span><span><i class="fas fa-calendar"></i> ${t}</span><span><i class="fas fa-comment"></i> ${p.replyCount||0} yanıt</span></div></div>`;
+  }).join("");
+}
+window.filterForum=tag=>{currentFilter=tag;renderForum()};
+window.toggleCompose=()=>{if(!user){toast("Giriş yap.",true);openModal();return}document.getElementById("forum-compose-area").classList.toggle("d-none")};
+window.submitForumPost=async()=>{
+  if(!user)return toast("Giriş yap.",true);
+  const title=document.getElementById("forum-title-input").value.trim();
+  const body=document.getElementById("forum-body-input").value.trim();
+  const tag=document.getElementById("forum-tag-input").value;
+  if(!title||!body)return toast("Başlık ve içerik zorunlu.",true);
+  await addDoc(collection(db,"forum_posts"),{title,body,tag,nick:user.nick,uid:user.id,role:user.role,replyCount:0,editedAt:null,ts:serverTimestamp()});
+  document.getElementById("forum-title-input").value="";document.getElementById("forum-body-input").value="";
+  document.getElementById("forum-compose-area").classList.add("d-none");toast("Konu açıldı.");
+};
+window.openPost=async id=>{
+  currentForumPostId=id;const post=forumPosts.find(p=>p.id===id);if(!post)return;
+  document.getElementById("forum-list-view").classList.add("d-none");document.getElementById("forum-detail-view").classList.remove("d-none");
+  const t=post.ts?new Date(post.ts.toDate()).toLocaleDateString("tr-TR"):"";
+  const ed=post.editedAt?'<span style="font-size:11px;color:var(--muted);margin-left:8px">(düzenlendi)</span>':"";
+  const canM=user&&(user.role==="admin"||user.id===post.uid);
+  document.getElementById("forum-detail-content").innerHTML=`<div class="forum-compose-card"><span class="forum-tag tag-${post.tag||"general"}">${tagLabels[post.tag]||"Genel"}</span><div class="forum-post-title" style="font-size:20px">${escH(post.title||"")} ${ed}</div><div style="font-size:13.5px;line-height:1.82;margin-bottom:14px">${escH(post.body||"").replace(/\n/g,"<br>")}</div><div class="forum-post-meta"><span><i class="fas fa-user"></i> ${escH(post.nick||"")}</span><span><i class="fas fa-calendar"></i> ${t}</span></div>${canM?`<div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm" onclick="editPost('${id}')"><i class="fas fa-pen"></i>Düzenle</button><button class="btn btn-red btn-sm" onclick="deletePost('${id}')"><i class="fas fa-trash"></i>Sil</button></div>`:""}</div>`;
+  await loadReplies(id);document.getElementById("reply-compose").classList.toggle("d-none",!user);
+};
+window.backToForum=()=>{currentForumPostId=null;document.getElementById("forum-list-view").classList.remove("d-none");document.getElementById("forum-detail-view").classList.add("d-none")};
+window.editPost=async id=>{
+  const ref=doc(db,"forum_posts",id);const snap=await getDoc(ref);if(!snap.exists())return;const d=snap.data();
+  if(d.uid!==user?.id&&user?.role!=="admin")return toast("Düzenleyemezsin.",true);
+  const title=prompt("Yeni başlık:",d.title||"");if(title===null)return;const body=prompt("Yeni içerik:",d.body||"");if(body===null)return;
+  if(!title.trim()||!body.trim())return toast("Boş olamaz.",true);
+  await updateDoc(ref,{title:title.trim(),body:body.trim(),editedAt:new Date().toISOString()});toast("Güncellendi.");
+};
+window.deletePost=async id=>{
+  const ref=doc(db,"forum_posts",id);const snap=await getDoc(ref);if(!snap.exists())return;const d=snap.data();
+  if(d.uid!==user?.id&&user?.role!=="admin")return toast("Silemezsin.",true);
+  if(!confirm("Bu konuyu silmek istediğine emin misin?"))return;
+  await deleteDoc(ref);backToForum();toast("Silindi.");
+};
+async function loadReplies(pid){
+  const box=document.getElementById("forum-replies");
+  const snap=await getDocs(query(collection(db,"forum_posts",pid,"replies"),orderBy("ts")));
+  if(snap.empty){box.innerHTML='<div style="font-size:13px;color:var(--muted);padding:10px 0">Henüz yanıt yok.</div>';return}
+  box.innerHTML=snap.docs.map(d=>{
+    const r=d.data();const t=r.ts?new Date(r.ts.toDate()).toLocaleString("tr-TR"):"";
+    const canM=user&&(user.role==="admin"||user.id===r.uid);
+    return`<div class="reply-card"><div class="reply-header"><span class="reply-author ${r.role||"sturgiyali"}">${escH(r.nick||"")}</span>${roleBadge(r.role)}<span class="reply-time">${t}</span>${r.editedAt?'<span class="reply-time">(düzenlendi)</span>':""}</div><div class="reply-text">${escH(r.text||"").replace(/\n/g,"<br>")}</div>${canM?`<div class="reply-actions"><button class="btn btn-sm" onclick="editReply('${pid}','${d.id}')"><i class="fas fa-pen"></i>Düzenle</button><button class="btn btn-red btn-sm" onclick="deleteReply('${pid}','${d.id}')"><i class="fas fa-trash"></i>Sil</button></div>`:""}</div>`;
+  }).join("");
+}
+window.submitReply=async()=>{
+  if(!user||!currentForumPostId)return;const text=document.getElementById("reply-input").value.trim();if(!text)return toast("Boş olamaz.",true);
+  await addDoc(collection(db,"forum_posts",currentForumPostId,"replies"),{nick:user.nick,uid:user.id,role:user.role,text,editedAt:null,ts:serverTimestamp()});
+  const p=forumPosts.find(p=>p.id===currentForumPostId);await updateDoc(doc(db,"forum_posts",currentForumPostId),{replyCount:(p?.replyCount||0)+1});
+  document.getElementById("reply-input").value="";await loadReplies(currentForumPostId);toast("Yanıt gönderildi.");
+};
+window.editReply=async(pid,rid)=>{
+  const ref=doc(db,"forum_posts",pid,"replies",rid);const snap=await getDoc(ref);if(!snap.exists())return;const d=snap.data();
+  if(d.uid!==user?.id&&user?.role!=="admin")return toast("Düzenleyemezsin.",true);
+  const next=prompt("Yanıtı düzenle:",d.text||"");if(next===null)return;if(!next.trim())return toast("Boş olamaz.",true);
+  await updateDoc(ref,{text:next.trim(),editedAt:new Date().toISOString()});await loadReplies(pid);toast("Güncellendi.");
+};
+window.deleteReply=async(pid,rid)=>{
+  const ref=doc(db,"forum_posts",pid,"replies",rid);const snap=await getDoc(ref);if(!snap.exists())return;const d=snap.data();
+  if(d.uid!==user?.id&&user?.role!=="admin")return toast("Silemezsin.",true);
+  await deleteDoc(ref);const p=forumPosts.find(p=>p.id===pid);await updateDoc(doc(db,"forum_posts",pid),{replyCount:Math.max(0,(p?.replyCount||0)-1)});
+  await loadReplies(pid);toast("Silindi.");
+};
+
+// Gallery
+function subGallery(){
+  if(galleryUnsub)galleryUnsub();if(galleryPendingUnsub)galleryPendingUnsub();
+  const qRef=user?.role==="admin"?query(collection(db,"gallery"),orderBy("ts","desc")):query(collection(db,"gallery"),where("approved","==",true),orderBy("ts","desc"));
+  galleryUnsub=onSnapshot(qRef,snap=>{
+    const grid=document.getElementById("gallery-grid"),empty=document.getElementById("gallery-empty");if(!grid)return;
+    grid.innerHTML="";
+    if(snap.empty){empty.classList.remove("d-none");return}empty.classList.add("d-none");
+    snap.forEach(s=>{
+      const d=s.data();const isA=user?.role==="admin";const isO=user?.id===d.uid;
+      const showD=isA||isO;const showOk=isA&&d.approved===false;
+      grid.innerHTML+=`<div class="gallery-item" onclick="openLightbox('${escA(d.url)}')"><img src="${escA(d.url)}" alt="${escA(d.caption||"")}" loading="lazy"><div class="gallery-overlay"><span class="gallery-caption">${escH(d.caption||d.nick||"")}${d.approved===false?" · (onay bekliyor)":""}</span></div>${showOk?`<button class="gallery-ok-btn" onclick="event.stopPropagation();okGallery('${s.id}')"><i class="fas fa-check"></i></button>`:""} ${showD?`<button class="gallery-del-btn" onclick="event.stopPropagation();delGallery('${s.id}')"><i class="fas fa-trash"></i></button>`:""}</div>`;
+    });
+  });
+  if(user?.role==="admin"){
+    galleryPendingUnsub=onSnapshot(query(collection(db,"gallery"),where("approved","==",false),orderBy("ts","desc")),snap=>{
+      const g=document.getElementById("gallery-pending-grid");if(!g)return;g.innerHTML="";
+      if(snap.empty){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Onay bekleyen fotoğraf yok.</p></div>';return}
+      snap.forEach(s=>{const d=s.data();g.innerHTML+=`<div class="gallery-item" onclick="openLightbox('${escA(d.url)}')"><img src="${escA(d.url)}" alt="${escA(d.caption||"")}"><div class="gallery-overlay"><span class="gallery-caption">${escH(d.caption||d.nick||"")}</span></div><button class="gallery-ok-btn" onclick="event.stopPropagation();okGallery('${s.id}')"><i class="fas fa-check"></i> Onay</button><button class="gallery-del-btn" onclick="event.stopPropagation();delGallery('${s.id}')"><i class="fas fa-trash"></i></button></div>`;});
+    });
+  }
+}
+subGallery();
+window.okGallery=async id=>{if(user?.role!=="admin")return toast("Sadece admin onaylayabilir.",true);await updateDoc(doc(db,"gallery",id),{approved:true});toast("Onaylandı.")};
+window.handleDragOver=e=>{e.preventDefault();document.getElementById("upload-zone").classList.add("dragover")};
+window.handleDragLeave=()=>document.getElementById("upload-zone").classList.remove("dragover");
+window.handleDrop=e=>{e.preventDefault();document.getElementById("upload-zone").classList.remove("dragover");uploadFiles(Array.from(e.dataTransfer.files))};
+window.handleFileInput=e=>uploadFiles(Array.from(e.target.files));
+async function uploadFiles(files){
+  if(!user){toast("Yüklemek için giriş yap.",true);openModal();return}
+  if(user.approved===false)return toast("Hesabın onay bekliyor.",true);
+  const valid=["image/jpeg","image/png","image/gif","image/webp"];
+  for(const f of files){
+    if(!valid.includes(f.type)){toast(`Geçersiz tür: ${f.name}`,true);continue}
+    if(f.size>5*1024*1024){toast(`Çok büyük: ${f.name}`,true);continue}
+    const r=new FileReader();r.onload=async ev=>{await addDoc(collection(db,"gallery"),{url:ev.target.result,nick:user.nick,uid:user.id,caption:f.name.replace(/\.[^/.]+$/,""),approved:false,ts:serverTimestamp()});toast("Yüklendi, admin onayı bekliyor.")};r.readAsDataURL(f);
+  }
+}
+window.delGallery=async id=>{await deleteDoc(doc(db,"gallery",id));toast("Silindi.")};
+window.openLightbox=url=>{document.getElementById("lightbox-img").src=url;document.getElementById("lightbox").classList.add("open")};
+window.closeLightbox=()=>document.getElementById("lightbox").classList.remove("open");
+
+// Auth
+window.processAuth=async()=>{
+  const n=document.getElementById("login-nick").value.trim();const p=document.getElementById("login-pass").value;
+  const errEl=document.getElementById("modal-error");const btn=document.getElementById("login-btn");errEl.style.display="none";
+  if(!n||!p){errEl.textContent="Tüm alanları doldur.";errEl.style.display="block";return}
+  if(n.length<2){errEl.textContent="En az 2 karakter.";errEl.style.display="block";return}
+  if(p.length<4){errEl.textContent="Şifre en az 4 karakter.";errEl.style.display="block";return}
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Kontrol...';
+  try{
+    const q=query(collection(db,"users"),where("nick","==",n));const snap=await getDocs(q);let d;
+    if(snap.empty){
+      const{hash,salt}=await hashPw(p);
+      const res=await addDoc(collection(db,"users"),{nick:n,passHash:hash,passSalt:salt,role:"sturgiyali",approved:false,muteUntil:null,muteReason:null});
+      d={id:res.id,nick:n,role:"sturgiyali",approved:false};toast("Hesap oluşturuldu, admin onayı bekliyor.");
+    }else{
+      const dd=snap.docs[0].data();let ok=false;
+      if(dd.passHash&&dd.passSalt)ok=await verifyPw(p,dd.passHash,dd.passSalt);
+      else if(dd.pass){ok=dd.pass===p;if(ok){const{hash,salt}=await hashPw(p);await updateDoc(doc(db,"users",snap.docs[0].id),{passHash:hash,passSalt:salt,pass:null})}}
+      if(!ok){errEl.textContent="Yanlış şifre.";errEl.style.display="block";return}
+      if(dd.approved===undefined){await updateDoc(doc(db,"users",snap.docs[0].id),{approved:true});dd.approved=true}
+      d={id:snap.docs[0].id,...dd};toast("Hoş geldin, "+d.nick+"!");
     }
-    subscribeGallery();
+    localStorage.setItem("st_session",JSON.stringify(d));setTimeout(()=>location.reload(),800);
+  }catch(e){errEl.textContent="Hata: "+e.message;errEl.style.display="block"}
+  finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i>Devam Et'}
+};
 
-    window.approveGalleryItem = async (id) => {
-      if (user?.role !== "admin") return showToast("Sadece admin onaylayabilir.", true);
-      await updateDoc(doc(db,"gallery",id), { approved:true });
-      showToast("Fotoğraf onaylandı.");
-    };
+window.updatePassword=async()=>{
+  if(!user)return toast("Önce giriş yap.",true);
+  const cur=document.getElementById("current-password").value;const np=document.getElementById("new-password").value;
+  if(!cur)return toast("Mevcut şifreni gir.",true);if(!np||np.length<6)return toast("En az 6 karakter.",true);
+  const me=await getDoc(doc(db,"users",user.id));const d=me.data();let ok=false;
+  if(d.passHash&&d.passSalt)ok=await verifyPw(cur,d.passHash,d.passSalt);else if(d.pass)ok=d.pass===cur;
+  if(!ok)return toast("Mevcut şifre yanlış.",true);
+  const{hash,salt}=await hashPw(np);await updateDoc(doc(db,"users",user.id),{passHash:hash,passSalt:salt,pass:null});
+  toast("Şifre güncellendi.");
+  ["current-password","new-password"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("strength-bar").style.width="0";document.getElementById("strength-text").textContent="";
+};
 
-    window.handleDragOver = (e) => { e.preventDefault(); document.getElementById("upload-zone").classList.add("dragover"); };
-    window.handleDragLeave = () => document.getElementById("upload-zone").classList.remove("dragover");
-    window.handleDrop = (e) => {
-      e.preventDefault();
-      document.getElementById("upload-zone").classList.remove("dragover");
-      uploadGalleryFiles(Array.from(e.dataTransfer.files));
-    };
-    window.handleFileInput = (e) => uploadGalleryFiles(Array.from(e.target.files));
+window.updRole=async(id,rk)=>{
+  if(user?.role!=="admin")return toast("Sadece admin.",true);if(!rolesMap[rk])return toast("Geçersiz rol.",true);
+  await updateDoc(doc(db,"users",id),{role:rk});toast("Rol güncellendi.");
+};
 
-    async function uploadGalleryFiles(files) {
-      if (!user) { showToast("Yüklemek için giriş yap.", true); openModal(); return; }
-      if (user.approved === false) return showToast("Hesabın onay bekliyor.", true);
-      const valid = ["image/jpeg","image/png","image/gif","image/webp"];
-      for (const file of files) {
-        if (!valid.includes(file.type)) { showToast(`Geçersiz tür: ${file.name}`, true); continue; }
-        if (file.size > 5 * 1024 * 1024) { showToast(`Çok büyük: ${file.name}`, true); continue; }
-        const reader = new FileReader();
-        reader.onload = async (ev) => {
-          await addDoc(collection(db,"gallery"), {
-            url: ev.target.result, nick: user.nick, uid: user.id,
-            caption: file.name.replace(/\.[^/.]+$/, ""),
-            approved: false, ts: serverTimestamp()
-          });
-          showToast("Fotoğraf yüklendi, admin onayı bekliyor.");
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+// Session UI
+if(user){
+  document.getElementById("auth-section").classList.add("d-none");
+  document.getElementById("user-section").classList.remove("d-none");
+  document.getElementById("display-nick").innerText=user.nick;
+  document.getElementById("display-rank").innerText=roleDisp(user.role).name;
+  document.getElementById("hero-rank").innerText=roleDisp(user.role).name;
+  if(user.role==="admin")document.getElementById("admin-nav-item").classList.remove("d-none");
+  const ua=document.getElementById("gallery-upload-area");if(ua&&user.approved!==false)ua.classList.remove("d-none");
+}
+renderRoles();
 
-    window.deleteGalleryItem = async (id) => {
-      await deleteDoc(doc(db,"gallery",id));
-      showToast("Fotoğraf silindi.");
-    };
+window.logout=()=>{localStorage.removeItem("st_session");location.reload()};
 
-    window.openLightbox = (url) => {
-      document.getElementById("lightbox-img").src = url;
-      document.getElementById("lightbox").classList.add("open");
-    };
-    window.closeLightbox = () => document.getElementById("lightbox").classList.remove("open");
+window.show=p=>{
+  document.querySelectorAll("main section").forEach(s=>s.classList.add("d-none"));
+  document.getElementById("page-"+p).classList.remove("d-none");
+  document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
+  const nav=document.getElementById("nav-"+p);if(nav)nav.classList.add("active");
+  if(p==="chat"){
+    const wall=document.getElementById("chat-access-wall"),area=document.getElementById("chat-approved-area");
+    if(!user){wall.classList.remove("d-none");area.classList.add("d-none");document.getElementById("chat-wall-msg").innerHTML="Sohbet için giriş yapmalısın."}
+    else if(user.approved===false){wall.classList.remove("d-none");area.classList.add("d-none");document.getElementById("chat-wall-msg").innerHTML='<div class="pending-pill"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra sohbet açılır.'}
+    else{wall.classList.add("d-none");area.classList.remove("d-none");setTimeout(()=>{const b=document.getElementById("chat-messages");if(b)b.scrollTop=b.scrollHeight},80)}
+  }
+  if(p==="forum"){
+    const wall=document.getElementById("forum-access-wall"),area=document.getElementById("forum-approved-area");
+    if(!user){wall.classList.remove("d-none");area.classList.add("d-none");document.getElementById("forum-wall-msg").innerHTML="Forum için giriş yapmalısın."}
+    else if(user.approved===false){wall.classList.remove("d-none");area.classList.add("d-none");document.getElementById("forum-wall-msg").innerHTML='<div class="pending-pill"><i class="fas fa-clock"></i> Hesabın onay bekliyor.</div>'}
+    else{wall.classList.add("d-none");area.classList.remove("d-none")}
+  }
+  if(p==="admin"&&user?.role!=="admin"){toast("Erişim yok.",true);show("home")}
+};
 
-    window.processAuth = async () => {
-      const n = document.getElementById("login-nick").value.trim();
-      const p = document.getElementById("login-pass").value;
-      const errEl = document.getElementById("modal-error");
-      const btn = document.getElementById("login-btn");
-      errEl.style.display = "none";
-      if (!n || !p) { errEl.textContent = "Tüm alanları doldur."; errEl.style.display = "block"; return; }
-      if (n.length < 2) { errEl.textContent = "Kullanıcı adı en az 2 karakter olmalı."; errEl.style.display = "block"; return; }
-      if (p.length < 4) { errEl.textContent = "Şifre en az 4 karakter olmalı."; errEl.style.display = "block"; return; }
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Kontrol ediliyor...`;
-      try {
-        const qUsers = query(collection(db,"users"), where("nick","==",n));
-        const snap = await getDocs(qUsers);
-        let d;
-        if (snap.empty) {
-          const { hash, salt } = await hashPassword(p);
-          const res = await addDoc(collection(db,"users"), {
-            nick:n, passHash:hash, passSalt:salt,
-            role:"sturgiyali", approved:false, muteUntil:null, muteReason:null
-          });
-          d = { id:res.id, nick:n, role:"sturgiyali", approved:false };
-          showToast("Hesap oluşturuldu, admin onayı bekliyor.");
-        } else {
-          const docData = snap.docs[0].data();
-          let ok = false;
-          if (docData.passHash && docData.passSalt) {
-            ok = await verifyPassword(p, docData.passHash, docData.passSalt);
-          } else if (docData.pass) {
-            ok = (docData.pass === p);
-            if (ok) {
-              const { hash, salt } = await hashPassword(p);
-              await updateDoc(doc(db,"users",snap.docs[0].id), { passHash:hash, passSalt:salt, pass:null });
-            }
-          }
-          if (!ok) { errEl.textContent = "Yanlış şifre."; errEl.style.display = "block"; return; }
-          if (docData.approved === undefined) {
-            await updateDoc(doc(db,"users",snap.docs[0].id), { approved:true });
-            docData.approved = true;
-          }
-          d = { id:snap.docs[0].id, ...docData };
-          showToast("Hoş geldin, " + d.nick + "!");
-        }
-        localStorage.setItem("st_session", JSON.stringify(d));
-        setTimeout(() => location.reload(), 800);
-      } catch (e) {
-        errEl.textContent = "Hata: " + e.message;
-        errEl.style.display = "block";
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fas fa-sign-in-alt"></i>Devam Et`;
-      }
-    };
+window.openModal=()=>{document.getElementById("loginModal").classList.add("open");setTimeout(()=>document.getElementById("login-nick")?.focus(),80)};
+window.closeModal=()=>document.getElementById("loginModal").classList.remove("open");
+window.closeMuteModal=()=>document.getElementById("muteModal").classList.remove("open");
+</script>
 
-    window.updatePassword = async () => {
-      if (!user) return showToast("Önce giriş yap.", true);
-      const current = document.getElementById("current-password").value;
-      const np = document.getElementById("new-password").value;
-      if (!current) return showToast("Mevcut şifreni gir.", true);
-      if (!np || np.length < 6) return showToast("Yeni şifre en az 6 karakter olmalı.", true);
-      const me = await getDoc(doc(db,"users",user.id));
-      const d = me.data();
-      let ok = false;
-      if (d.passHash && d.passSalt) ok = await verifyPassword(current, d.passHash, d.passSalt);
-      else if (d.pass) ok = (d.pass === current);
-      if (!ok) return showToast("Mevcut şifre yanlış.", true);
-      const { hash, salt } = await hashPassword(np);
-      await updateDoc(doc(db,"users",user.id), { passHash:hash, passSalt:salt, pass:null });
-      showToast("Şifre güncellendi.");
-      document.getElementById("current-password").value = "";
-      document.getElementById("new-password").value = "";
-      document.getElementById("strength-bar").style.width = "0";
-      document.getElementById("strength-text").textContent = "";
-    };
+<script>
+// Three.js particles
+(function(){
+  const canvas=document.getElementById("bg-canvas");
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
+  camera.position.z=5;
+  const N=1800,pos=new Float32Array(N*3),col=new Float32Array(N*3);
+  const pal=[new THREE.Color(0x7dd3fc),new THREE.Color(0x818cf8),new THREE.Color(0xa78bfa),new THREE.Color(0x38bdf8),new THREE.Color(0xfcd34d)];
+  for(let i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*34;pos[i*3+1]=(Math.random()-.5)*24;pos[i*3+2]=(Math.random()-.5)*16;
+    const c=pal[Math.floor(Math.random()*pal.length)];col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+  }
+  const geom=new THREE.BufferGeometry();
+  geom.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  geom.setAttribute("color",new THREE.BufferAttribute(col,3));
+  function circleTex(){
+    const sz=128,c=document.createElement("canvas");c.width=c.height=sz;
+    const ctx=c.getContext("2d"),g=ctx.createRadialGradient(sz/2,sz/2,3,sz/2,sz/2,sz/2);
+    g.addColorStop(0,"rgba(255,255,255,1)");g.addColorStop(.3,"rgba(255,255,255,.8)");
+    g.addColorStop(.6,"rgba(255,255,255,.2)");g.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=g;ctx.fillRect(0,0,sz,sz);
+    const t=new THREE.CanvasTexture(c);t.needsUpdate=true;return t;
+  }
+  const mat=new THREE.PointsMaterial({size:.055,transparent:true,opacity:.62,vertexColors:true,blending:THREE.AdditiveBlending,depthWrite:false,map:circleTex(),alphaTest:.01});
+  scene.add(new THREE.Points(geom,mat));
+  let mx=0,my=0,t=0;
+  document.addEventListener("mousemove",e=>{
+    mx=(e.clientX/innerWidth-.5)*.8;my=(e.clientY/innerHeight-.5)*.5;
+    document.body.style.setProperty("--mx",`${e.clientX/innerWidth*100}%`);
+    document.body.style.setProperty("--my",`${e.clientY/innerHeight*100}%`);
+  });
+  const pts=scene.children[0];
+  (function animate(){
+    requestAnimationFrame(animate);t+=.004;
+    pts.rotation.y=t*.05;pts.rotation.x=t*.018;
+    mat.opacity=.55+Math.sin(t*1.6)*.1;
+    camera.position.x+=(mx-camera.position.x)*.04;
+    camera.position.y+=(-my-camera.position.y)*.04;
+    camera.lookAt(scene.position);renderer.render(scene,camera);
+  })();
+  window.addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+})();
 
-    window.updRole = async (id, roleKey) => {
-      if (user?.role !== "admin") return showToast("Sadece admin değiştirebilir.", true);
-      if (!rolesMap[roleKey]) return showToast("Geçersiz rol.", true);
-      await updateDoc(doc(db,"users",id), { role:roleKey });
-      showToast("Rol güncellendi.");
-    };
-
-    window.createRole = async () => {
-      if (user?.role !== "admin") return showToast("Sadece admin rol oluşturabilir.", true);
-      const key = document.getElementById("new-role-key").value.trim().toLowerCase();
-      const name = document.getElementById("new-role-name").value.trim();
-      const color = document.getElementById("new-role-color").value || "#a8d8ea";
-      const canModerate = document.getElementById("new-role-moderate").checked;
-      if (!key || !name) return showToast("Rol key ve adı zorunlu.", true);
-      if (!/^[a-z0-9_-]+$/.test(key)) return showToast("Rol key sadece a-z 0-9 _ - içerebilir.", true);
-      if (key === "admin") return showToast("admin rolü oluşturulamaz.", true);
-      await setDoc(doc(db,"roles",key), {
-        name, color, className:"", canModerate, canCreateRole:false
-      }, { merge:true });
-      document.getElementById("new-role-key").value = "";
-      document.getElementById("new-role-name").value = "";
-      document.getElementById("new-role-color").value = "#a8d8ea";
-      document.getElementById("new-role-moderate").checked = false;
-      showToast("Yeni rol oluşturuldu.");
-    };
-
-    async function ensureFallbackRole() {
-      if (rolesMap["sturgiyali"]) return "sturgiyali";
-      const keys = Object.keys(rolesMap).filter(k => k !== "admin");
-      if (keys.length) return keys[0];
-      const key = "uyeler";
-      await setDoc(doc(db,"roles",key), {
-        name:"Üyeler", color:"#8fb0d0", className:"", canModerate:false, canCreateRole:false
-      }, { merge:true });
-      rolesMap[key] = { name:"Üyeler", color:"#8fb0d0", className:"", canModerate:false, canCreateRole:false };
-      return key;
-    }
-
-    // FIX 1: deleteRole - handle Firebase permission errors gracefully
-    window.deleteRole = async (event, roleKey) => {
-      event?.preventDefault();
-      event?.stopPropagation();
-      if (user?.role !== "admin") return showToast("Sadece admin rol silebilir.", true);
-      if (roleKey === "admin") return showToast("admin rolü silinemez.", true);
-      if (!confirm(`"${roleKey}" rolünü silmek istediğine emin misin?`)) return;
-      try {
-        const fallbackRole = await ensureFallbackRole();
-        const usersWithRole = await getDocs(query(collection(db,"users"), where("role","==",roleKey)));
-        await Promise.all(usersWithRole.docs.map(u => updateDoc(doc(db,"users",u.id), { role:fallbackRole })));
-
-        // Try deleteDoc first; if permission denied, mark as _deleted via setDoc
-        try {
-          await deleteDoc(doc(db,"roles",roleKey));
-        } catch(permErr) {
-          // Firestore rules may block delete but allow write — mark as deleted
-          await setDoc(doc(db,"roles",roleKey), {
-            _deleted:true, name:roleKey, color:"#333",
-            canModerate:false, canCreateRole:false
-          });
-        }
-
-        delete rolesMap[roleKey];
-        renderRolesPreview();
-        if (user?.role === roleKey) {
-          user.role = fallbackRole;
-          localStorage.setItem("st_session", JSON.stringify(user));
-        }
-        showToast(`"${roleKey}" rolü silindi.`);
-      } catch (err) {
-        showToast(`Rol silinemedi: ${err.message}`, true);
-      }
-    };
-
-    // Session UI
-    if (user) {
-      document.getElementById("auth-section").classList.add("d-none");
-      document.getElementById("user-section").classList.remove("d-none");
-      document.getElementById("display-nick").innerText = user.nick;
-      document.getElementById("display-rank").innerText = roleDisplay(user.role).name;
-      document.getElementById("hero-rank").innerText = roleDisplay(user.role).name;
-      if (user.role === "admin") document.getElementById("admin-nav-item").classList.remove("d-none");
-      const uploadArea = document.getElementById("gallery-upload-area");
-      if (uploadArea && user.approved !== false) uploadArea.classList.remove("d-none");
-    }
-    renderRolesPreview();
-
-    window.logout = () => { localStorage.removeItem("st_session"); location.reload(); };
-
-    window.show = (p) => {
-      document.querySelectorAll("main section").forEach(s => s.classList.add("d-none"));
-      document.getElementById("page-" + p).classList.remove("d-none");
-      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-      const nav = document.getElementById("nav-" + p);
-      if (nav) nav.classList.add("active");
-
-      if (p === "chat") {
-        const wall = document.getElementById("chat-access-wall");
-        const area = document.getElementById("chat-approved-area");
-        if (!user) {
-          wall.classList.remove("d-none"); area.classList.add("d-none");
-          document.getElementById("chat-wall-msg").innerHTML = "Sohbet için giriş yapmalısın.";
-        } else if (user.approved === false) {
-          wall.classList.remove("d-none"); area.classList.add("d-none");
-          document.getElementById("chat-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra sohbet açılır.`;
-        } else {
-          wall.classList.add("d-none"); area.classList.remove("d-none");
-          setTimeout(() => { const b = document.getElementById("chat-messages"); if (b) b.scrollTop = b.scrollHeight; }, 80);
-        }
-      }
-
-      if (p === "forum") {
-        const wall = document.getElementById("forum-access-wall");
-        const area = document.getElementById("forum-approved-area");
-        if (!user) {
-          wall.classList.remove("d-none"); area.classList.add("d-none");
-          document.getElementById("forum-wall-msg").innerHTML = "Forum için giriş yapmalısın.";
-        } else if (user.approved === false) {
-          wall.classList.remove("d-none"); area.classList.add("d-none");
-          document.getElementById("forum-wall-msg").innerHTML = `<div class="pending-notice"><i class="fas fa-clock"></i> Hesabın admin onayı bekliyor.</div><br>Onaydan sonra forum açılır.`;
-        } else {
-          wall.classList.add("d-none"); area.classList.remove("d-none");
-        }
-      }
-
-      if (p === "admin" && user?.role !== "admin") {
-        showToast("Admin paneline erişimin yok.", true);
-        show("home");
-      }
-    };
-
-    window.openModal = () => {
-      document.getElementById("loginModal").classList.add("open");
-      setTimeout(() => document.getElementById("login-nick")?.focus(), 80);
-    };
-    window.closeModal = () => document.getElementById("loginModal").classList.remove("open");
-    window.closeMuteModal = () => document.getElementById("muteModal").classList.remove("open");
-  </script>
-
-  <script>
-    (function() {
-      const canvas = document.getElementById("bg-canvas");
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0x000000, 0);
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-      camera.position.z = 5;
-      const particleCount = 1650;
-      const positions = new Float32Array(particleCount * 3);
-      const colors = new Float32Array(particleCount * 3);
-      const palette = [
-        new THREE.Color(0x8fe9ff), new THREE.Color(0x7aa8ff),
-        new THREE.Color(0x6d5bff), new THREE.Color(0x79ffd4), new THREE.Color(0xf0d070)
-      ];
-      for (let i = 0; i < particleCount; i++) {
-        positions[i*3] = (Math.random()-.5)*32;
-        positions[i*3+1] = (Math.random()-.5)*22;
-        positions[i*3+2] = (Math.random()-.5)*14;
-        const c = palette[Math.floor(Math.random()*palette.length)];
-        colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
-      }
-      const geom = new THREE.BufferGeometry();
-      geom.setAttribute("position", new THREE.BufferAttribute(positions,3));
-      geom.setAttribute("color", new THREE.BufferAttribute(colors,3));
-      function createCircleTexture() {
-        const size=128, c=document.createElement("canvas");
-        c.width=c.height=size;
-        const ctx=c.getContext("2d"), g=ctx.createRadialGradient(size/2,size/2,4,size/2,size/2,size/2);
-        g.addColorStop(0,"rgba(255,255,255,1)"); g.addColorStop(.2,"rgba(255,255,255,.9)");
-        g.addColorStop(.55,"rgba(255,255,255,.35)"); g.addColorStop(1,"rgba(255,255,255,0)");
-        ctx.fillStyle=g; ctx.fillRect(0,0,size,size);
-        const tex=new THREE.CanvasTexture(c); tex.needsUpdate=true; return tex;
-      }
-      const mat = new THREE.PointsMaterial({
-        size:.06, transparent:true, opacity:.68, vertexColors:true,
-        blending:THREE.AdditiveBlending, depthWrite:false,
-        map:createCircleTexture(), alphaTest:.02
-      });
-      const particles = new THREE.Points(geom,mat);
-      scene.add(particles);
-      let mouseX=0, mouseY=0;
-      document.addEventListener("mousemove",(e)=>{
-        mouseX=(e.clientX/window.innerWidth-.5)*.7;
-        mouseY=(e.clientY/window.innerHeight-.5)*.45;
-        document.body.style.setProperty("--mx",`${(e.clientX/window.innerWidth)*100}%`);
-        document.body.style.setProperty("--my",`${(e.clientY/window.innerHeight)*100}%`);
-      });
-      let t=0;
-      function animate(){
-        requestAnimationFrame(animate); t+=.005;
-        particles.rotation.y=t*.06; particles.rotation.x=t*.02;
-        particles.material.opacity=.60+Math.sin(t*1.8)*.12;
-        camera.position.x+=(mouseX-camera.position.x)*.05;
-        camera.position.y+=(-mouseY-camera.position.y)*.05;
-        camera.lookAt(scene.position);
-        renderer.render(scene,camera);
-      }
-      animate();
-      window.addEventListener("resize",()=>{
-        camera.aspect=window.innerWidth/window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth,window.innerHeight);
-      });
-    })();
-
-    window.toggleSidebar = () => {
-      document.getElementById("sidenav").classList.toggle("open");
-      document.getElementById("sidenav-overlay").classList.toggle("open");
-    };
-    window.closeSidebar = () => {
-      document.getElementById("sidenav").classList.remove("open");
-      document.getElementById("sidenav-overlay").classList.remove("open");
-    };
-  </script>
+window.toggleSidebar=()=>{document.getElementById("sidenav").classList.toggle("open");document.getElementById("sidenav-overlay").classList.toggle("open")};
+window.closeSidebar=()=>{document.getElementById("sidenav").classList.remove("open");document.getElementById("sidenav-overlay").classList.remove("open")};
+</script>
 </body>
 </html>
