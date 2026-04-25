@@ -3,195 +3,166 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>Sturgia Clan | Premium Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<title>Sturgia Clan | Premium Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-:root {
-  --bg: #020205;
-  --accent: #7dd3fc;
-  --glass: rgba(255, 255, 255, 0.03);
-  --border: rgba(255, 255, 255, 0.08);
-  --sidebar-w: 260px;
+:root{
+  --bg:#020308; /* Daha tünd fon */
+  --s1:rgba(255,255,255,.03);--s2:rgba(255,255,255,.06);--s3:rgba(255,255,255,.1);
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);--b3:rgba(255,255,255,.24);
+  --ice:#7dd3fc;--frost:#e0f2fe;--gold:#f59e0b;--gold2:#fcd34d;
+  --red:#ef4444;--green:#22c55e;--purple:#a78bfa;
+  --text:#cbd5e1;--muted:#475569;--dim:#1e293b;
+  --sw:280px;--r:16px;
+  --glow-ice:rgba(125,211,252,.35);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: var(--bg);
-  color: #cbd5e1;
-  font-family: 'Outfit', sans-serif;
-  overflow-x: hidden;
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  min-height:100vh;overflow-x:hidden;color:var(--text);
+  font-family:'Outfit',sans-serif; background:var(--bg);
 }
 
-/* Three.js Background */
-#bg-canvas { position: fixed; inset: 0; z-index: -1; }
-
-/* Sidebar */
-.sidebar {
-  position: fixed; left: 0; top: 0; width: var(--sidebar-w); height: 100vh;
-  background: rgba(2, 2, 5, 0.8);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  z-index: 100;
+/* Videodakı Neon Atmosferi */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background: 
+    radial-gradient(circle at 15% 10%, rgba(125,211,252,0.15), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(167,139,250,0.1), transparent 40%);
 }
-.brand { padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border); }
-.brand h2 { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #fff; letter-spacing: 4px; }
 
-.nav-menu { padding: 20px 0; flex-grow: 1; }
-.nav-item {
-  display: flex; align-items: center; gap: 15px; padding: 15px 25px;
-  color: #64748b; text-decoration: none; font-size: 14px; transition: 0.3s;
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* Premium Glassmorphism */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
-.nav-item:hover, .nav-item.active { color: var(--accent); background: rgba(125, 211, 252, 0.05); }
 
-/* Main Content */
-.main { margin-left: var(--sidebar-w); padding: 50px; }
-
-/* Hero */
-.hero { margin-bottom: 60px; }
-.hero h1 { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: #fff; line-height: 1; }
-.hero span { color: var(--accent); }
-
-/* Grid Layout */
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-
-/* Global Card Design */
-.card {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  padding: 30px; border-radius: 12px;
-  backdrop-filter: blur(10px);
+/* Rol Paneli Yeni Dizayn */
+.role-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--b1);
+  margin-bottom: 8px; transition: 0.3s;
 }
-.card h3 { font-size: 12px; letter-spacing: 2px; color: #64748b; margin-bottom: 20px; text-transform: uppercase; }
-
-/* Rol Yönetimi Stilleri */
-.role-input-wrap { display: flex; gap: 10px; margin-bottom: 20px; }
-input {
-  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-  padding: 12px; border-radius: 6px; color: #fff; outline: none;
+.role-row:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--ice);
+  transform: translateX(5px);
 }
-.btn-add { background: var(--accent); color: #000; border: none; padding: 0 20px; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-.role-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px; border-bottom: 1px solid var(--border);
+.btn-premium {
+  padding: 10px 20px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, var(--ice), var(--purple));
+  color: #000; font-weight: 800; cursor: pointer; transition: 0.3s;
 }
-.btn-del { color: #ef4444; background: none; border: none; cursor: pointer; font-size: 11px; }
+.btn-premium:hover {
+  box-shadow: 0 0 20px var(--glow-ice);
+  transform: translateY(-2px);
+}
 
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .main { margin-left: 0; padding: 20px; }
+/* Sidenav */
+.sidenav{
+  position:fixed;left:0;top:0;z-index:100;width:var(--sw);height:100vh;
+  background:rgba(4,5,13,.92); backdrop-filter:blur(40px);
+  border-right:1px solid var(--b1);
 }
 </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<div id="bg-canvas"></div>
 
-<div class="sidebar">
-  <div class="brand">
-    <h2>STURGIA</h2>
-    <p style="font-size: 10px; color: #475569; margin-top: 5px;">ELITE CLAN SYSTEM</p>
+<aside class="sidenav">
+  <div class="clan-brand">
+    <div class="clan-logo-wrap">
+      <i class="fas fa-shield-alt" style="font-size: 40px; color: var(--ice);"></i>
+    </div>
+    <div class="clan-name">STURGIA CLAN</div>
   </div>
-  <nav class="nav-menu">
-    <a href="#" class="nav-item active"><i class="fas fa-th-large"></i> DASHBOARD</a>
-    <a href="#" class="nav-item"><i class="fas fa-users"></i> MEMBERS</a>
-    <a href="#" class="nav-item"><i class="fas fa-comments"></i> FORUM</a>
-    <a href="#" class="nav-item"><i class="fas fa-image"></i> GALLERY</a>
-    <a href="#" class="nav-item" style="margin-top: auto; color: #f59e0b;"><i class="fas fa-crown"></i> ADMIN</a>
-  </nav>
-</div>
+  </aside>
 
-<div class="main">
-  <header class="hero">
-    <h1>STURGIA <span>CLAN</span></h1>
-    <p style="margin-top: 15px; color: #64748b;">Dominance through discipline. The ultimate clan management portal.</p>
-  </header>
-
-  <div class="grid">
-    <div class="card">
-      <h3>Klan Durumu</h3>
-      <div style="font-size: 40px; font-weight: 900; color: #fff; font-family: 'Orbitron';">48/50</div>
-      <p style="color: var(--accent); font-size: 12px; margin-top: 5px;">ÜYELER AKTİF</p>
+<main class="main-content" style="margin-left: var(--sw); padding: 40px;">
+  
+  <section id="role-management" class="glass-premium" style="padding: 30px; border-radius: 20px;">
+    <h2 style="font-family: 'Orbitron'; color: #fff; margin-bottom: 20px;">
+      <i class="fas fa-user-shield"></i> ROL İDARƏETMƏSİ
+    </h2>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+      <input type="text" id="newRoleName" class="glass-premium" style="flex: 1; padding: 12px; border-radius: 10px; color: #fff;" placeholder="Yeni rol adı...">
+      <button onclick="addNewRole()" class="btn-premium">ƏLAVƏ ET</button>
     </div>
 
-    <div class="card">
-      <h3>Rol Yönetimi</h3>
-      <div class="role-input-wrap">
-        <input type="text" id="roleInp" placeholder="Yeni rol adı...">
-        <button class="btn-add" onclick="addRole()">EKLE</button>
+    <div id="rolesContainer">
       </div>
-      <div id="roleDisplay"></div>
-    </div>
+  </section>
 
-    <div class="card">
-      <h3>Son Duyurular</h3>
-      <div style="font-size: 14px; border-left: 2px solid var(--accent); padding-left: 15px;">
-        <p>Haftalık klan savaşı bu Pazar 21:00'da başlayacak. Hazır olun!</p>
-        <span style="font-size: 10px; color: #475569;">25 Nisan 2026</span>
-      </div>
-    </div>
-  </div>
-</div>
+</main>
 
 <script>
-// --- THREE.JS BACKGROUND ---
-(function() {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
+// THREE.JS ARXA FON (Videodakı kimi ulduz effekti) [cite: 136]
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('bg-canvas').appendChild(renderer.domElement);
 
-  const geometry = new THREE.BufferGeometry();
-  const vertices = [];
-  for (let i = 0; i < 7000; i++) {
-    vertices.push(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000));
-  }
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-  const material = new THREE.PointsMaterial({ color: 0x7dd3fc, size: 0.8, transparent: true, opacity: 0.5 });
-  const points = new THREE.Points(geometry, material);
-  scene.add(points);
-  camera.position.z = 1000;
-
-  function animate() {
-    requestAnimationFrame(animate);
-    points.rotation.y += 0.0006;
-    points.rotation.x += 0.0002;
-    renderer.render(scene, camera);
-  }
-  animate();
-})();
-
-// --- ROL YÖNETİMİ (HATASIZ) ---
-function addRole() {
-  const input = document.getElementById('roleInp');
-  if(!input.value.trim()) return;
-  let roles = JSON.parse(localStorage.getItem('st_roles') || '[]');
-  roles.push(input.value.trim());
-  localStorage.setItem('st_roles', JSON.stringify(roles));
-  input.value = "";
-  renderRoles();
+const geometry = new THREE.BufferGeometry();
+const vertices = [];
+for (let i = 0; i < 5000; i++) {
+  vertices.push(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000));
 }
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+const particles = new THREE.Points(geometry, new THREE.PointsMaterial({color: 0x7dd3fc, size: 2}));
+scene.add(particles);
+camera.position.z = 500;
 
-function delRole(idx) {
-  let roles = JSON.parse(localStorage.getItem('st_roles'));
-  roles.splice(idx, 1);
-  localStorage.setItem('st_roles', JSON.stringify(roles));
-  renderRoles();
+function animate() {
+  requestAnimationFrame(animate);
+  particles.rotation.x += 0.0005;
+  particles.rotation.y += 0.0005;
+  renderer.render(scene, camera);
 }
+animate();
+
+// ROL FUNKSİYALARI (Fix edildi)
+let roles = ["Admin", "Moderator", "Üzv"]; // Başlanğıc datası
 
 function renderRoles() {
-  const display = document.getElementById('roleDisplay');
-  let roles = JSON.parse(localStorage.getItem('st_roles') || '[]');
-  display.innerHTML = roles.map((r, i) => `
-    <div class="role-item">
-      <span>${r}</span>
-      <button class="btn-del" onclick="delRole(${i})"><i class="fas fa-trash"></i> SİL</button>
+  const container = document.getElementById('rolesContainer');
+  container.innerHTML = roles.map((role, index) => `
+    <div class="role-row">
+      <span><i class="fas fa-circle" style="font-size: 8px; color: var(--ice); margin-right: 10px;"></i> ${role}</span>
+      <button onclick="deleteRole(${index})" style="background: none; border: none; color: var(--red); cursor: pointer;">
+        <i class="fas fa-trash-alt"></i>
+      </button>
     </div>
   `).join('');
 }
-document.addEventListener('DOMContentLoaded', renderRoles);
+
+function addNewRole() {
+  const input = document.getElementById('newRoleName');
+  if(input.value.trim() !== "") {
+    roles.push(input.value.trim());
+    input.value = "";
+    renderRoles();
+    // Buraya Firebase update kodu əlavə edilə bilər: db.collection('roles').doc('list').update({roles})
+  }
+}
+
+function deleteRole(index) {
+  roles.splice(index, 1);
+  renderRoles();
+}
+
+// İlkin yükləmə
+renderRoles();
 </script>
 
 </body>
