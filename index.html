@@ -13,13 +13,13 @@
   --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);--b3:rgba(255,255,255,.24);
   --ice:#7dd3fc;--frost:#e0f2fe;--gold:#f59e0b;--gold2:#fcd34d;
   --red:#ef4444;--green:#22c55e;--purple:#a78bfa;
+  --blood:#c0392b;--blood2:#e74c3c;--blood3:#ff6b6b;
   --text:#cbd5e1;--muted:#475569;--dim:#1e293b;
   --sw:280px;--r:16px;
-  --glow-ice:rgba(125,211,252,.35);--glow-gold:rgba(245,158,11,.35);
+  --glow-ice:rgba(125,211,252,.35);--glow-gold:rgba(245,158,11,.35);--glow-blood:rgba(192,57,43,.5);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 
-/* GRAIN */
 body{
   min-height:100vh;overflow-x:hidden;color:var(--text);
   font-family:'Outfit',sans-serif;font-weight:400;
@@ -30,14 +30,16 @@ body::before{
   background:
     radial-gradient(ellipse 70% 50% at 15% 10%,rgba(99,102,241,.09),transparent 55%),
     radial-gradient(ellipse 55% 40% at 85% 5%,rgba(125,211,252,.07),transparent 50%),
-    radial-gradient(ellipse 45% 55% at 50% 90%,rgba(245,158,11,.05),transparent 55%),
+    radial-gradient(ellipse 45% 55% at 50% 90%,rgba(192,57,43,.06),transparent 55%),
     radial-gradient(ellipse 30% 30% at 80% 70%,rgba(167,139,250,.06),transparent 50%);
 }
-/* grain overlay */
 body::after{
   content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.28;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='.18'/%3E%3C/svg%3E");
 }
+
+/* VEIN CANVAS — fullscreen behind everything */
+#vein-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85}
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 #mouse-glow{
   position:fixed;inset:0;z-index:2;pointer-events:none;
@@ -45,7 +47,6 @@ body::after{
 }
 .d-none{display:none!important}
 
-/* GLASS UTIL */
 .glass{
   background:rgba(255,255,255,.04);
   backdrop-filter:blur(24px) saturate(180%);
@@ -59,7 +60,6 @@ body::after{
   border:1px solid var(--b2);
 }
 
-/* HAMBURGER */
 .hamburger{
   display:none;position:fixed;top:14px;left:14px;z-index:400;
   background:rgba(4,5,13,.9);border:1px solid var(--b2);color:var(--ice);
@@ -68,7 +68,6 @@ body::after{
 .hamburger:hover{border-color:var(--b3);box-shadow:0 0 18px var(--glow-ice)}
 .sidenav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:90;backdrop-filter:blur(4px)}
 
-/* SIDEBAR */
 .sidenav{
   position:fixed;left:0;top:0;z-index:100;width:var(--sw);height:100vh;
   overflow-y:auto;display:flex;flex-direction:column;
@@ -79,7 +78,6 @@ body::after{
 .sidenav::-webkit-scrollbar{width:3px}
 .sidenav::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
 
-/* CLAN BRAND */
 .clan-brand{
   padding:28px 20px 22px;text-align:center;
   border-bottom:1px solid var(--b1);position:relative;overflow:hidden;
@@ -87,31 +85,45 @@ body::after{
 .clan-brand::before{
   content:'';position:absolute;left:50%;top:-40px;transform:translateX(-50%);
   width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(125,211,252,.12),transparent 65%);
-  pointer-events:none;animation:brandPulse 4s ease-in-out infinite;
+  background:radial-gradient(circle,rgba(192,57,43,.18),transparent 65%);
+  pointer-events:none;animation:brandPulse 0.9s ease-in-out infinite;
 }
-@keyframes brandPulse{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+@keyframes brandPulse{
+  0%{opacity:.5;transform:translateX(-50%) scale(1)}
+  25%{opacity:1;transform:translateX(-50%) scale(1.18)}
+  35%{opacity:.7;transform:translateX(-50%) scale(0.97)}
+  50%{opacity:1;transform:translateX(-50%) scale(1.12)}
+  60%{opacity:.6;transform:translateX(-50%) scale(0.98)}
+  100%{opacity:.5;transform:translateX(-50%) scale(1)}
+}
 
+/* HEART LOGO */
 .clan-logo-wrap{
   width:88px;height:88px;border-radius:20px;margin:0 auto 14px;
   display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,#080c1e,#111c38);
-  border:1px solid rgba(125,211,252,.3);
-  box-shadow:0 0 32px rgba(125,211,252,.18),0 0 64px rgba(99,102,241,.12),inset 0 1px 0 rgba(255,255,255,.08);
+  background:linear-gradient(145deg,#080c1e,#1a0810);
+  border:1px solid rgba(192,57,43,.4);
+  box-shadow:0 0 32px rgba(192,57,43,.25),0 0 64px rgba(99,102,241,.12),inset 0 1px 0 rgba(255,255,255,.08);
   position:relative;
-  animation:logoGlow 3s ease-in-out infinite;
+  animation:heartBeat 0.9s ease-in-out infinite;
 }
-@keyframes logoGlow{0%,100%{box-shadow:0 0 24px rgba(125,211,252,.18),inset 0 1px 0 rgba(255,255,255,.08)}50%{box-shadow:0 0 40px rgba(125,211,252,.32),0 0 60px rgba(99,102,241,.16),inset 0 1px 0 rgba(255,255,255,.12)}}
+@keyframes heartBeat{
+  0%{transform:scale(1);box-shadow:0 0 20px rgba(192,57,43,.25),inset 0 1px 0 rgba(255,255,255,.08)}
+  14%{transform:scale(1.18);box-shadow:0 0 50px rgba(192,57,43,.7),0 0 80px rgba(231,76,60,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+  28%{transform:scale(0.96)}
+  42%{transform:scale(1.13);box-shadow:0 0 40px rgba(192,57,43,.55),0 0 60px rgba(231,76,60,.3)}
+  56%{transform:scale(0.98)}
+  70%,100%{transform:scale(1);box-shadow:0 0 20px rgba(192,57,43,.25),inset 0 1px 0 rgba(255,255,255,.08)}
+}
 
 .clan-name{
   font-family:'Orbitron',monospace;font-size:14px;font-weight:800;
   letter-spacing:6px;text-transform:uppercase;
-  background:linear-gradient(135deg,var(--ice),var(--frost),var(--gold2));
+  background:linear-gradient(135deg,var(--blood3),var(--blood2),var(--gold2));
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .clan-tagline{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:5px}
 
-/* NAV */
 .sidenav-menu{flex:1;padding:14px 10px}
 .nav-section-label{
   font-size:8px;letter-spacing:3.5px;text-transform:uppercase;
@@ -126,16 +138,16 @@ body::after{
 }
 .nav-link::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-  background:linear-gradient(to bottom,var(--ice),var(--purple));
+  background:linear-gradient(to bottom,var(--blood2),var(--purple));
   border-radius:1px;opacity:0;transition:.22s;
 }
 .nav-link:hover{
-  background:rgba(125,211,252,.06);border-color:var(--b2);
+  background:rgba(192,57,43,.07);border-color:var(--b2);
   color:var(--frost)!important;transform:translateX(2px);
 }
 .nav-link.active{
-  background:rgba(125,211,252,.09);border-color:rgba(125,211,252,.22);
-  color:var(--ice)!important;
+  background:rgba(192,57,43,.1);border-color:rgba(192,57,43,.28);
+  color:var(--blood3)!important;
 }
 .nav-link.active::before{opacity:1}
 .nav-link i{width:16px;text-align:center;font-size:13px}
@@ -147,43 +159,40 @@ body::after{
 .sidenav-footer{padding:12px 10px;border-top:1px solid var(--b1)}
 .user-nick{
   display:block;text-align:center;font-family:'Orbitron',monospace;
-  font-size:11px;color:var(--ice);margin-bottom:2px;letter-spacing:1px;
+  font-size:11px;color:var(--blood3);margin-bottom:2px;letter-spacing:1px;
 }
 .user-rank-badge{display:block;text-align:center;font-size:10px;color:var(--muted);margin-bottom:10px}
 
-/* MAIN */
 .main-content{margin-left:var(--sw);min-height:100vh;position:relative;z-index:3}
 section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* HERO */
 .hero-section{
   position:relative;padding:80px 52px 64px;overflow:hidden;
   border-bottom:1px solid var(--b1);
 }
 .hero-section::after{
   content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 70% at 80% 20%,rgba(99,102,241,.1),transparent 55%);
+  background:radial-gradient(ellipse 60% 70% at 80% 20%,rgba(192,57,43,.08),transparent 55%);
 }
 .hero-eyebrow{
   font-size:10px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--ice);font-weight:600;margin-bottom:18px;
+  color:var(--blood3);font-weight:600;margin-bottom:18px;
   display:flex;align-items:center;gap:10px;
 }
-.hero-eyebrow::before{content:'';width:24px;height:1px;background:linear-gradient(to right,var(--ice),transparent)}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:linear-gradient(to right,var(--blood3),transparent)}
 .hero-title{
   font-family:'Orbitron',monospace;
   font-size:clamp(32px,4.5vw,68px);line-height:1.06;
   color:#fff;font-weight:900;letter-spacing:-1px;
-  text-shadow:0 0 60px rgba(125,211,252,.12);
+  text-shadow:0 0 60px rgba(192,57,43,.15);
 }
 .hero-title .grd{
-  background:linear-gradient(135deg,var(--ice) 0%,var(--frost) 40%,var(--gold2) 100%);
+  background:linear-gradient(135deg,var(--blood3) 0%,#ff8a80 40%,var(--gold2) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .hero-desc{margin-top:20px;max-width:500px;line-height:1.85;color:var(--muted);font-size:14px;font-weight:300}
 
-/* STATS BENTO */
 .stats-bento{
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--b1);border-bottom:1px solid var(--b1);
@@ -192,10 +201,10 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
   background:rgba(4,5,13,.9);padding:26px 32px;
   position:relative;overflow:hidden;transition:.3s;
 }
-.stat-cell:hover{background:rgba(125,211,252,.03)}
+.stat-cell:hover{background:rgba(192,57,43,.04)}
 .stat-cell::before{
   content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(to right,transparent,var(--ice),transparent);
+  background:linear-gradient(to right,transparent,var(--blood2),transparent);
   opacity:0;transition:.3s;
 }
 .stat-cell:hover::before{opacity:.4}
@@ -205,7 +214,6 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
   margin-top:10px;font-weight:700;letter-spacing:-1px;
 }
 
-/* QUICK CARDS */
 .quick-actions{
   display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
   padding:28px 52px;border-bottom:1px solid var(--b1);
@@ -218,21 +226,20 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 }
 .qa-card::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(125,211,252,.08),transparent 60%);
+  background:linear-gradient(135deg,rgba(192,57,43,.1),transparent 60%);
   opacity:0;transition:.26s;
 }
 .qa-card:hover{
   transform:translateY(-4px);
-  border-color:rgba(125,211,252,.28);
-  box-shadow:0 0 28px rgba(125,211,252,.14),0 16px 40px rgba(0,0,0,.4);
+  border-color:rgba(192,57,43,.35);
+  box-shadow:0 0 28px rgba(192,57,43,.2),0 16px 40px rgba(0,0,0,.4);
 }
 .qa-card:hover::before{opacity:1}
-.qa-icon{font-size:28px;color:var(--ice);display:block;margin-bottom:12px;transition:.26s}
-.qa-card:hover .qa-icon{text-shadow:0 0 16px var(--glow-ice)}
+.qa-icon{font-size:28px;color:var(--blood3);display:block;margin-bottom:12px;transition:.26s}
+.qa-card:hover .qa-icon{text-shadow:0 0 16px var(--glow-blood)}
 .qa-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--frost)}
 .qa-sub{font-size:10px;color:var(--muted);margin-top:5px}
 
-/* PAGE BODY */
 .page-body{padding:38px 52px}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
 .section-title{
@@ -240,9 +247,8 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
   letter-spacing:3px;text-transform:uppercase;font-weight:700;
   white-space:nowrap;
 }
-.section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(125,211,252,.25),transparent)}
+.section-rule{flex:1;height:1px;background:linear-gradient(to right,rgba(192,57,43,.3),transparent)}
 
-/* WARRIOR CARDS */
 .warrior-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .warrior-card{
   border-radius:14px;border:1px solid var(--b1);
@@ -250,14 +256,13 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   transition:.22s;
 }
-.warrior-card:hover{border-color:var(--b2);background:var(--s2);transform:translateY(-2px)}
+.warrior-card:hover{border-color:rgba(192,57,43,.25);background:var(--s2);transform:translateY(-2px)}
 .warrior-name{font-weight:600;color:var(--frost);font-size:14px;text-transform:none!important}
 .badge-rank{
   font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
   padding:5px 11px;border-radius:8px;border:1px solid transparent;font-weight:700;
 }
 
-/* BUTTONS */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:11px 20px;border-radius:12px;
@@ -272,7 +277,7 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 }
 .btn:hover{
   transform:translateY(-2px);border-color:var(--b3);color:#fff;
-  box-shadow:0 0 20px rgba(125,211,252,.2),0 8px 24px rgba(0,0,0,.4);
+  box-shadow:0 0 20px rgba(192,57,43,.2),0 8px 24px rgba(0,0,0,.4);
 }
 .btn:active{transform:translateY(0)}
 .btn-sm{padding:7px 13px;font-size:10px;letter-spacing:1.5px;border-radius:9px}
@@ -284,7 +289,6 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
 .btn-red:hover{background:rgba(239,68,68,.18);box-shadow:0 0 24px rgba(239,68,68,.22),0 8px 24px rgba(0,0,0,.4)}
 .btn-discord{background:rgba(88,101,242,.12);border-color:rgba(88,101,242,.3);color:#a5b4fc}
 
-/* FORM */
 .form-label{display:block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:600}
 .form-input{
   width:100%;border-radius:11px;outline:none;
@@ -293,13 +297,12 @@ section{animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
   transition:.2s;
 }
 .form-input:focus{
-  border-color:rgba(125,211,252,.35);background:rgba(125,211,252,.04);
-  box-shadow:0 0 0 3px rgba(125,211,252,.1);
+  border-color:rgba(192,57,43,.4);background:rgba(192,57,43,.04);
+  box-shadow:0 0 0 3px rgba(192,57,43,.1);
 }
 .form-input::placeholder{color:var(--muted)}
 textarea.form-input{resize:vertical;min-height:90px}
 
-/* ACCESS WALL */
 .access-wall{
   min-height:58vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
@@ -313,7 +316,6 @@ textarea.form-input{resize:vertical;min-height:90px}
   padding:10px 16px;border-radius:12px;color:var(--gold2);font-size:12px;
 }
 
-/* CHAT */
 .chat-wrapper{display:grid;grid-template-columns:1fr 270px;gap:14px;height:calc(100vh - 190px)}
 .chat-main,.chat-sidebar{
   border-radius:var(--r);border:1px solid var(--b1);
@@ -322,7 +324,7 @@ textarea.form-input{resize:vertical;min-height:90px}
 .chat-main{display:flex;flex-direction:column}
 .chat-head{
   padding:14px 18px;border-bottom:1px solid var(--b1);
-  background:rgba(125,211,252,.03);display:flex;align-items:center;gap:10px;
+  background:rgba(192,57,43,.04);display:flex;align-items:center;gap:10px;
 }
 .chat-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
 .chat-title{font-family:'Orbitron',monospace;font-size:12px;color:#fff;letter-spacing:2px}
@@ -348,7 +350,7 @@ textarea.form-input{resize:vertical;min-height:90px}
   background:rgba(255,255,255,.03);border:1px solid var(--b1);
   padding:9px 13px;line-height:1.58;font-size:13.5px;transition:.18s;
 }
-.msg-bubble.own{border-radius:13px 5px 13px 13px;background:rgba(125,211,252,.06);border-color:rgba(125,211,252,.15)}
+.msg-bubble.own{border-radius:13px 5px 13px 13px;background:rgba(192,57,43,.06);border-color:rgba(192,57,43,.18)}
 .msg-bubble:hover{background:rgba(255,255,255,.05)}
 .msg-actions{position:absolute;right:8px;top:8px;display:flex;gap:5px;opacity:0;transition:.15s}
 .msg-bubble:hover .msg-actions{opacity:1}
@@ -360,19 +362,19 @@ textarea.form-input{resize:vertical;min-height:90px}
 .msg-act-btn.danger{border-color:rgba(239,68,68,.3);color:#fca5a5}
 .msg-edit-wrap{margin-top:8px;display:flex;gap:6px;align-items:center}
 .msg-edit-input{
-  flex:1;background:rgba(125,211,252,.05);border:1px solid rgba(125,211,252,.25);
+  flex:1;background:rgba(192,57,43,.05);border:1px solid rgba(192,57,43,.28);
   border-radius:9px;color:var(--text);padding:7px 10px;font-size:13px;outline:none;font-family:'Outfit',sans-serif;
 }
-.msg-edit-input:focus{border-color:rgba(125,211,252,.5)}
+.msg-edit-input:focus{border-color:rgba(192,57,43,.5)}
 .chat-input-area{border-top:1px solid var(--b1);padding:12px 14px;display:flex;gap:9px;align-items:center}
 .chat-input{
   flex:1;border-radius:11px;outline:none;padding:10px 14px;
   border:1px solid var(--b1);background:rgba(255,255,255,.04);
   color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;transition:.2s;
 }
-.chat-input:focus{border-color:rgba(125,211,252,.3);background:rgba(125,211,252,.04)}
+.chat-input:focus{border-color:rgba(192,57,43,.35);background:rgba(192,57,43,.04)}
 .chat-members-head{
-  padding:13px 16px;border-bottom:1px solid var(--b1);background:rgba(125,211,252,.03);
+  padding:13px 16px;border-bottom:1px solid var(--b1);background:rgba(192,57,43,.03);
   font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600;
 }
 .chat-members{padding:8px;overflow:auto}
@@ -391,15 +393,14 @@ textarea.form-input{resize:vertical;min-height:90px}
   color:#fca5a5;border-radius:10px;padding:10px 14px;text-align:center;font-size:12px;
 }
 
-/* FORUM */
 .forum-compose-card,.forum-post-card,.reply-card{
   border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);
 }
 .forum-compose-card{padding:22px;margin-bottom:18px}
 .forum-post-card{padding:20px;cursor:pointer;transition:.24s}
 .forum-post-card:hover{
-  transform:translateY(-3px);border-color:rgba(245,158,11,.25);
-  box-shadow:0 0 28px rgba(245,158,11,.1),0 16px 40px rgba(0,0,0,.35);
+  transform:translateY(-3px);border-color:rgba(192,57,43,.28);
+  box-shadow:0 0 28px rgba(192,57,43,.12),0 16px 40px rgba(0,0,0,.35);
 }
 .forum-tag{
   display:inline-block;padding:3px 10px;border-radius:6px;
@@ -421,7 +422,6 @@ textarea.form-input{resize:vertical;min-height:90px}
 .reply-text{font-size:13.5px;line-height:1.65}
 .reply-actions{display:flex;gap:7px;margin-top:11px}
 
-/* GALLERY */
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px}
 .gallery-item{
   position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:14px;cursor:pointer;
@@ -443,37 +443,33 @@ textarea.form-input{resize:vertical;min-height:90px}
 .gallery-del-btn{right:10px;background:rgba(239,68,68,.72)}.gallery-del-btn:hover{background:rgba(239,68,68,.95)}
 .gallery-ok-btn{left:10px;background:rgba(34,197,94,.72)}.gallery-ok-btn:hover{background:rgba(34,197,94,.95)}
 .upload-zone{
-  border:2px dashed rgba(125,211,252,.25);border-radius:var(--r);padding:36px;
-  text-align:center;background:rgba(125,211,252,.025);margin-bottom:20px;cursor:pointer;transition:.22s;
+  border:2px dashed rgba(192,57,43,.28);border-radius:var(--r);padding:36px;
+  text-align:center;background:rgba(192,57,43,.025);margin-bottom:20px;cursor:pointer;transition:.22s;
 }
 .upload-zone:hover,.upload-zone.dragover{
-  border-color:rgba(125,211,252,.5);background:rgba(125,211,252,.07);
+  border-color:rgba(192,57,43,.55);background:rgba(192,57,43,.07);
 }
-.upload-icon{font-size:40px;color:rgba(125,211,252,.38);display:block;margin-bottom:12px}
+.upload-icon{font-size:40px;color:rgba(192,57,43,.4);display:block;margin-bottom:12px}
 .upload-text{font-size:13px;color:var(--muted);line-height:1.7}
 
-/* DISCORD */
 .discord-hero{
   border-radius:20px;border:1px solid rgba(88,101,242,.18);
   background:rgba(88,101,242,.07);text-align:center;padding:40px;
 }
 
-/* SETTINGS */
 .settings-card{
   max-width:500px;padding:26px;border-radius:var(--r);
   border:1px solid var(--b1);background:var(--s1);
 }
 
-/* ADMIN */
 .admin-table-card{border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);overflow:hidden;margin-bottom:22px}
-.admin-table-head{padding:16px 20px;border-bottom:1px solid var(--b1);background:rgba(125,211,252,.02)}
+.admin-table-head{padding:16px 20px;border-bottom:1px solid var(--b1);background:rgba(192,57,43,.02)}
 table{width:100%;border-collapse:collapse}
 thead th{padding:11px 16px;text-align:left;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:700}
 tbody td{padding:13px 16px;border-top:1px solid var(--b1);font-size:13px}
 tbody tr{transition:.18s}
-tbody tr:hover{background:rgba(125,211,252,.03)}
+tbody tr:hover{background:rgba(192,57,43,.03)}
 
-/* ROLE MANAGEMENT — new design */
 .roles-bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
 .role-panel{border-radius:var(--r);border:1px solid var(--b1);background:var(--s1);padding:22px}
 .role-panel-title{
@@ -511,7 +507,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 }
 .role-del-btn:hover{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4);transform:scale(1.05)}
 
-/* color swatches */
 .color-row{display:flex;align-items:center;gap:10px}
 .color-inp{
   width:44px;height:44px;border-radius:11px;border:1px solid var(--b2);
@@ -521,7 +516,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .swatch{width:24px;height:24px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:.15s}
 .swatch:hover{transform:scale(1.12)}
 .swatch.on{border-color:rgba(255,255,255,.65);transform:scale(1.12)}
-/* toggle */
 .toggle-row{
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 14px;border-radius:11px;border:1px solid var(--b1);
@@ -539,7 +533,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   position:absolute;top:2px;left:2px;transition:.22s;
 }
 .tog.on .tog-k{left:20px;background:var(--green)}
-/* preview badge */
 .preview-box{
   padding:14px 16px;border-radius:12px;border:1px solid var(--b1);
   background:rgba(255,255,255,.02);margin-bottom:14px;
@@ -549,7 +542,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   display:inline-flex;align-items:center;gap:8px;
   padding:6px 13px;border-radius:9px;font-size:12px;font-weight:700;letter-spacing:.5px;
 }
-/* stats mini */
 .stats-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
 .stat-mini{
   text-align:center;padding:14px 6px;border-radius:11px;
@@ -558,23 +550,22 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .stat-mini-val{font-family:'Orbitron',monospace;font-size:26px;font-weight:800;color:#fff;line-height:1}
 .stat-mini-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:5px}
 
-/* lux-select */
 .lux-select{position:relative}
 .lux-sel-btn{
   width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
   border-radius:11px;border:1px solid var(--b2);
-  background:linear-gradient(135deg,rgba(125,211,252,.09),rgba(99,102,241,.07)),rgba(4,5,13,.9);
+  background:linear-gradient(135deg,rgba(192,57,43,.09),rgba(99,102,241,.07)),rgba(4,5,13,.9);
   color:var(--frost);padding:11px 13px;cursor:pointer;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07);transition:.18s;
 }
 .lux-sel-btn:hover{border-color:var(--b3)}
-.lux-sel-btn:focus{outline:none;border-color:rgba(125,211,252,.5);box-shadow:0 0 0 3px rgba(125,211,252,.1)}
+.lux-sel-btn:focus{outline:none;border-color:rgba(192,57,43,.5);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
 .lux-sel-caret{color:var(--gold2);font-size:11px;transition:.2s}
 .lux-select.open .lux-sel-caret{transform:rotate(180deg)}
 .lux-sel-menu{
   position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:50;
   border-radius:13px;border:1px solid var(--b2);background:rgba(4,5,13,.98);
-  box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 20px rgba(99,102,241,.15);
+  box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 20px rgba(192,57,43,.15);
   padding:8px;display:none;
 }
 .lux-select.open .lux-sel-menu{display:block}
@@ -583,11 +574,10 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
   padding:10px 11px;background:transparent;color:var(--text);
   display:flex;align-items:center;gap:9px;transition:.16s;font-family:'Outfit',sans-serif;font-size:13px;
 }
-.lux-opt:hover{background:rgba(125,211,252,.07)}
+.lux-opt:hover{background:rgba(192,57,43,.08)}
 .lux-opt.active{background:rgba(99,102,241,.2);color:#fff}
 .lux-dot{width:8px;height:8px;border-radius:50%}
 
-/* MODALS */
 .modal-overlay{
   display:none;position:fixed;inset:0;z-index:1000;
   align-items:center;justify-content:center;padding:18px;
@@ -597,7 +587,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .modal-box{
   width:100%;max-width:460px;position:relative;border-radius:20px;
   border:1px solid var(--b2);background:rgba(4,5,13,.97);padding:30px;
-  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 50px rgba(99,102,241,.1);
+  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 50px rgba(192,57,43,.12);
   animation:modalIn .3s cubic-bezier(.22,1,.36,1);
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
@@ -610,7 +600,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .modal-title{text-align:center;font-family:'Orbitron',monospace;font-size:18px;color:#fff;margin-bottom:4px;letter-spacing:2px}
 .modal-sub{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
 
-/* CONFIRM MODAL */
 .confirm-box{max-width:360px}
 .confirm-btns{display:flex;gap:10px;margin-top:18px}
 .confirm-cancel{
@@ -626,7 +615,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 }
 .confirm-del:hover{background:rgba(239,68,68,.22);border-color:rgba(239,68,68,.5)}
 
-/* TOAST */
 .toast{
   position:fixed;bottom:22px;right:22px;z-index:3000;
   padding:12px 18px;border-radius:14px;border:1px solid var(--b2);
@@ -640,21 +628,17 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* LIGHTBOX */
 .lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.94);backdrop-filter:blur(10px);align-items:center;justify-content:center}
 .lightbox.open{display:flex}
 .lightbox img{max-width:90vw;max-height:88vh;border-radius:12px;border:1px solid var(--b2)}
 .lightbox-x{position:absolute;right:20px;top:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--b2);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-/* STRENGTH */
 #strength-bar{height:3px;border-radius:2px;background:var(--b1);margin-top:8px;transition:width .3s}
 #strength-text{font-size:10px;letter-spacing:1px;margin-top:5px}
 
-/* EMPTY */
 .empty-state{text-align:center;padding:40px 16px;color:var(--muted)}
 .empty-state i{font-size:44px;opacity:.15;display:block;margin-bottom:12px}
 
-/* RESPONSIVE */
 @media(max-width:1000px){
   .hamburger{display:block}
   .sidenav{transform:translateX(-100%);transition:.28s}
@@ -674,6 +658,8 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 </style>
 </head>
 <body>
+<!-- VEIN CANVAS — fullscreen background veins -->
+<canvas id="vein-canvas"></canvas>
 <canvas id="bg-canvas"></canvas>
 <div id="mouse-glow"></div>
 
@@ -682,12 +668,27 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 
 <nav class="sidenav" id="sidenav">
   <div class="clan-brand">
-    <div class="clan-logo-wrap">
-      <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-        <polygon points="28,4 50,16 50,40 28,52 6,40 6,16" fill="none" stroke="#7dd3fc" stroke-width="1.2" opacity=".5"/>
-        <polygon points="28,11 44,20 44,36 28,45 12,36 12,20" fill="none" stroke="#f59e0b" stroke-width=".9" opacity=".4"/>
-        <text x="28" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#f59e0b" opacity=".95">S</text>
-        <circle cx="28" cy="28" r="25" fill="none" stroke="rgba(125,211,252,.1)" stroke-width=".7"/>
+    <div class="clan-logo-wrap" id="heart-logo">
+      <!-- HEART SVG -->
+      <svg width="60" height="56" viewBox="0 0 60 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hg1" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ff6b6b"/>
+            <stop offset="50%" stop-color="#c0392b"/>
+            <stop offset="100%" stop-color="#7b0f0f"/>
+          </radialGradient>
+          <filter id="hglow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M30 52 C30 52 4 34 4 18 C4 9 11 3 19 3 C24 3 28.5 6 30 9 C31.5 6 36 3 41 3 C49 3 56 9 56 18 C56 34 30 52 30 52Z"
+          fill="url(#hg1)" filter="url(#hglow)" opacity="0.95"/>
+        <!-- highlight -->
+        <path d="M19 8 C15 9 11 13 10 18" stroke="rgba(255,150,150,0.4)" stroke-width="2" stroke-linecap="round"/>
+        <!-- pulse line inside heart -->
+        <polyline points="14,26 18,26 20,20 22,32 25,22 27,28 30,26 33,26 35,22 37,30 39,26 46,26"
+          fill="none" stroke="rgba(255,180,180,0.55)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
     <div class="clan-name">Sturgia</div>
@@ -872,7 +873,7 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
     <div id="gallery-upload-area" class="d-none">
       <div class="upload-zone" id="upload-zone" onclick="document.getElementById('gallery-file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
         <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-        <div class="upload-text"><strong style="color:var(--ice)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br><span style="font-size:12px">JPG, PNG, GIF, WEBP · Maks. 5MB</span></div>
+        <div class="upload-text"><strong style="color:var(--blood3)">Fotoğraf yükle</strong> — tıkla veya sürükle bırak<br><span style="font-size:12px">JPG, PNG, GIF, WEBP · Maks. 5MB</span></div>
       </div>
       <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
     </div>
@@ -916,8 +917,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
 <section id="page-admin" class="d-none">
   <div class="page-body">
     <div class="section-header"><div class="section-title">Klan Yönetimi</div><div class="section-rule"></div></div>
-
-    <!-- pending -->
     <div style="margin-bottom:26px">
       <div class="section-header" style="margin-bottom:12px">
         <div class="section-title" style="font-size:11px;color:var(--gold)"><i class="fas fa-clock"></i> Onay Bekleyen Üyeler</div>
@@ -925,14 +924,11 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
       </div>
       <div id="pending-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
     </div>
-
-    <!-- ROLE MANAGEMENT — bento -->
     <div class="section-header" style="margin-bottom:14px">
       <div class="section-title" style="font-size:11px;color:var(--gold)"><i class="fas fa-layer-group"></i> Rol Yönetimi</div>
       <div class="section-rule"></div>
     </div>
     <div class="roles-bento">
-      <!-- LEFT: role list -->
       <div class="role-panel">
         <div class="role-panel-title"><i class="fas fa-list"></i>Mevcut Roller</div>
         <div class="stats-mini">
@@ -942,7 +938,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
         </div>
         <div class="role-list" id="role-list-render"></div>
       </div>
-      <!-- RIGHT: create form -->
       <div class="role-panel">
         <div class="role-panel-title"><i class="fas fa-plus-circle"></i>Yeni Rol Oluştur</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
@@ -970,8 +965,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
         <button class="btn btn-gold" id="btn-create-role" style="width:100%" onclick="createRole()"><i class="fas fa-plus"></i>Rol Oluştur</button>
       </div>
     </div>
-
-    <!-- warrior table -->
     <div class="admin-table-card">
       <div class="admin-table-head"><span style="font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase">Savaşçı Listesi · Rol / Mute Yönetimi</span></div>
       <table>
@@ -979,7 +972,6 @@ tbody tr:hover{background:rgba(125,211,252,.03)}
         <tbody id="admin-table-body"></tbody>
       </table>
     </div>
-
     <div class="section-header" style="margin:24px 0 12px"><div class="section-title" style="font-size:11px;color:var(--gold)">Galeri Onay Kuyruğu</div><div class="section-rule"></div></div>
     <div id="gallery-pending-grid" class="gallery-grid"></div>
   </div>
@@ -1050,18 +1042,24 @@ const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 
 let user=null,currentForumPostId=null,currentFilter="all",forumPosts=[],allUsers={},messagesCache=[],countdownInterval=null,isSending=false,editingMsgId=null,galleryUnsub=null,galleryPendingUnsub=null,modOn=false,pendingDelRole=null,toastT=null;
 
-let rolesMap={
+// BUILTIN roles — these are DEFAULTS only. Firestore data overwrites them.
+// The key difference: we no longer blindly overwrite rolesMap with builtins every snapshot.
+const BUILTIN_DEFAULTS={
   admin:{name:"Yönetici",color:"#ef4444",canModerate:true,canCreateRole:true,builtin:true},
   westra:{name:"Westra / Abak 🌊",color:"#7dd3fc",canModerate:false,builtin:true},
   sturgiyali:{name:"Sturgiyalı",color:"#94a3b8",canModerate:false,builtin:true}
 };
+
+// rolesMap starts with defaults; Firestore listener will merge/override
+let rolesMap={...BUILTIN_DEFAULTS};
+
 const tagLabels={general:"Genel",strategy:"Strateji",event:"Etkinlik",suggestion:"Öneri",bug:"Hata"};
 const SWATCHES=["#7dd3fc","#f59e0b","#ef4444","#22c55e","#a78bfa","#fb923c","#f472b6","#38bdf8","#818cf8","#a3e635"];
 
 function escH(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function escA(s){return String(s||"").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 function isMuted(d){if(!d?.muteUntil)return false;if(d.muteUntil==="permanent")return true;return new Date(d.muteUntil)>new Date()}
-function roleDisp(k){return rolesMap[k]||rolesMap.sturgiyali}
+function roleDisp(k){return rolesMap[k]||rolesMap.sturgiyali||{name:k,color:"#94a3b8"}}
 function roleBadge(k){const r=roleDisp(k);return`<span class="badge-rank" style="border-color:${r.color}55;color:${r.color};background:${r.color}18">${escH(r.name||k)}</span>`}
 
 // SWATCHES init
@@ -1129,8 +1127,8 @@ window.execDelRole=async()=>{
     const fb=await ensureFallback();
     const usrs=await getDocs(query(collection(db,"users"),where("role","==",key)));
     await Promise.all(usrs.docs.map(u=>updateDoc(doc(db,"users",u.id),{role:fb})));
-    try{await deleteDoc(doc(db,"roles",key))}
-    catch{await setDoc(doc(db,"roles",key),{_deleted:true,name:key,color:"#333",canModerate:false,canCreateRole:false})}
+    // Mark as deleted in Firestore so it won't reappear
+    await setDoc(doc(db,"roles",key),{_deleted:true},{merge:false});
     delete rolesMap[key];renderRoles();toast(`"${key}" rolü silindi.`);
   }catch(e){toast("Silinemedi: "+e.message,true)}
 };
@@ -1146,7 +1144,14 @@ window.createRole=async()=>{
   if(rolesMap[key])return toast(`"${key}" zaten var!`,true);
   const btn=document.getElementById("btn-create-role");btn.disabled=true;
   try{
-    await setDoc(doc(db,"roles",key),{name,color,className:"",canModerate:modOn,canCreateRole:false},{merge:true});
+    // Save to Firestore with all required fields — this persists across reloads
+    await setDoc(doc(db,"roles",key),{
+      name,color,
+      canModerate:modOn,
+      canCreateRole:false,
+      builtin:false,
+      _deleted:false
+    });
     document.getElementById("new-role-key").value="";document.getElementById("new-role-name").value="";
     document.getElementById("new-role-color").value="#7dd3fc";
     document.querySelectorAll(".swatch").forEach((s,i)=>{s.classList.toggle("on",i===0)});
@@ -1159,7 +1164,7 @@ async function ensureFallback(){
   if(rolesMap["sturgiyali"])return"sturgiyali";
   const keys=Object.keys(rolesMap).filter(k=>k!=="admin");
   if(keys.length)return keys[0];
-  await setDoc(doc(db,"roles","uyeler"),{name:"Üyeler",color:"#64748b",className:"",canModerate:false,canCreateRole:false},{merge:true});
+  await setDoc(doc(db,"roles","uyeler"),{name:"Üyeler",color:"#64748b",canModerate:false,canCreateRole:false,builtin:false,_deleted:false},{merge:true});
   return"uyeler";
 }
 
@@ -1215,10 +1220,25 @@ window.checkPasswordStrength=pw=>{
   document.addEventListener("click",e=>{if(!wrap.contains(e.target))wrap.classList.remove("open")});
 })();
 
-// Roles listener
+// ===== ROLES LISTENER — FIX =====
+// We merge Firestore roles ON TOP of builtin defaults.
+// Deleted roles (_deleted:true) are removed. Builtins are never removed by Firestore.
 onSnapshot(collection(db,"roles"),snap=>{
-  const next={};snap.forEach(d=>{const data=d.data();if(!data._deleted)next[d.id]={...data}});
-  rolesMap={admin:rolesMap.admin,westra:rolesMap.westra,sturgiyali:rolesMap.sturgiyali,...next};
+  // Start fresh from builtins each time snapshot fires
+  const next={...BUILTIN_DEFAULTS};
+  snap.forEach(d=>{
+    const data=d.data();
+    if(data._deleted){
+      // Explicitly deleted — remove even if it's a builtin key
+      // But protect 'admin' always
+      if(d.id!=="admin")delete next[d.id];
+    } else {
+      // Custom roles override or add to the map
+      // For builtin keys (westra, sturgiyali), Firestore data wins if it exists and is not deleted
+      next[d.id]={...data, builtin: BUILTIN_DEFAULTS[d.id]?.builtin || false};
+    }
+  });
+  rolesMap=next;
   renderRoles();
 });
 
@@ -1573,7 +1593,152 @@ window.closeMuteModal=()=>document.getElementById("muteModal").classList.remove(
 </script>
 
 <script>
-// Three.js particles
+// ========== VEIN / HEARTBEAT CANVAS ==========
+(function(){
+  const canvas = document.getElementById('vein-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Heart center — top of sidebar, a bit below logo area
+  // We'll put it at ~140px from top, 140px from left (center of sidebar)
+  function heartCenter(){
+    return { x: 140, y: 140 };
+  }
+
+  // Generate vein tree: recursive branching paths from heart origin
+  // Each vein is an array of points
+  const veins = [];
+  function mkVein(x, y, angle, length, depth, width){
+    if(depth <= 0 || length < 8) return;
+    const points = [{x, y}];
+    let cx = x, cy = y, a = angle;
+    const segs = Math.floor(length / 18) + 2;
+    for(let i = 0; i < segs; i++){
+      a += (Math.random() - 0.5) * 0.55;
+      const step = length / segs;
+      cx += Math.cos(a) * step;
+      cy += Math.sin(a) * step;
+      points.push({x:cx, y:cy});
+    }
+    veins.push({ points, width, depth, flow: Math.random(), speed: 0.4 + Math.random() * 0.6 });
+    // branches
+    const numBranches = depth > 3 ? 2 : (Math.random() < 0.7 ? 2 : 1);
+    for(let b = 0; b < numBranches; b++){
+      const bAngle = a + (Math.random() - 0.5) * 1.4;
+      mkVein(cx, cy, bAngle, length * (0.55 + Math.random()*0.2), depth-1, width * 0.68);
+    }
+  }
+
+  // Seed veins from heart center in many directions
+  function buildVeins(){
+    veins.length = 0;
+    const c = heartCenter();
+    const dirs = 14;
+    for(let i = 0; i < dirs; i++){
+      const angle = (i / dirs) * Math.PI * 2;
+      const len = 180 + Math.random() * 320;
+      mkVein(c.x, c.y, angle, len, 6, 1.8);
+    }
+  }
+  buildVeins();
+  window.addEventListener('resize', buildVeins);
+
+  // Heartbeat timing — matches CSS 0.9s animation
+  const BEAT_PERIOD = 0.9; // seconds
+  let startTime = performance.now();
+
+  // Beat phase: 0..1 over one period
+  function beatPhase(t){
+    const phase = ((t / 1000) % BEAT_PERIOD) / BEAT_PERIOD;
+    return phase;
+  }
+
+  // Blood pulse: returns 0..1 intensity based on beat phase
+  function pulseIntensity(phase){
+    // Double-peak like real heartbeat (lub-dub)
+    const p1 = Math.exp(-Math.pow((phase - 0.14) / 0.06, 2));
+    const p2 = Math.exp(-Math.pow((phase - 0.28) / 0.05, 2)) * 0.65;
+    return Math.max(0, p1 + p2);
+  }
+
+  function draw(now){
+    ctx.clearRect(0, 0, W, H);
+    const phase = beatPhase(now - startTime);
+    const pulse = pulseIntensity(phase);
+
+    // Draw each vein
+    for(const vein of veins){
+      const pts = vein.points;
+      if(pts.length < 2) continue;
+
+      // Flow position along vein: advances with time + depth offset
+      const flowPos = ((now / 1000 * vein.speed + vein.flow) % 1);
+
+      // Base dim vein
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for(let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.strokeStyle = `rgba(100,15,15,${0.06 + vein.width * 0.02})`;
+      ctx.lineWidth = vein.width * 0.7;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Pulsing blood flow along vein
+      if(pulse > 0.02){
+        // Draw a glowing segment that travels along the vein
+        const totalLen = pts.length - 1;
+        const bloodHead = flowPos * totalLen;
+        const bloodTail = Math.max(0, bloodHead - 0.6 - pulse * 0.9);
+
+        const i0 = Math.floor(bloodTail);
+        const i1 = Math.min(pts.length - 1, Math.ceil(bloodHead));
+
+        if(i1 > i0){
+          ctx.beginPath();
+          const t0 = bloodTail - i0;
+          const sx = pts[i0].x + (pts[Math.min(i0+1,pts.length-1)].x - pts[i0].x) * t0;
+          const sy = pts[i0].y + (pts[Math.min(i0+1,pts.length-1)].y - pts[i0].y) * t0;
+          ctx.moveTo(sx, sy);
+          for(let i = i0+1; i <= i1; i++) ctx.lineTo(pts[i].x, pts[i].y);
+
+          const alpha = pulse * (0.25 + vein.width * 0.12);
+          ctx.strokeStyle = `rgba(220,30,30,${Math.min(0.9, alpha)})`;
+          ctx.lineWidth = vein.width * (0.9 + pulse * 0.5);
+          ctx.shadowBlur = 6 + pulse * 12;
+          ctx.shadowColor = `rgba(255,50,50,${pulse * 0.7})`;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+      }
+    }
+
+    // Radial blood glow at heart on beat
+    if(pulse > 0.05){
+      const c = heartCenter();
+      const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, 120 + pulse * 80);
+      grad.addColorStop(0, `rgba(220,30,30,${pulse * 0.22})`);
+      grad.addColorStop(0.4, `rgba(160,20,20,${pulse * 0.08})`);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 200 + pulse * 80, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+// ========== THREE.JS PARTICLES ==========
 (function(){
   const canvas=document.getElementById("bg-canvas");
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
@@ -1583,7 +1748,7 @@ window.closeMuteModal=()=>document.getElementById("muteModal").classList.remove(
   const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
   camera.position.z=5;
   const N=1800,pos=new Float32Array(N*3),col=new Float32Array(N*3);
-  const pal=[new THREE.Color(0x7dd3fc),new THREE.Color(0x818cf8),new THREE.Color(0xa78bfa),new THREE.Color(0x38bdf8),new THREE.Color(0xfcd34d)];
+  const pal=[new THREE.Color(0xc0392b),new THREE.Color(0x818cf8),new THREE.Color(0xa78bfa),new THREE.Color(0x7dd3fc),new THREE.Color(0x7b0f0f)];
   for(let i=0;i<N;i++){
     pos[i*3]=(Math.random()-.5)*34;pos[i*3+1]=(Math.random()-.5)*24;pos[i*3+2]=(Math.random()-.5)*16;
     const c=pal[Math.floor(Math.random()*pal.length)];col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
@@ -1623,4 +1788,4 @@ window.toggleSidebar=()=>{document.getElementById("sidenav").classList.toggle("o
 window.closeSidebar=()=>{document.getElementById("sidenav").classList.remove("open");document.getElementById("sidenav-overlay").classList.remove("open")};
 </script>
 </body>
-                                                                                                      </html>
+</html>
